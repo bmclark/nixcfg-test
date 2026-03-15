@@ -17,6 +17,21 @@ in {
     ./atuin.nix
   ];
 
+  home.sessionPath = ["$HOME/.local/bin"];
+  xdg.configFile."just/justfile".text = builtins.readFile ./ujust.just;
+
+  home.file.".local/bin/ujust" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+      exec just \
+        --justfile "$HOME/.config/just/justfile" \
+        --working-directory "$PWD" \
+        "$@"
+    '';
+  };
+
   assertions = [
     {
       assertion = !(config.features.cli.fish.enable && config.features.cli.zsh.enable);
@@ -297,8 +312,11 @@ in {
     # mc is managed via programs.mc above
     ncdu # Interactive disk usage: ncdu /path
     ripgrep # Fast grep (aliased: grep → rg)
-    tldr # Simplified man pages: tldr tar
+    tailscale # Tailscale CLI for VPN status and auth flows
+    go-task # Taskfile runner: task, task --list
+    tealdeer # Fast tldr client: tldr tar
     tokei # Lines of code counter: tokei . (aliased: loc)
+    restic # Backups: restic init, restic backup, restic snapshots
 
     # --- New modern CLI tools -------------------------------------------------
     choose # Human-friendly cut/awk: docker ps | choose 0 3

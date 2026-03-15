@@ -54,14 +54,25 @@ in {
     mkEnableOption "wayland extra tools and config";
 
   config = mkIf cfg.enable {
+    home.pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+      size = 24;
+    };
+
     # --- Wayland Ecosystem Packages -----------------------------------------
     home.packages = with pkgs; [
       # Screenshots & capture
+      cliphist
       grim
       slurp
+      swappy
       wf-recorder
       wl-mirror
       wl-clipboard
+      hyprpicker
 
       # Input & remote tooling
       wtype
@@ -84,6 +95,8 @@ in {
       thunar
       thunar-archive-plugin
       thunar-volman
+      zathura
+      tesseract
     ];
 
     # --- Wallpapers (swww) ---------------------------------------------------
@@ -158,6 +171,149 @@ in {
           --transition-fps 60
       '';
     };
+
+    home.file.".local/bin/cliphist-wofi" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        cliphist list | wofi --dmenu --prompt "Clipboard" | cliphist decode | wl-copy
+      '';
+    };
+
+    home.file.".local/bin/copy-path" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        target="''${1:?Usage: copy-path <path>}"
+        realpath "$target" | tr -d '\n' | wl-copy
+        notify-send "Path copied" "$(realpath "$target")"
+      '';
+    };
+
+    home.file.".local/bin/thunar-open-terminal" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        target="''${1:-$PWD}"
+        if [[ -f "$target" ]]; then
+          target="$(dirname "$target")"
+        fi
+        exec ghostty -e sh -lc 'cd "$1" && exec "${SHELL:-zsh}"' sh "$target"
+      '';
+    };
+
+    home.file.".local/bin/screenshot-area-annotate" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        target="$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png"
+        mkdir -p "$(dirname "$target")"
+        grim -g "$(slurp)" - | swappy -f - -o "$target"
+        notify-send "Screenshot" "Saved to $target"
+      '';
+    };
+
+    home.file.".local/bin/ocr-image" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        image="''${1:?Usage: ocr-image <image>}"
+        text="$(tesseract "$image" stdout 2>/dev/null)"
+        printf '%s\n' "$text"
+        printf '%s' "$text" | wl-copy
+        notify-send "OCR" "Copied text from $(basename "$image")"
+      '';
+    };
+
+    home.file.".local/bin/ocr-pdf" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        pdf="''${1:?Usage: ocr-pdf <pdf> [page] }"
+        page="''${2:-1}"
+        tmpdir="$(mktemp -d)"
+        trap 'rm -rf "$tmpdir"' EXIT
+        pdftoppm -f "$page" -l "$page" -png "$pdf" "$tmpdir/page" >/dev/null
+        image="$(find "$tmpdir" -name 'page-*.png' | head -n 1)"
+        [[ -n "$image" ]] || { echo "Failed to render PDF page $page" >&2; exit 1; }
+        text="$(tesseract "$image" stdout 2>/dev/null)"
+        printf '%s\n' "$text"
+        printf '%s' "$text" | wl-copy
+        notify-send "OCR" "Copied text from $(basename "$pdf") page $page"
+      '';
+    };
+
+    home.file.".local/bin/ocr-screenshot" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        set -euo pipefail
+        tmpfile="$(mktemp --suffix=.png)"
+        trap 'rm -f "$tmpfile"' EXIT
+        grim -g "$(slurp)" "$tmpfile"
+        text="$(tesseract "$tmpfile" stdout 2>/dev/null)"
+        printf '%s\n' "$text"
+        printf '%s' "$text" | wl-copy
+        notify-send "OCR" "Copied text from selected screen region"
+      '';
+    };
+
+    xdg.configFile."Thunar/uca.xml".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <actions>
+        <action>
+          <icon>utilities-terminal</icon>
+          <name>Open Terminal Here</name>
+          <submenu></submenu>
+          <unique-id>171001000000001</unique-id>
+          <command>$HOME/.local/bin/thunar-open-terminal %f</command>
+          <description>Open Ghostty in the selected directory</description>
+          <patterns>*</patterns>
+          <directories/>
+        </action>
+        <action>
+          <icon>edit-copy</icon>
+          <name>Copy Path</name>
+          <submenu></submenu>
+          <unique-id>171001000000002</unique-id>
+          <command>$HOME/.local/bin/copy-path %f</command>
+          <description>Copy the selected path to the clipboard</description>
+          <patterns>*</patterns>
+          <directories/>
+          <audio-files/>
+          <image-files/>
+          <other-files/>
+          <text-files/>
+          <video-files/>
+        </action>
+        <action>
+          <icon>accessories-text-editor</icon>
+          <name>OCR Image To Clipboard</name>
+          <submenu></submenu>
+          <unique-id>171001000000003</unique-id>
+          <command>$HOME/.local/bin/ocr-image %f</command>
+          <description>Extract text from the selected image</description>
+          <patterns>*.png;*.jpg;*.jpeg;*.webp;*.tif;*.tiff;*.bmp;</patterns>
+          <image-files/>
+        </action>
+        <action>
+          <icon>x-office-document</icon>
+          <name>OCR PDF First Page</name>
+          <submenu></submenu>
+          <unique-id>171001000000004</unique-id>
+          <command>$HOME/.local/bin/ocr-pdf %f 1</command>
+          <description>Extract text from the first page of the selected PDF</description>
+          <patterns>*.pdf;</patterns>
+          <other-files/>
+        </action>
+      </actions>
+    '';
 
     # --- Lock Screen (hyprlock) -----------------------------------------------
     # Dracula-themed lock screen with clock, input field, and date.
@@ -257,6 +413,8 @@ in {
         ];
       };
     }; # Dims after 5 min, locks after 15 min, blanks displays after 20 min.
+
+    services.cliphist.enable = true;
 
     # --- Application Launcher -----------------------------------------------
     programs.wofi = {

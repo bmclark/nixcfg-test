@@ -20,20 +20,30 @@ in {
         user = {
           name = "Bryan Clark";
           email = "bryan@bclark.net";
+          signingkey = "bryan@bclark.net";
         };
         init.defaultBranch = "main";
         push.autoSetupRemote = true;
         pull.rebase = true;
         core.editor = "emacs";
+        gpg = {
+          program = "${pkgs.gnupg}/bin/gpg";
+          format = "openpgp";
+        };
+        commit.gpgsign = false;
+        tag.gpgSign = true;
         merge.conflictstyle = "diff3";
         diff.colorMoved = "default";
         rerere.enabled = true;
 
         alias = {
           st = "status";
+          sb = "status --short --branch";
           co = "checkout";
           br = "branch";
           ci = "commit";
+          cs = "commit -S";
+          csa = "commit -S --amend";
           lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
           unstage = "reset HEAD --";
           last = "log -1 HEAD";

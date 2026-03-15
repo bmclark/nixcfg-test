@@ -81,6 +81,7 @@ in {
         gs = "git status";
         ga = "git add";
         gc = "git commit";
+        gcs = "git commit -S";
         gp = "git push";
         gl = "git pull";
         gd = "git diff";
@@ -105,6 +106,7 @@ in {
         nfu = "nix flake update";
         nfc = "nix flake check";
         ns = "nix search nixpkgs";
+        uj = "ujust";
 
         # Data formats
         yq = "yq-go"; # YAML processor
@@ -156,6 +158,14 @@ in {
         bench = "hyperfine"; # Benchmark commands
         diff = "difft"; # Syntax-aware diff
         fm = "yazi"; # File manager (also: y to cd on quit)
+        gpgkeys = "gpg --list-secret-keys --keyid-format LONG";
+        gpgpub = "gpg --armor --export";
+        rbwls = "rbw list";
+
+        # Emacs daemon workflow
+        emacs = "emacsclient -c -a ''";
+        ec = "emacsclient -c -a ''";
+        et = "emacsclient -t -a ''";
       };
 
       # --- initContent with ordering ----------------------------------------
@@ -164,6 +174,7 @@ in {
         (lib.mkOrder 100 ''
           export NIX_PATH="nixpkgs=channel:nixos-unstable"
           export NIX_LOG="info"
+          export GPG_TTY="$(tty)"
         '')
 
         # Emacs keybindings, colored man pages, extract function
@@ -230,10 +241,30 @@ in {
           # Quick HTTP server in current directory
           serve() { python3 -m http.server "''${1:-8000}"; }
 
+          # Copy a path to the Wayland clipboard.
+          cpath() {
+            local target="''${1:?Usage: cpath <path>}"
+            realpath "$target" | tr -d '\n' | wl-copy
+            echo "Copied path: $(realpath "$target")"
+          }
+
           # Find unreferenced nix store paths
           nix-stray() {
             nix-store --gc --print-dead 2>/dev/null | head -20
             echo "Run 'nix-collect-garbage -d' to clean up"
+          }
+
+          # OCR helpers for screenshots, images, and PDFs.
+          ocrimg() {
+            local file="''${1:?Usage: ocrimg <image>}"
+            "$HOME/.local/bin/ocr-image" "$file"
+          }
+          ocrpdf() {
+            local file="''${1:?Usage: ocrpdf <pdf> [page] }"
+            "$HOME/.local/bin/ocr-pdf" "$file" "''${2:-1}"
+          }
+          ocrshot() {
+            "$HOME/.local/bin/ocr-screenshot"
           }
 
           # Tmux workflow presets

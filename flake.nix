@@ -69,6 +69,10 @@
       then env
       else "dracula";
     theme = import ./home/themes/${themeName}.nix;
+    mkPkgs = system:
+      import nixpkgs {
+        inherit system;
+      };
   in {
     overlays = {
       additions = final: _prev: {};
@@ -78,6 +82,20 @@
     };
 
     homeManagerModules = {};
+
+    homeConfigurations = {
+      "bclark@carbon" = home-manager.lib.homeManagerConfiguration {
+        pkgs = mkPkgs "x86_64-linux";
+        extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
+        modules = [./home/bclark/carbon.nix];
+      };
+
+      "bclark@macmini" = home-manager.lib.homeManagerConfiguration {
+        pkgs = mkPkgs "aarch64-darwin";
+        extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
+        modules = [./home/bclark/macmini.nix];
+      };
+    };
 
     # Project templates: nix flake init -t .#python (etc.)
     templates = {

@@ -51,6 +51,10 @@ These bindings are the main way to move around the graphical desktop on `carbon`
 | `Ctrl+Alt+Shift+B/F/P/N` | Move window left / right / up / down |
 | `Super+Shift+S` | Area screenshot |
 | `Super+Shift+Print` | Full screenshot |
+| `Super+Ctrl+S` | Area screenshot and annotate in Swappy |
+| `Super+Ctrl+O` | OCR selected screen region to clipboard |
+| `Super+V` | Clipboard history picker |
+| `Super+Shift+C` | Pick a screen color to the clipboard |
 
 Mouse actions:
 
@@ -133,6 +137,28 @@ Useful behaviors:
 - left click triggers the default action
 - middle click closes all notifications
 - right click closes the current notification
+
+### Thunar and removable media
+
+Thunar is the lightweight graphical file browser on `carbon`.
+
+Use it for:
+- browsing directories visually
+- opening and ejecting USB/thumb drives
+- quick archive handling through the archive plugin
+- opening a terminal in the selected directory
+- copying full file paths from the context menu
+- running OCR on selected images or PDFs from the context menu
+
+Removable media is automounted by `udiskie`, so mounted drives should show up in Thunar automatically.
+
+### OCR and document helpers
+
+`carbon` includes a lightweight OCR workflow:
+- `ocrshot` or `Super+Ctrl+O` grabs a screen region, OCRs it, and copies the text
+- `ocrimg <file>` OCRs an image and copies the text
+- `ocrpdf <file> [page]` OCRs a PDF page and copies the text
+- `zathura <file.pdf>` opens PDFs in a keyboard-friendly viewer
 
 ### Hyprlock and idle flow
 

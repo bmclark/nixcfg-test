@@ -9,22 +9,45 @@ default:
 
 # --------------------------------------------------
 # NixOS Commands
+_require-nixos-rebuild:
+    @command -v nixos-rebuild >/dev/null 2>&1 || { echo "nixos-rebuild is required for this recipe"; exit 1; }
+
 nixos-switch-host SYSTEM:
+    @just _require-nixos-rebuild
     @sudo nixos-rebuild switch --flake .#{{SYSTEM}} --impure
 
 nixos-switch:
-    @just nixos-switch-host carbon
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    just nixos-switch-host $HOST
 
 nixos-test:
-    @sudo nixos-rebuild test --flake .#carbon --impure
+    @just _require-nixos-rebuild
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    sudo nixos-rebuild test --flake .#$HOST --impure
 
 nixos-boot:
-    @sudo nixos-rebuild boot --flake .#carbon --impure
+    @just _require-nixos-rebuild
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    sudo nixos-rebuild boot --flake .#$HOST --impure
 
 nixos-build SYSTEM:
+    @just _require-nixos-rebuild
     @nixos-rebuild build --flake .#{{SYSTEM}} --impure
 
+build-current:
+    @if [ "$(uname -s)" = "Darwin" ]; then \
+        just darwin-build; \
+    else \
+        HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+        if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+        just nixos-build $HOST; \
+    fi
+
 deploy-to HOST SYSTEM:
+    @just _require-nixos-rebuild
     @nixos-rebuild switch --flake .#{{SYSTEM}} --target-host {{HOST}} --use-remote-sudo
 
 deploy SYSTEM:
@@ -32,31 +55,50 @@ deploy SYSTEM:
 
 # --------------------------------------------------
 # Darwin Commands
+_require-darwin-rebuild:
+    @command -v darwin-rebuild >/dev/null 2>&1 || { echo "darwin-rebuild is required for this recipe"; exit 1; }
+
 darwin-switch-host SYSTEM:
+    @just _require-darwin-rebuild
     @darwin-rebuild switch --flake .#{{SYSTEM}} --impure
 
 darwin-switch:
-    @just darwin-switch-host macmini
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    just darwin-switch-host $HOST
 
 darwin-test:
-    @darwin-rebuild check --flake .#macmini --impure
+    @just _require-darwin-rebuild
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    darwin-rebuild check --flake .#$HOST --impure
 
 darwin-build:
-    @darwin-rebuild build --flake .#macmini --impure
+    @just _require-darwin-rebuild
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    darwin-rebuild build --flake .#$HOST --impure
 
 # --------------------------------------------------
 # Home Manager Commands
-# Provide the host suffix used in flake attributes (e.g., carbon -> .#bclark@carbon).
 # Useful for quick user-space tweaks without a full system rebuild.
-home-switch HOST:
-    @home-manager switch --flake .#bclark@{{HOST}}
+_require-home-manager:
+    @command -v home-manager >/dev/null 2>&1 || { echo "home-manager is required for this recipe"; exit 1; }
 
-home-switch-local:
+home-switch-host HOST:
+    @just _require-home-manager
+    @NIXPKGS_ALLOW_UNFREE=1 home-manager switch --impure --flake .#bclark@{{HOST}}
+
+home-switch:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    just home-switch $HOST
+    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    just home-switch-host $HOST
 
-home-build HOST:
-    @home-manager build --flake .#bclark@{{HOST}}
+home-build-host HOST:
+    @just _require-home-manager
+    @NIXPKGS_ALLOW_UNFREE=1 home-manager build --impure --flake .#bclark@{{HOST}}
+
+home-build:
+    @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
+    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    just home-build-host $HOST
 
 # --------------------------------------------------
 # Cross-Platform Commands
@@ -76,7 +118,11 @@ test:
 
 build-all:
     @just nixos-build carbon
-    @just darwin-build
+    @if command -v darwin-rebuild >/dev/null 2>&1; then \
+        just darwin-build; \
+    else \
+        echo "Skipping darwin-build: darwin-rebuild is not available on this host"; \
+    fi
 
 # --------------------------------------------------
 # Update Workflow
@@ -109,6 +155,27 @@ clean:
     @just gc
     @just optimize
 
+user-services:
+    @systemctl --user --failed
+
+user-status:
+    @systemctl --user status --no-pager
+
+git-signing-status:
+    @echo "git user.signingkey: $$(git config --get user.signingkey || echo unset)"
+    @echo "git commit.gpgsign: $$(git config --get commit.gpgsign || echo unset)"
+    @echo "gpg secret keys:"
+    @gpg --list-secret-keys --keyid-format LONG
+
+ocr-shot:
+    @$HOME/.local/bin/ocr-screenshot
+
+ocr-image FILE:
+    @$HOME/.local/bin/ocr-image {{FILE}}
+
+ocr-pdf FILE PAGE="1":
+    @$HOME/.local/bin/ocr-pdf {{FILE}} {{PAGE}}
+
 # --------------------------------------------------
 # Flake Utilities
 check:
@@ -117,11 +184,19 @@ check:
 show:
     @nix flake show
 
+show-json:
+    @nix flake show --json
+
+check-trace:
+    @nix flake check --show-trace
+
 # --------------------------------------------------
 # Git Workflow
 commit MESSAGE:
     @git add .
     @git commit -m "{{MESSAGE}}"
+
+push:
     @git push
 
 update-and-commit MESSAGE: update
@@ -129,6 +204,7 @@ update-and-commit MESSAGE: update
 
 deploy-update-commit SYSTEM MESSAGE: (deploy SYSTEM) update
     @just commit "{{MESSAGE}}"
+    @just push
 
 # --------------------------------------------------
 # Theme Switching

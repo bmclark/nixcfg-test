@@ -248,6 +248,10 @@ in {
           # Screenshots
           "$mainMod SHIFT, S, exec, bash -lc 'grim -g \"$(slurp)\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
           "$mainMod SHIFT, Print, exec, bash -lc 'grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
+          "$mainMod CTRL, S, exec, $HOME/.local/bin/screenshot-area-annotate"
+          "$mainMod CTRL, O, exec, $HOME/.local/bin/ocr-screenshot"
+          "$mainMod, V, exec, $HOME/.local/bin/cliphist-wofi"
+          "$mainMod SHIFT, C, exec, hyprpicker -a"
 
           # Workspace cycling with mouse wheel
           "$mainMod, mouse_down, workspace, r-1"

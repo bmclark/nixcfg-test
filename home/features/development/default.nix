@@ -23,6 +23,16 @@
     };
   };
 
+  programs.gpg.enable = true;
+
+  services.gpg-agent = {
+    enable = true;
+    defaultCacheTtl = 1800;
+    maxCacheTtl = 7200;
+    enableZshIntegration = true;
+    pinentry.package = pkgs.pinentry-curses;
+  };
+
   home.packages = with pkgs; [
     # --- Nix development -----------------------------------------------------
     nil # Nix LSP for VS Code / editors
@@ -77,6 +87,7 @@
     pgcli # PostgreSQL with autocomplete: pgcli -h localhost -d mydb
     litecli # SQLite with autocomplete: litecli mydb.sqlite
     usql # Universal SQL client: usql postgres://localhost/mydb
+    dbmate # Simple database migrations: dbmate up
 
     # --- Infrastructure as Code ----------------------------------------------
     opentofu # Terraform-compatible IaC: tofu init, tofu plan, tofu apply
@@ -98,6 +109,8 @@
     # --- Secrets management --------------------------------------------------
     sops # Encrypted secrets: sops secrets.yaml
     age # Modern encryption: age -e -r <key> file
+    rbw # Bitwarden CLI client with local cache: rbw get item
+    pinentry-curses # Terminal pinentry for gpg-agent and signing flows
 
     # --- API / network tools -------------------------------------------------
     grpcurl # gRPC client: grpcurl -plaintext localhost:50051 list

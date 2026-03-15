@@ -1,0 +1,46 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  check:
+    desc: Run flake validation
+    cmds:
+      - just check
+
+  switch:
+    desc: Switch the current host
+    cmds:
+      - just switch
+
+  home-switch:
+    desc: Switch only the home-manager profile for the current host
+    cmds:
+      - just home-switch
+
+  update:
+    desc: Update flake inputs
+    cmds:
+      - just update
+
+  clean:
+    desc: Run garbage collection and store optimization
+    cmds:
+      - just clean
+
+  user-services:
+    desc: Show failed user services
+    cmds:
+      - just user-services
+
+  signing-status:
+    desc: Show git/GPG signing status
+    cmds:
+      - just git-signing-status
+
+  ocr-shot:
+    desc: OCR a selected screen region to stdout and clipboard
+    cmds:
+      - ~/.local/bin/ocr-screenshot

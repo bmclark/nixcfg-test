@@ -46,6 +46,7 @@ Add host-specific config to `~/.ssh/config.d/` or extend `matchBlocks` in the mo
 | Tool | Command | Description |
 |------|---------|-------------|
 | `gnumake` | `make` | GNU Make — required by codex CLI and general build automation |
+| `go-task` | `task check`, `task switch` | Taskfile runner for a smaller wrapper layer over common local workflows |
 
 ### Dev Environments
 
@@ -108,6 +109,8 @@ Kubernetes aliases (in `cli/zsh.nix`):
 |------|---------|-------------|
 | `sops` | `sops secrets.yaml` | Encrypt/decrypt secrets files (supports age, AWS KMS, GCP KMS) |
 | `age` | `age -e -r <key> file` | Modern file encryption with small explicit keys |
+| `rbw` | `rbw login`, `rbw get <item>` | Bitwarden CLI with local cache for terminal secret retrieval |
+| `gpg` / `gpg-agent` | `gpg --list-secret-keys`, `git cs -m ...` | Terminal signing flow with curses pinentry and cached agent |
 
 ### Python
 
@@ -236,6 +239,7 @@ Includes hooks for: trailing whitespace, YAML/JSON/TOML validation, private key 
 ## Git Configuration (git.nix)
 
 - **Identity**: Bryan Clark <bryan@bclark.net>
+- **Signing key hint**: `user.signingkey = bryan@bclark.net`
 - **Default branch**: main
 - **Delta pager**: Side-by-side diffs with Dracula syntax highlighting
 - **Difftastic**: Syntax-aware diff via `git dft`
@@ -244,20 +248,45 @@ Includes hooks for: trailing whitespace, YAML/JSON/TOML validation, private key 
 - **Rebase on pull**: `pull.rebase = true`
 - **Editor**: emacs
 - **Rerere**: Remembers conflict resolutions
+- **GPG program**: `gpg` with OpenPGP format; signed tags by default and signed commits available via aliases
 
 ### Git Aliases (git.nix)
 
 | Alias | Command |
 |-------|---------|
 | `git st` | `git status` |
+| `git sb` | `git status --short --branch` |
 | `git co` | `git checkout` |
 | `git br` | `git branch` |
 | `git ci` | `git commit` |
+| `git cs` | `git commit -S` |
+| `git csa` | `git commit -S --amend` |
 | `git lg` | Pretty log graph |
 | `git unstage` | `git reset HEAD --` |
 | `git last` | `git log -1 HEAD` |
 | `git amend` | `git commit --amend --no-edit` |
 | `git absorb` | `git absorb --and-rebase` |
+
+### Signing and Secrets Workflow
+
+Use this flow on `carbon`:
+
+```bash
+# Verify the secret key is present
+gpgkeys
+
+# Check git's signing-related settings
+just git-signing-status
+
+# Make a signed commit without enabling global sign-on-every-commit
+git cs -m "your message"
+
+# Log into Bitwarden for terminal retrieval
+rbw login
+rbw get <item-name>
+```
+
+`gpg-agent` is configured with a curses pinentry and a short cache TTL, so terminal signing prompts stay inside Ghostty/tmux instead of spawning a GUI prompt.
 | `git dft` | Syntax-aware diff via difftastic |
 
 Additional shell-level git aliases (`g`, `gs`, `ga`, etc.) are in `cli/zsh.nix`.

@@ -8,6 +8,8 @@ Cross-platform NixOS + nix-darwin unified configuration for two systems:
 
 13 phases transforming a minimal Nix configuration into a fully-featured, Dracula-themed, cross-platform development environment. All managed declaratively through Nix flakes, home-manager, and nix-darwin.
 
+Primary goal: make the day-to-day experience as consistent as practical across NixOS, macOS, and future hosts, especially for programs, keybindings, terminal workflows, and core user-facing behavior.
+
 ---
 
 ## Implementation Batches

@@ -8,6 +8,10 @@ This repository manages two systems through a single flake:
 
 Both hosts share common CLI tooling, editors, and development settings via home-manager. Dracula theming and keyboard shortcuts (Ctrl for apps, Super for window management) stay consistent across platforms.
 
+The broader project goal is to keep the user experience as consistent as practical across NixOS, macOS, and future machines: same tools where possible, same keybindings where possible, and the same mental model for terminal, editor, and desktop workflows.
+
+Another standing directive is that user-facing shell tooling should feel polished, not merely functional: prefer tasteful `gum`/shell-sugar enhancements and other QoL improvements when they make commands easier to understand and nicer to use.
+
 ## Features
 - Dracula theme everywhere (Hyprland, Ghostty, tmux, VS Code, Emacs, Starship, waybar, wofi, dunst, fzf, bat, git delta)
 - Switchable themes: Dracula, Tokyo Night, SynthWave '84 via `just theme <name>`
@@ -54,12 +58,13 @@ Both hosts share common CLI tooling, editors, and development settings via home-
    - Adjust system settings in `hosts/carbon/configuration.nix` or `darwin/macmini/configuration.nix`
    - Update user details in `home/bclark/home.nix`
 4. **Build and switch**
-   - NixOS: `just nixos-switch`
-   - macOS: `just darwin-switch`
-   - Any platform: `just switch`
+   - Current machine: `just switch`
+   - NixOS only: `just nixos-switch`
+   - macOS only: `just darwin-switch`
 5. **Test before applying (optional)**
-   - NixOS: `just nixos-test`
-   - macOS: `just darwin-test`
+   - Current machine: `just test`
+   - NixOS only: `just nixos-test`
+   - macOS only: `just darwin-test`
 
 ## Common Commands
 | Command | Description |
@@ -73,9 +78,13 @@ Both hosts share common CLI tooling, editors, and development settings via home-
 | `just gc` | Garbage collect (7 days) |
 | `just clean` | Garbage collect and optimize |
 | `just check` | Validate flake |
-| `just nixos-switch` | Rebuild NixOS (carbon) |
-| `just darwin-switch` | Rebuild macOS (macmini) |
-| `just home-switch-local` | Rebuild home-manager only |
+| `just build-current` | Build the current machine without switching |
+| `just nixos-switch` | Rebuild the current NixOS host |
+| `just darwin-switch` | Rebuild the current macOS host |
+| `just home-switch` | Rebuild home-manager for the current host |
+| `just home-build` | Build home-manager for the current host |
+| `just show-json` | Show flake outputs as JSON |
+| `just check-trace` | Run `nix flake check --show-trace` |
 
 See the [justfile](justfile) for the full catalog.
 
@@ -218,7 +227,7 @@ See `secrets/secrets.nix` for the full setup.
 - **USB drives not automounting**
   Verify udisks2 and udiskie services are running. Ensure polkit agent is active.
 - **Home-manager changes not applying**
-  Because home-manager is integrated, use `just switch` rather than `home-manager switch`. For rapid iteration, run `just home-switch-local`.
+  Because home-manager is integrated, use `just switch` rather than raw `home-manager switch` for normal rebuilds. For rapid iteration, run `just home-switch`.
 - **Theme not changing**
   Ensure you use the environment variable: `NIXCFG_THEME=tokyo-night just switch` or `just theme tokyo-night`.
 

@@ -195,11 +195,53 @@ Use the Hyprland dropdown terminal with `Super+\`` for:
 - package/version checks
 - a quick `journalctl`, `kubectl`, or `rg`
 
+### Pattern: machine-wide utility commands from any directory
+
+Use `ujust` when you want the host-level utility `justfile` instead of a repo-local one.
+
+Examples:
+- `ujust now`
+- `ujust weather NYC`
+- `ujust ports`
+- `ujust ocr-shot`
+- `ujust doctor`
+- `ujust host-info`
+
+For nixcfg specifically, the universal layer also exposes:
+- `ujust nixcfg-check`
+- `ujust nixcfg-update`
+- `ujust nixcfg-switch`
+- `ujust nixcfg-home-switch`
+- `ujust rebuild`
+- `ujust rollback`
+
+For host operations, it also exposes:
+- `ujust tailscale-status`
+- `ujust tailscale-up`
+- `ujust bootstrap`
+- `ujust post-switch`
+
+Use plain `just` when you want the current repository's own recipes.
+
+### Pattern: signed commits and terminal secrets
+
+1. Check available signing keys with `gpgkeys`
+2. Confirm git signing state with `just git-signing-status` or `task signing-status`
+3. Use `git cs -m "message"` for a signed commit
+4. Use `rbw login` and `rbw get <item>` for terminal secret retrieval
+
+### Pattern: quick OCR or document extraction
+
+1. Press `Super+Ctrl+O` to OCR a selected screen region
+2. Use `ocrimg file.png` for images or `ocrpdf file.pdf 2` for a PDF page
+3. Open PDFs in `zathura` when you want a keyboard-friendly viewer
+
 ## Where To Learn More
 
 - CLI stack: [home/features/cli/README.md](../home/features/cli/README.md)
 - Desktop stack: [home/features/desktop/README.md](../home/features/desktop/README.md)
 - Editors: [home/features/editors/README.md](../home/features/editors/README.md)
 - Deep Emacs guide: [home/features/editors/GUIDE.md](../home/features/editors/GUIDE.md)
+- Hyprland deep dive: [hyprland-configuration.md](hyprland-configuration.md)
 - Keyboard strategy: [keyboard-layout-strategy.md](keyboard-layout-strategy.md)
 - Shortcut conflicts to resolve later: [keyboard-shortcut-conflicts.md](keyboard-shortcut-conflicts.md)

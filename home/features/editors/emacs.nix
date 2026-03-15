@@ -24,6 +24,11 @@ in {
     home.file.".emacs.d/init.el".source = ./init.el;
     home.file.".config/eca/config.json".source = ./eca-config.json;
 
+    home.sessionVariables = {
+      EDITOR = "emacsclient -t -a ''";
+      VISUAL = "emacsclient -c -a ''";
+    };
+
     # LSP servers and tools needed by init.el that aren't in development/default.nix.
     # Already available via development module: nil, alejandra, shellcheck,
     # terraform-ls, ruff, nodejs, typescript.
@@ -57,7 +62,7 @@ in {
     # Use `emacsclient -c` for GUI frames, `emacsclient -t` for terminal.
     services.emacs = {
       enable = true;
-      defaultEditor = true;
+      defaultEditor = false;
       client.enable = true;
       startWithUserSession = "graphical";
     };

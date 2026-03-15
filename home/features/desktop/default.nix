@@ -9,8 +9,5 @@
     ./karabiner.nix
   ];
 
-  home.packages = with pkgs; [
-    tree
-    thunar
-  ];
+  home.packages = with pkgs; [tree];
 }

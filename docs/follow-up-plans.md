@@ -135,9 +135,8 @@ Post-implementation deep-dives for the nixcfg unified configuration. Each sectio
   - `hyprspace` -- macOS-like overview
 - Performance impact assessment for each plugin
 
-### Layout & Multi-Monitor
+### Layout & Workspace Rules
 - Workspace-specific layouts and rules
-- Multi-monitor setup preparation (for external displays)
 - Per-workspace default applications
 
 ---
@@ -185,9 +184,9 @@ Post-implementation deep-dives for the nixcfg unified configuration. Each sectio
 - SSH config management via home-manager `programs.ssh`
   - Host aliases, jump hosts, key management
   - Per-host settings
-- GPG key management via home-manager `programs.gpg`
-  - Signing commits
-  - Password store integration
+- ~~GPG key management via home-manager `programs.gpg`~~ **DONE** (agent + pinentry + git signing workflow on carbon)
+  - ~~Signing commits~~ **DONE**
+  - Password store integration -- **PARTIAL** (`rbw` workflow documented; full backup/export policy deferred)
 
 ---
 
@@ -241,5 +240,5 @@ Recommended order based on impact and dependencies:
 2. **Follow-Up E** (Development) -- **DONE**
 3. **Follow-Up A** (VS Code) -- **MOSTLY DONE**: Emacs MCX with conflict resolution (Ctrl+B/P context-aware), Emacs-style keybindings (M-x, C-x C-f, C-x 2/3/o/1/k), Copilot/Claude Code with settings, markdown-all-in-one, two-layer extensions. REMAINING: snippets, task configurations
 4. **Follow-Up B** (Browser) -- **DONE**: arkenfox-style Firefox hardening, dual profiles, all privacy extensions, xBrowserSync, Chromium privacy flags, documented in README
-5. **Follow-Up D** (Hyprland Rice) -- **MOSTLY DONE**: Dracula theming, animations, swww wallpaper, dropdown terminal, window rules, waybar with hover/transitions/urgent pulse, wofi with icons/fuzzy, dunst with progress bars/history/per-app rules, hyprlock Dracula lock screen, hypridle dim→lock→dpms chain. REMAINING: plugins (hyprexpo broken), wallpaper collection, multi-monitor prep
+5. **Follow-Up D** (Hyprland Rice) -- **MOSTLY DONE**: Dracula theming, animations, swww wallpaper, dropdown terminal, window rules, waybar with hover/transitions/urgent pulse, wofi with icons/fuzzy, dunst with progress bars/history/per-app rules, hyprlock Dracula lock screen, hypridle dim→lock→dpms chain. REMAINING: plugins (hyprexpo broken), wallpaper collection
 6. **Follow-Up F** (System-Level) -- **MOSTLY DONE**: TLP, firewall, plymouth, agenix, vulnix, emacs daemon, CI, flake update timer. DEFERRED: secure boot, backups, macOS defaults

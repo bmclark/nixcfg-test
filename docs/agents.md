@@ -23,6 +23,8 @@ This repository manages one NixOS host and one macOS host from a single flake:
 
 Most user-facing configuration is implemented as modular home-manager features under `home/features/`, then enabled per host in `home/bclark/carbon.nix` or `home/bclark/macmini.nix`.
 
+When adding or changing user-facing shell commands, CLI workflows, or terminal dashboards, prefer polished UX by default: use `gum` and similar shell sugar when it meaningfully improves readability, discoverability, QoL, and ease of use.
+
 Top-level areas:
 
 - `flake.nix`: main entrypoint, outputs, host registration, theme injection, templates
@@ -205,13 +207,15 @@ Use the command names that really exist in `justfile`:
 just switch
 just test
 just check
+just build-current
 just nixos-switch
 just darwin-switch
-just home-switch carbon
-just home-switch macmini
-just home-switch-local
+just home-switch
+just home-build
 just update
 just build-all
+just show-json
+just check-trace
 just theme dracula
 just theme tokyo-night
 ```
@@ -219,9 +223,11 @@ just theme tokyo-night
 Validation defaults:
 
 1. After editing Nix files, run `just check`
-2. If only home-manager changed, run `just home-switch <host>` when appropriate
+2. If only home-manager changed, run `just home-switch`
 3. If system-level NixOS changed, run `just nixos-switch` or `just nixos-test`
 4. If system-level macOS changed, run `just darwin-switch` or `just darwin-test`
+
+Most day-to-day recipes infer the current machine automatically. Use explicit `*-host` recipes only for bootstrap, remote, or cross-host work.
 
 If you cannot execute a full rebuild, at minimum run `just check` and state what you could not verify.
 

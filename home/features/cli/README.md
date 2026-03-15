@@ -122,6 +122,7 @@ Use `y` when you want a terminal file manager that returns you to the last direc
 | `serve [port]` | Start a quick static file server |
 | `y` | Open Yazi and `cd` to the last visited directory |
 | `md <file>` | Render markdown with glow |
+| `ujust <recipe>` | Run the universal host-level `justfile` from any directory |
 
 ### History and fuzzy search
 
@@ -140,6 +141,28 @@ Use `y` when you want a terminal file manager that returns you to the last direc
 | `glog` | Compact graph view |
 | `lg` | lazygit TUI |
 | `delta` | Syntax-aware git diff pager |
+
+### Universal justfile
+
+Use `ujust` for commands that should work from any directory on the machine, instead of only inside a specific repo.
+
+Examples:
+- `ujust now`
+- `ujust weather NYC`
+- `ujust ports`
+- `ujust ocr-shot`
+- `ujust cliphist`
+- `ujust nixcfg-check`
+- `ujust nixcfg-switch`
+- `ujust nixcfg-update`
+- `ujust doctor`
+- `ujust host-info`
+- `ujust tailscale-status`
+- `ujust tailscale-up`
+- `ujust rebuild`
+- `ujust rollback`
+
+Use plain `just` when you want the current project's nearest `justfile`.
 
 ### Background and monitoring
 

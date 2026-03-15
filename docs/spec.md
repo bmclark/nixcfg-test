@@ -25,6 +25,8 @@ in {
 
 Platform guards use `lib.mkIf pkgs.stdenv.isLinux` / `lib.mkIf pkgs.stdenv.isDarwin`.
 
+User-facing shell tooling should optimize for both function and presentation. When adding terminal dashboards, wrappers, or operational commands, prefer tasteful `gum`/shell-sugar enhancements and QoL affordances over plain raw output when the extra polish improves usability.
+
 ---
 
 ## 2. Git (`home/features/development/git.nix`)

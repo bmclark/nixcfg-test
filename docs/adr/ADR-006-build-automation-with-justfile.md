@@ -14,14 +14,14 @@ Remembering raw commands like `sudo nixos-rebuild switch --flake .#carbon` or `d
 
 ## Decision
 Standardize on a repository-level `justfile` that collects common workflows:
-- NixOS recipes (`nixos-switch`, `nixos-test`, `nixos-boot`, `nixos-build`, `deploy-to`)
-- Darwin recipes (`darwin-switch`, `darwin-test`, `darwin-build`)
-- Home-manager recipes (`home-switch`, `home-switch-local`, `home-build`)
-- Cross-platform helpers (`switch`, `test`, `build-all`)
+- NixOS recipes (`nixos-switch`, `nixos-test`, `nixos-boot`) that infer the current host, plus explicit host-targeted recipes for bootstrap and remote work
+- Darwin recipes (`darwin-switch`, `darwin-test`, `darwin-build`) that infer the current host on macOS
+- Home-manager recipes (`home-switch`, `home-build`) that infer the current host, plus explicit `*-host` variants when needed
+- Cross-platform helpers (`switch`, `test`, `build-current`, `build-all`)
 - Update flow (`update`, `update-input`, `update-all`)
 - Maintenance (`gc`, `gc-old`, `gc-all`, `optimize`, `clean`)
-- Flake utilities (`check`, `show`)
-- Git helpers (`commit`, `update-and-commit`, `deploy-update-commit`)
+- Flake utilities (`check`, `show`, `show-json`, `check-trace`)
+- Git helpers (`commit`, `push`, `update-and-commit`, `deploy-update-commit`)
 - Development shell entry (`dev-shell`, `dev`)
 
 Users install `just` (e.g., `nix-shell -p just`) and then run short commands instead of memorizing full Nix invocations.
@@ -31,7 +31,7 @@ Users install `just` (e.g., `nix-shell -p just`) and then run short commands ins
 - Single entry point for all common workflows.
 - `just --list` surfaces available commands with descriptions.
 - Short, memorable commands reduce typos and friction.
-- Platform-aware recipes encapsulate host-specific logic.
+- Platform-aware recipes encapsulate host-specific logic and infer the current machine for normal use.
 - Recipes compose cleanly (e.g., `update-all` chains other commands).
 - Easier to document and extend than scattered shell scripts.
 

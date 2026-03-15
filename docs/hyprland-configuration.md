@@ -50,6 +50,9 @@ Hyprland adheres to CUA conventions (Ctrl for application actions), keeps Super 
 |----------|--------|
 | Super+Shift+S | Region screenshot (grim + slurp) |
 | Super+Shift+Print | Fullscreen screenshot |
+| Super+Ctrl+S | Region screenshot with annotation in Swappy |
+| Super+Ctrl+O | OCR selected region to clipboard |
+| Super+Shift+C | Pick a screen color to the clipboard |
 
 ### Mouse Bindings
 | Shortcut | Action |
@@ -92,6 +95,11 @@ Enable or disable modules via `home/bclark/carbon.nix` to tailor the desktop set
 - Themed with Dracula colors and transparency.  
 - Controlled via Super+D. Adjust style or behaviour in the `programs.wofi` section.
 
+### Clipboard and OCR helpers
+- `cliphist` stores clipboard history and `Super+V` opens a picker.  
+- `ocr-screenshot`, `ocr-image`, and `ocr-pdf` extract text with `tesseract` and copy it to the clipboard.  
+- `swappy` provides inline screenshot annotation for quick markups.
+
 ### Dunst (Notifications)
 - Dracula colors across urgency levels; critical alerts stay until dismissed.  
 - Test notifications with `notify-send "Test" "Message"`.
@@ -115,6 +123,7 @@ Enable or disable modules via `home/bclark/carbon.nix` to tailor the desktop set
 - Thunar with `thunar-volman` (removable media) and `thunar-archive-plugin` (archives).  
 - Thumbnail generation via Tumbler (enabled at the system level).  
 - Super+E opens Thunar.
+- Custom actions add open-terminal-here, copy-path, OCR-image, and OCR-PDF helpers.
 
 ### Automounting
 - udisks2 supplies backend support; udiskie handles user-level automounts.  
