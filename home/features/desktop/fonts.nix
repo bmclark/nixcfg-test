@@ -25,10 +25,11 @@ in {
       nerd-fonts.symbols-only # Pure icon fallback
 
       # System and UI fonts
-      font-manager
       font-awesome_5
       noto-fonts
       meslo-lgs-nf # P10k compatibility if ever needed
+    ] ++ lib.optionals pkgs.stdenv.isLinux [
+      font-manager # GTK font browser (depends on webkitgtk, Linux-only)
     ];
 
     # Fontconfig monospace fallback chain

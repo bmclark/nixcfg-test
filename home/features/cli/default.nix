@@ -218,8 +218,8 @@ in {
     };
   };
 
-  # --- Pueue task queue daemon ------------------------------------------------
-  services.pueue = {
+  # --- Pueue task queue daemon (systemd — Linux only) -------------------------
+  services.pueue = lib.mkIf pkgs.stdenv.isLinux {
     enable = true;
     settings = {
       shared = {

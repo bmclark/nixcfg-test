@@ -147,8 +147,8 @@
       nixos = carbonSystem;
     };
 
-    darwinConfigurations = {
-      macmini = inputs.nix-darwin.lib.darwinSystem {
+    darwinConfigurations = let
+      macminiSystem = inputs.nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         specialArgs = {inherit inputs outputs theme themeName;};
         modules = [
@@ -165,6 +165,11 @@
           }
         ];
       };
+    in {
+      macmini = macminiSystem;
+      # Alias so `darwin-rebuild switch --flake .` works when hostname
+      # reports as "bryansmacmini" (from "Bryans-Mac-mini").
+      bryansmacmini = macminiSystem;
     };
   };
 }

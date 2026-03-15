@@ -12,11 +12,9 @@
   # manage.
   home.username = "bclark";
   home.homeDirectory =
-    lib.mkDefault (
-      if pkgs.stdenv.isDarwin
-      then "/Users/bclark"
-      else "/home/bclark"
-    );
+    if pkgs.stdenv.isDarwin
+    then "/Users/bclark"
+    else "/home/bclark";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

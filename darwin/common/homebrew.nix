@@ -26,6 +26,7 @@
       "logitech-g-hub" # Logitech peripheral management
       "raycast" # Launcher / productivity tool
       "spotify" # Music streaming
+      "tailscale" # VPN mesh network (menu bar app)
     ];
 
     masApps = {

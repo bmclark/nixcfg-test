@@ -60,7 +60,7 @@ _require-darwin-rebuild:
 
 darwin-switch-host SYSTEM:
     @just _require-darwin-rebuild
-    @darwin-rebuild switch --flake .#{{SYSTEM}} --impure
+    @sudo darwin-rebuild switch --flake .#{{SYSTEM}} --impure
 
 darwin-switch:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \

@@ -1,7 +1,7 @@
 # Development tools module. Git, SSH, language runtimes, container tools,
 # code quality, database clients, and AI coding assistants.
 # Designed for AI-agent-forward development workflows.
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   imports = [
     ./git.nix
     ./vscode.nix
@@ -43,7 +43,7 @@
     # --- AI coding tools -----------------------------------------------------
     claude-code # Claude AI coding assistant CLI
     codex # OpenAI Codex CLI
-    aider-chat # AI pair programming: aider
+    # aider-chat — disabled: upstream trio-websocket test failure on aarch64-darwin
 
     # --- Build tools -----------------------------------------------------------
     gnumake # make (required by codex CLI)
@@ -101,7 +101,6 @@
     # --- Kubernetes ----------------------------------------------------------
     kubectl # Kubernetes CLI: kubectl get pods
     k9s # Kubernetes TUI: k9s
-    helm # Kubernetes package manager: helm install
 
     # --- Cloud CLIs ----------------------------------------------------------
     awscli2 # AWS CLI v2: aws s3 ls, aws sts get-caller-identity
@@ -115,5 +114,8 @@
     # --- API / network tools -------------------------------------------------
     grpcurl # gRPC client: grpcurl -plaintext localhost:50051 list
     websocat # WebSocket client: websocat ws://localhost:8080
+  ] ++ lib.optionals pkgs.stdenv.isLinux [
+    # --- Linux-only packages -------------------------------------------------
+    helm # Kubernetes package manager (not available on aarch64-darwin)
   ];
 }

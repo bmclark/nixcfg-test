@@ -30,6 +30,16 @@
       NSAutomaticSpellingCorrectionEnabled = false;
       InitialKeyRepeat = 15;
       KeyRepeat = 2;
+      # Sound
+      "com.apple.sound.beep.feedback" = 0;
+      "com.apple.sound.beep.volume" = 0.0;
+      # UX Polish
+      NSTableViewDefaultSizeMode = 2;
+      AppleShowScrollBars = "Always";
+      NSNavPanelExpandedStateForSaveMode = true;
+      NSNavPanelExpandedStateForSaveMode2 = true;
+      PMPrintingExpandedStateForPrint = true;
+      PMPrintingExpandedStateForPrint2 = true;
     };
     dock = {
       autohide = true;
@@ -54,11 +64,40 @@
       location = "~/Pictures/Screenshots";
       type = "png";
     };
-    alf = {
-      globalstate = 1;
-      allowsignedenabled = 1;
+    # --- Menu Bar / Control Center ---
+    menuExtraClock = {
+      Show24Hour = false;
+      ShowAMPM = true;
+      ShowDate = 1; # 0 = when space allows, 1 = always, 2 = never
+      ShowDayOfWeek = true;
+    };
+    controlcenter = {
+      BatteryShowPercentage = true;
+      Bluetooth = true;
+      Sound = true;
+    };
+    # --- Login & Security ---
+    screensaver = {
+      askForPassword = true;
+      askForPasswordDelay = 60;
+    };
+    LaunchServices = {
+      LSQuarantine = false;
+    };
+    CustomUserPreferences = {
+      "com.apple.screensaver" = {
+        idleTime = 900;
+      };
     };
   };
 
+  system.startup.chime = false;
+
+  networking.applicationFirewall = {
+    enable = true;
+    allowSigned = true;
+  };
+
+  system.primaryUser = "bclark";
   system.stateVersion = 5;
 }

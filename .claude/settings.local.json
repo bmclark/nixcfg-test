@@ -53,7 +53,16 @@
       "Read(//home/bclark/.emacs.d/elpaca/repos/**)",
       "Read(//home/bclark/.emacs.d/**)",
       "Bash(find ~/.emacs.d -path \"*/claude-code-ide*\" -name \"*.el\" -not -path \"*/eln-cache/*\" 2>/dev/null | head -10)",
-      "Bash(command grep:*)"
+      "Bash(command grep:*)",
+      "Bash(find:*)",
+      "Bash(brew list:*)",
+      "Bash(brew leaves:*)",
+      "Bash(mas list:*)",
+      "Bash(brew info:*)",
+      "Bash(git add:*)",
+      "Bash(git worktree:*)",
+      "Bash(cd:*)",
+      "Bash(just check:*)"
     ]
   }
 }
