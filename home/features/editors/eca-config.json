@@ -1,0 +1,21 @@
+{
+  "defaultAgent": "code",
+  "defaultModel": "anthropic/claude-sonnet-4-6-20250514",
+  "providers": {
+    "anthropic": {
+      "url": "https://api.anthropic.com"
+    }
+  },
+  "toolCall": {
+    "approval": {
+      "byDefault": "ask",
+      "allow": {
+        "eca__read_file": {},
+        "eca__directory_tree": {},
+        "eca__grep": {},
+        "eca__editor_diagnostics": {}
+      },
+      "deny": {}
+    }
+  }
+}

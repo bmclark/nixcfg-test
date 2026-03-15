@@ -9,10 +9,6 @@
   imports = [
     ./users
   ];
-#  home-manager = {
-#    useUserPackages = true;
-#    extraSpecialArgs = {inherit inputs outputs;};
-#  };
   nixpkgs = {
     config = {
       # Disable if you don't want unfree packages
@@ -38,5 +34,5 @@
     registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
     nixPath = ["/etc/nix/path"] ++ lib.mapAttrsToList (flakeName: _: "${flakeName}=flake:${flakeName}") flakeInputs;
   };
-  users.defaultUserShell = pkgs.fish;
+  users.defaultUserShell = pkgs.zsh;
 }

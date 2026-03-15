@@ -1,27 +1,56 @@
-{ pkgs, ... }:
-{
+# NixOS laptop (carbon) -- x86_64-linux with Hyprland.
+{pkgs, ...}: {
   imports = [
+    ../common/default.nix
     ./dotfiles
     ../features/cli
     ../features/desktop
     ../features/development
+    ../features/editors
     ./home.nix
   ];
-  nixpkgs.config.allowUnfree = true;
+
   features = {
     cli = {
-      fish.enable = true;
+      zsh.enable = true;
       fzf.enable = true;
+      ghostty.enable = true;
+      tmux.enable = true;
+      atuin.enable = true;
     };
     desktop = {
       fonts.enable = true;
       hyprland.enable = true;
       wayland.enable = true;
       firefox.enable = true;
+      chromium.enable = true;
     };
     development = {
+      git.enable = true;
       vscode.enable = true;
     };
+    editors = {
+      emacs.enable = true;
+    };
+  };
+
+  # --- Weekly flake update timer --------------------------------------------
+  # Runs `nix flake update` every Sunday at 09:00. Review changes with `git diff flake.lock`.
+  systemd.user.services.flake-update = {
+    Unit.Description = "Update nixcfg flake inputs";
+    Service = {
+      Type = "oneshot";
+      WorkingDirectory = "%h/nixcfg";
+      ExecStart = "${pkgs.nix}/bin/nix flake update";
+    };
+  };
+  systemd.user.timers.flake-update = {
+    Unit.Description = "Weekly nixcfg flake update";
+    Timer = {
+      OnCalendar = "Sun 09:00";
+      Persistent = true; # Run missed timers after boot
+    };
+    Install.WantedBy = ["timers.target"];
   };
 
   wayland.windowManager.hyprland = {
@@ -37,7 +66,7 @@
         }
       ];
       monitor = [
-         "eDP-1,1920x1080@60,0x0,1"
+        "eDP-1,1920x1080@60,0x0,1"
       ];
       workspace = [
         "1, monitor:eDP-1, default:true"

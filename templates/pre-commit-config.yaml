@@ -1,0 +1,71 @@
+# Default pre-commit config for new projects.
+# Copy to .pre-commit-config.yaml in your project, then run: pre-commit install
+#
+# Customize by removing hooks you don't need or adding language-specific ones.
+# See https://pre-commit.com/hooks.html for available hooks.
+repos:
+  # General
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  # Nix
+  - repo: local
+    hooks:
+      - id: alejandra
+        name: alejandra (nix formatter)
+        entry: alejandra
+        language: system
+        files: '\.nix$'
+      - id: statix
+        name: statix (nix linter)
+        entry: statix check
+        language: system
+        files: '\.nix$'
+        pass_filenames: false
+      - id: deadnix
+        name: deadnix (unused nix code)
+        entry: deadnix
+        language: system
+        files: '\.nix$'
+
+  # Shell
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: shellcheck
+        language: system
+        types: [shell]
+
+  # Python (uncomment if needed)
+  # - repo: local
+  #   hooks:
+  #     - id: ruff-check
+  #       name: ruff check
+  #       entry: ruff check --fix
+  #       language: system
+  #       types: [python]
+  #     - id: ruff-format
+  #       name: ruff format
+  #       entry: ruff format
+  #       language: system
+  #       types: [python]
+
+  # TypeScript/JavaScript (uncomment if needed)
+  # - repo: local
+  #   hooks:
+  #     - id: prettier
+  #       name: prettier
+  #       entry: prettier --write
+  #       language: system
+  #       types_or: [javascript, jsx, ts, tsx, json, yaml, markdown, css]

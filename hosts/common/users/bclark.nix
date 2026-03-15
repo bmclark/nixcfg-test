@@ -19,8 +19,6 @@
       "kvm"
       "qemu-libvirtd"
     ];
-    packages = [inputs.home-manager.packages.${pkgs.system}.default];
+    packages = [inputs.home-manager.packages.${pkgs.stdenv.hostPlatform.system}.default];
   };
-  #home-manager.users.bclark =
-  #  import ../../../home/bclark/${config.networking.hostName}.nix;
 }

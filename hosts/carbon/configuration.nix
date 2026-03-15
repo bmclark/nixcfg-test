@@ -1,7 +1,11 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{pkgs, ...}: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -11,35 +15,24 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Plymouth boot splash: manufacturer logo (bgrt) with Dracula background
+  boot.plymouth = {
+    enable = true;
+    theme = "bgrt";
+  };
+  boot.initrd.systemd.enable = true; # Required for smooth plymouth transitions
+
   networking.hostName = "carbon"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
   networking.networkmanager.enable = true;
   networking.networkmanager.unmanaged = ["interface-name:ve-*"];
   # Set your time zone.
-  time.timeZone = "Americas/New_York";
+  time.timeZone = "America/New_York";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # i18n.extraLocaleSettings = {
-  #   LC_ADDRESS = "de_DE.UTF-8";
-  #   LC_IDENTIFICATION = "de_DE.UTF-8";
-  #   LC_MEASUREMENT = "de_DE.UTF-8";
-  #   LC_MONETARY = "de_DE.UTF-8";
-  #   LC_NAME = "de_DE.UTF-8";
-  #   LC_NUMERIC = "de_DE.UTF-8";
-  #   LC_PAPER = "de_DE.UTF-8";
-  #   LC_TELEPHONE = "de_DE.UTF-8";
-  #   LC_TIME = "de_DE.UTF-8";
-  # };
-
-  # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -47,24 +40,6 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    #  wget
-    git
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -78,26 +53,155 @@
     xwayland.enable = true;
   };
 
-  programs.fish.enable = true;
+  # --- Login Manager (greetd + tuigreet) ---
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --cmd Hyprland";
+        user = "greeter";
+      };
+    };
+  };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
+  # ----- ThinkPad X1 Carbon Gen 6 ------------------------------------------
+
+  # TLP: battery charge thresholds + power management
+  services.tlp = {
+    enable = true;
+    settings = {
+      # Battery charge thresholds preserve long-term battery health.
+      # Charging starts at 75%, stops at 80% when on AC.
+      START_CHARGE_THRESH_BAT0 = 75;
+      STOP_CHARGE_THRESH_BAT0 = 80;
+
+      # CPU governor: powersave on battery, performance on AC
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      # Intel CPU energy/performance policy (EPP)
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "balance_power";
+
+      # Intel turbo boost: on when plugged in, off on battery
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+
+      # WiFi power saving on battery
+      WIFI_PWR_ON_AC = "off";
+      WIFI_PWR_ON_BAT = "on";
+
+      # USB autosuspend
+      USB_AUTOSUSPEND = 1;
+
+      # Runtime PM for PCI(e) devices on battery
+      RUNTIME_PM_ON_AC = "on";
+      RUNTIME_PM_ON_BAT = "auto";
+
+      # NVMe power saving
+      AHCI_RUNTIME_PM_ON_AC = "on";
+      AHCI_RUNTIME_PM_ON_BAT = "auto";
+    };
+  };
+  # Prevent conflicts: power-profiles-daemon and tlp are mutually exclusive
+  services.power-profiles-daemon.enable = false;
+
+  # Thermald: Intel thermal daemon for ThinkPad thermal management
+  services.thermald.enable = true;
+
+  # Firmware updates via fwupd (ThinkPads get BIOS/firmware updates via LVFS)
+  services.fwupd.enable = true;
+
+  # TrackPoint & touchpad tuning
+  # The X1C6 has a good TrackPoint — bump sensitivity and enable tap-to-click on touchpad
+  services.libinput = {
+    enable = true;
+    touchpad = {
+      tapping = true;
+      naturalScrolling = false;
+      disableWhileTyping = true;
+      clickMethod = "clickfinger"; # 2-finger = right-click, 3-finger = middle
+    };
+  };
+
+  # Fingerprint reader (Synaptics on X1C6)
+  # Enroll with: fprintd-enroll
+  services.fprintd.enable = true;
+
+  # Brightness control (for waybar backlight module)
+  environment.systemPackages = with pkgs; [
+    git
+    brightnessctl
+    powertop # battery diagnostics: sudo powertop
+    vulnix # CVE scanner: vulnix --system
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default # agenix CLI for secrets management
+  ];
+
+  # ----- Audio System (PipeWire) -----
+  # PipeWire provides low-latency audio while keeping PulseAudio/JACK compatibility for legacy applications.
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa = {
+      enable = true;
+      support32Bit = true;
+    };
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # ----- Bluetooth -----
+  # BlueZ with Blueman offers full-featured Bluetooth management with battery reporting for modern peripherals.
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    package = pkgs.bluez.override {enableExperimental = true;};
+    settings = {
+      General = {
+        Experimental = true;
+        FastConnectable = true;
+      };
+      Policy.AutoEnable = true;
+    };
+  };
+  services.blueman.enable = true;
+
+  # ----- Desktop Environment Services -----
+  # Provide desktop niceties like automounting, GVFS backends, and policy authentication prompts.
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+  services.tumbler.enable = true;
+  security.polkit.enable = true;
+
+  # ----- XDG Portals -----
+  # Enable Wayland portals for file picking, screenshots, and screen sharing integration.
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-hyprland
+    ];
+  };
+
+  services.gnome.gnome-keyring.enable = true;
+
+  programs.zsh.enable = true;
+
   networking.nat.enable = true;
   networking.nat.internalInterfaces = ["ve-+"];
   networking.nat.externalInterface = "enp1s0";
 
-  #security.sudo.wheelNeedsPassword = false;
-
   security.sudo.extraConfig = "bclark ALL=(ALL) NOPASSWD: ALL";
 
-  # networking.firewall.enable = false;
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  security.pam.services.login.enableGnomeKeyring = true;
+
+  # ----- Firewall ----------------------------------------------------------
+  # Allow SSH inbound only; all other inbound traffic is dropped.
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [22];
+    allowedUDPPorts = [];
+  };
+
+  system.stateVersion = "24.11";
 }

@@ -1,153 +1,229 @@
+# Hyprland window manager with full rice: switchable theme, blur, window rules,
+# gestures, and workspace assignments. Aligned with ADR-003 (keyboard strategy)
+# and ADR-004 (theme standardization).
 {
   config,
   lib,
+  pkgs,
+  theme,
   ...
 }:
 with lib; let
   cfg = config.features.desktop.hyprland;
+  palette = theme.palette;
+  stripHash = color: builtins.replaceStrings ["#"] [""] color;
+  # Simple rgba helper keeps Dracula palette usage consistent throughout the config.
+  rgba = color: alpha: "rgba(${stripHash color}${alpha})";
 in {
   options.features.desktop.hyprland.enable = mkEnableOption "hyprland config";
 
   config = mkIf cfg.enable {
+    home.sessionVariables = {
+      XDG_CURRENT_DESKTOP = "Hyprland";
+      XDG_SESSION_DESKTOP = "Hyprland";
+      XDG_SESSION_TYPE = "wayland";
+      SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/keyring/ssh";
+    };
+
     wayland.windowManager.hyprland = {
       enable = true;
-      settings = {
-        xwayland = {
-          force_zero_scaling = true;
-        };
+      # hyprexpo plugin disabled: incompatible with current Hyprland (missing HookSystemManager.hpp)
+      # plugins = [pkgs.hyprlandPlugins.hyprexpo];
+      systemd = {
+        enable = true;
+        variables = ["--all"];
+      };
 
+      settings = {
+        # --- XWayland ---------------------------------------------------------
+        xwayland.force_zero_scaling = true;
+
+        # --- Runtime Environment ---------------------------------------------
         exec-once = [
+          "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE"
+          "dbus-update-activation-environment --systemd --all"
+          # Wallpaper daemon (swww) with initial random wallpaper
+          "swww-daemon && sleep 0.5 && $HOME/.local/bin/wallpaper-random"
           "waybar"
-          "hyprpaper"
-          "hypridle"
-          "wl-paste -p -t text --watch clipman store -P --histpath=\"~/.local/share/clipman-primary.json\""
+          "blueman-applet"
+          # Dropdown terminal: starts hidden in special workspace, toggled with Super+`
+          "[workspace special:terminal silent] $TERMINAL"
         ];
 
         env = [
           "XCURSOR_SIZE,32"
           "WLR_NO_HARDWARE_CURSORS,1"
-          "GTK_THEME,Dracula"
+          "XDG_CURRENT_DESKTOP,Hyprland"
+          "XDG_SESSION_DESKTOP,Hyprland"
+          "XDG_SESSION_TYPE,wayland"
+          "GTK_THEME,${theme.gtkThemeName}"
         ];
 
+        # --- Input -----------------------------------------------------------
         input = {
           kb_layout = "us";
           kb_variant = "";
           kb_model = "";
           kb_rules = "";
-          kb_options = "ctrl:nocaps";
+          kb_options = "ctrl:nocaps"; # CapsLock → Ctrl
           follow_mouse = 1;
-
-          touchpad = {
-            natural_scroll = false;
-          };
-
           sensitivity = 0;
+          touchpad.natural_scroll = false;
         };
 
+        # --- Core Layout -----------------------------------------------------
         general = {
           gaps_in = 5;
-          gaps_out = 5;
+          gaps_out = 10; # Slightly more outer gap for breathing room
           border_size = 1;
-          "col.active_border" = "rgba(9742b5ee) rgba(9742b5ee) 45deg";
-          "col.inactive_border" = "rgba(595959aa)";
           layout = "dwindle";
+          # Dracula palette for border gradients (#ff79c6 pink → #bd93f9 purple)
+          "col.active_border" =
+            "${rgba palette.pink "ee"} ${rgba palette.purple "ee"} 45deg";
+          "col.inactive_border" = rgba palette.comment "aa";
         };
 
+        # --- Decorations -----------------------------------------------------
         decoration = {
-          "col.shadow" = "rgba(1E202966)";
-          drop_shadow = true;
-          shadow_range = 60;
-          shadow_offset = "1 2";
-          shadow_render_power = 3;
-          shadow_scale = 0.97;
-          rounding = 8;
+          rounding = 12;
+          active_opacity = 0.95; # 0.95 is more readable than 0.9
+          inactive_opacity = 0.5;
           blur = {
             enabled = true;
-            size = 3;
+            size = 6;
             passes = 3;
+            vibrancy = 0.20;
+            contrast = 1.0;
+            brightness = 0.9;
+            noise = 0.01;
+            xray = true; # Blurred layers (waybar) show through for glass effect
+            popups = true;
+            popups_ignorealpha = 0.25;
           };
-          active_opacity = 0.9;
-          inactive_opacity = 0.5;
+          shadow = {
+            enabled = true;
+            range = 18;
+            render_power = 3;
+            ignore_window = true;
+            offset = "0 6";
+            scale = 1.0;
+            color = rgba palette.bg "66";
+          };
         };
 
+        # --- Animations ------------------------------------------------------
         animations = {
           enabled = true;
-          bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+          bezier = [
+            "easeOutQuint, 0.23, 1, 0.32, 1"
+            "easeInOutCubic, 0.65, 0.05, 0.36, 1"
+            "quick, 0.15, 0, 0.1, 1"
+          ];
           animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
-            "border, 1, 10, default"
-            "borderangle, 1, 8, default"
-            "fade, 1, 7, default"
-            "workspaces, 1, 6, default"
+            "windowsIn, 1, 6, easeOutQuint, popin 85%"
+            "windowsOut, 1, 5, easeInOutCubic, popin 80%"
+            "windowsMove, 1, 6, easeInOutCubic"
+            "border, 1, 8, easeInOutCubic"
+            "borderangle, 1, 8, easeInOutCubic"
+            "fadeIn, 1, 6, easeOutQuint"
+            "fadeOut, 1, 6, quick"
+            "layers, 1, 6, easeOutQuint"
+            "workspaces, 1, 7, easeOutQuint, slidefade 40%"
           ];
         };
 
+        # --- Window Management -----------------------------------------------
         dwindle = {
           pseudotile = true;
           preserve_split = true;
         };
 
-        master = {};
-
-        gestures = {
-          workspace_swipe = false;
-        };
-
-        windowrule = [
-          "float, file_progress"
-          "float, confirm"
-          "float, dialog"
-          "float, download"
-          "float, notification"
-          "float, error"
-          "float, splash"
-          "float, confirmreset"
-          "float, title:Open File"
-          "float, title:branchdialog"
-          "float, Lxappearance"
-          "float, Wofi"
-          "float, dunst"
-          "animation none,Wofi"
-          "float,viewnior"
-          "float,feh"
-          "float, pavucontrol-qt"
-          "float, pavucontrol"
-          "float, file-roller"
-          "fullscreen, wlogout"
-          "float, title:wlogout"
-          "fullscreen, title:wlogout"
-          "idleinhibit focus, mpv"
-          "idleinhibit fullscreen, firefox"
-          "float, title:^(Media viewer)$"
-          "float, title:^(Volume Control)$"
-          "float, title:^(Picture-in-Picture)$"
-          "size 800 600, title:^(Volume Control)$"
-          "move 75 44%, title:^(Volume Control)$"
+        # Touchpad gesture: 3-finger swipe to change workspace (new syntax for 0.51+)
+        gesture = [
+          "3, horizontal, workspace"
         ];
 
-        "$mainMod" = "SUPER";
+        # --- Layer Rules: frosted glass on overlays (0.53+ syntax) -----------
+        layerrule = [
+          "blur on, ignore_alpha 0.1, match:namespace gtk-layer-shell"
+          "blur on, ignore_alpha 0.1, match:namespace waybar"
+          "blur on, ignore_alpha 0.1, match:namespace wofi"
+        ];
 
+        # --- Window Rules (0.48+ syntax) --------------------------------------
+        windowrule = [
+          # Float dialog-like windows automatically
+          "float on, match:class ^(?i:file_progress|confirm|dialog|download|notification|error|splash|confirmreset)$"
+          "float on, match:title ^(Open File|Save File|branchdialog)$"
+
+          # Application-specific float rules
+          "float on, match:class ^(Wofi|dunst|Viewnior|feh|blueman-manager)$"
+          "float on, match:class ^(pavucontrol(-qt)?|org.gnome.FileRoller)$"
+          "animation none, match:class ^(Wofi)$"
+
+          # Volume control sizing and positioning
+          "float on, match:title ^(Volume Control)$"
+          "size 800 600, match:title ^(Volume Control)$"
+          "move 75 44%, match:title ^(Volume Control)$"
+
+          # Picture-in-Picture: float, pin, and resize
+          "float on, pin on, size 480 270, match:title ^(Picture-in-Picture)$"
+
+          # Media / full-screen rules (idleinhibit removed in 0.53+, use hypridle)
+          "fullscreen on, float on, match:title ^(wlogout)$"
+
+          # Workspace assignments
+          "workspace 1, match:class ^(Emacs)$"
+          "workspace 2, match:class ^(firefox)$"
+          "workspace 3, match:class ^(code-url-handler)$" # VS Code
+
+          # Force full opacity on browsers (blur looks bad through text)
+          "opacity 1.0 override 1.0, match:class ^(firefox|chromium-browser)$"
+
+          # Dropdown terminal: float and size for special workspace
+          "float on, size 100% 50%, move 0 0, animation slide, match:workspace name:special:terminal"
+        ];
+
+        # --- Keybindings -----------------------------------------------------
+        "$mainMod" = "SUPER";
+        # Ctrl-focused bindings follow CUA conventions, Super controls the WM, and Emacs-style navigation
+        # handles directional focus per ADR-003.
         bind = [
-          "$mainMod, return, exec, kitty"
-          "$mainMod, t, exec, kitty -e fish -c 'neofetch; exec fish'"
-          "$mainMod SHIFT, e, exec, kitty"
-          "$mainMod, o, exec, thunar"
-          "$mainMod, Escape, exec, wlogout -p layer-shell"
+          # Core launcher bindings
+          "$mainMod, Return, exec, $TERMINAL"
+          "$mainMod, D, exec, wofi --show drun"
           "$mainMod, Space, togglefloating"
-          "$mainMod, q, killactive"
-          "$mainMod, M, exit"
           "$mainMod, F, fullscreen"
-          "$mainMod, V, togglefloating"
-          "$mainMod, D, exec, wofi --show drun --allow-images"
-          "$mainMod SHIFT, S, exec, bemoji"
-          "$mainMod, P, exec, wofi-pass"
-          "$mainMod SHIFT, P, pseudo"
-          "$mainMod, J, togglesplit"
-          "$mainMod, left, movefocus, l"
-          "$mainMod, right, movefocus, r"
-          "$mainMod, up, movefocus, u"
-          "$mainMod, down, movefocus, d"
+          "$mainMod, E, exec, thunar"
+          "$mainMod, L, exec, hyprlock"
+          "$mainMod, Escape, exec, wlogout -p layer-shell"
+          "$mainMod, comma, workspace, r-1"
+          "$mainMod, period, workspace, r+1"
+
+          # Dropdown terminal (Super+` toggles special:terminal workspace)
+          "$mainMod, grave, togglespecialworkspace, terminal"
+
+          # Wallpaper controls
+          "$mainMod SHIFT, W, exec, $HOME/.local/bin/wallpaper-random"
+
+          # CUA / application bindings
+          "ALT, F4, killactive"
+          "ALT, Tab, cyclenext"
+          "ALT SHIFT, Tab, cyclenext, prev"
+
+          # Emacs-style focus navigation
+          "CTRL ALT, B, movefocus, l"
+          "CTRL ALT, F, movefocus, r"
+          "CTRL ALT, P, movefocus, u"
+          "CTRL ALT, N, movefocus, d"
+
+          # Emacs-style window movement
+          "CTRL ALT SHIFT, B, movewindow, l"
+          "CTRL ALT SHIFT, F, movewindow, r"
+          "CTRL ALT SHIFT, P, movewindow, u"
+          "CTRL ALT SHIFT, N, movewindow, d"
+
+          # Workspace management
           "$mainMod, 1, workspace, 1"
           "$mainMod, 2, workspace, 2"
           "$mainMod, 3, workspace, 3"
@@ -168,19 +244,19 @@ in {
           "$mainMod SHIFT, 8, movetoworkspace, 8"
           "$mainMod SHIFT, 9, movetoworkspace, 9"
           "$mainMod SHIFT, 0, movetoworkspace, 10"
-          "$mainMod, mouse_down, workspace, e+1"
-          "$mainMod, mouse_up, workspace, e-1"
+
+          # Screenshots
+          "$mainMod SHIFT, S, exec, bash -lc 'grim -g \"$(slurp)\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
+          "$mainMod SHIFT, Print, exec, bash -lc 'grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
+
+          # Workspace cycling with mouse wheel
+          "$mainMod, mouse_down, workspace, r-1"
+          "$mainMod, mouse_up, workspace, r+1"
         ];
 
         bindm = [
           "$mainMod, mouse:272, movewindow"
           "$mainMod, mouse:273, resizewindow"
-        ];
-
-        windowrulev2 = [
-          "workspace 1,class:(Emacs)"
-          "workspace 3,opacity 1.0, class:(brave-browser)"
-          "workspace 4,class:(com.obsproject.Studio)"
         ];
       };
     };

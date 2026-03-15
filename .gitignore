@@ -1,0 +1,24 @@
+# Nix build/link artifacts
+/result
+/result-*
+
+# Local development environments
+/.direnv/
+/.devenv/
+
+# Local caches and ephemeral work dirs
+/.cache/
+/home-tmp/
+
+# Editor and OS noise
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Local databases and logs
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+*.log

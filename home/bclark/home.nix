@@ -11,7 +11,12 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "bclark";
-  home.homeDirectory = "/home/bclark";
+  home.homeDirectory =
+    lib.mkDefault (
+      if pkgs.stdenv.isDarwin
+      then "/Users/bclark"
+      else "/home/bclark"
+    );
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -27,6 +32,7 @@
   home.packages = with pkgs; [
     kitty
     wofi
+    just
 #    firefox
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
