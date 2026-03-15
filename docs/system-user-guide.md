@@ -46,7 +46,9 @@ On `carbon`:
 - press `Super+Return` to open Ghostty
 
 On `macmini`:
-- open Ghostty from the app launcher
+- open Ghostty from the app launcher (installed via Homebrew cask — `darwin/common/homebrew.nix`)
+- if fresh setup: run `just darwin-switch` first to install Ghostty and all other Homebrew casks
+- Karabiner-Elements will need Accessibility and Input Monitoring permissions granted manually in System Settings > Privacy & Security
 
 ### 2. Start tmux
 
@@ -80,6 +82,15 @@ emacsclient -c
 Then use `C-c p p` to switch into a project and let Emacs restore the IDE layout.
 
 ## Moving Around The System
+
+### macOS (macmini)
+
+macOS uses native desktop management instead of Hyprland:
+- use Mission Control (`Ctrl+Up`) and Spaces for virtual desktops
+- use `Cmd+Tab` for app switching (remapped to `Ctrl+Tab` by Karabiner)
+- use Raycast for app launching and productivity shortcuts
+- use `drs` alias to rebuild the nix-darwin config: `drs` (equivalent of `nrs` on Linux)
+- use `drt` alias to check config without switching: `drt`
 
 ### Hyprland
 
@@ -190,10 +201,12 @@ Use:
 
 ### Pattern: quick check without disturbing your main layout
 
-Use the Hyprland dropdown terminal with `Super+\`` for:
+On `carbon`, use the Hyprland dropdown terminal with `Super+\`` for:
 - one-off git status
 - package/version checks
 - a quick `journalctl`, `kubectl`, or `rg`
+
+On `macmini`, use a Ghostty tab (`Ctrl+Shift+T`) for the same purpose — there is no dropdown terminal on macOS.
 
 ### Pattern: machine-wide utility commands from any directory
 
@@ -230,11 +243,13 @@ Use plain `just` when you want the current repository's own recipes.
 3. Use `git cs -m "message"` for a signed commit
 4. Use `rbw login` and `rbw get <item>` for terminal secret retrieval
 
-### Pattern: quick OCR or document extraction
+### Pattern: quick OCR or document extraction (Linux only)
 
 1. Press `Super+Ctrl+O` to OCR a selected screen region
 2. Use `ocrimg file.png` for images or `ocrpdf file.pdf 2` for a PDF page
 3. Open PDFs in `zathura` when you want a keyboard-friendly viewer
+
+Note: OCR functions are not yet available on macOS. See `docs/mac-parity-todo.md` for planned alternatives.
 
 ## Where To Learn More
 

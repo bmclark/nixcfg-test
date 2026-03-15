@@ -1,5 +1,7 @@
 # Chromium: fallback browser for sites broken by Firefox privacy hardening.
 # Minimal privacy flags + essential extensions only.
+# Linux-only: pkgs.chromium is not available on aarch64-darwin.
+# macOS uses Google Chrome cask via darwin/common/homebrew.nix instead.
 {
   config,
   lib,
@@ -11,7 +13,7 @@ with lib; let
 in {
   options.features.desktop.chromium.enable = mkEnableOption "enable Chromium browser";
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && pkgs.stdenv.isLinux) {
     programs.chromium = {
       enable = true;
       extensions = [

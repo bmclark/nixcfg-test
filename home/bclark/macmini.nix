@@ -1,5 +1,9 @@
 # macOS Mac Mini (macmini) -- aarch64-darwin with nix-darwin.
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ../common/default.nix
     ./dotfiles
@@ -30,6 +34,30 @@
     };
     editors = {
       emacs.enable = true;
+    };
+  };
+
+  # Weekly flake update timer (Sunday 9am) -- mirrors carbon's systemd timer.
+  launchd.agents.flake-update = {
+    enable = true;
+    config = {
+      Label = "org.nixos.flake-update";
+      ProgramArguments = [
+        "${pkgs.nix}/bin/nix"
+        "flake"
+        "update"
+        "--flake"
+        "${config.home.homeDirectory}/nixcfg"
+      ];
+      StartCalendarInterval = [
+        {
+          Weekday = 7; # Sunday
+          Hour = 9;
+          Minute = 0;
+        }
+      ];
+      StandardOutPath = "/tmp/flake-update.log";
+      StandardErrorPath = "/tmp/flake-update.err";
     };
   };
 }

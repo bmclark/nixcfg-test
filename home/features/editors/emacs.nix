@@ -58,21 +58,42 @@ in {
       pkg-config # Needed by jinx native module compilation
     ];
 
-    # Emacs daemon: runs as a systemd user service so emacsclient starts instantly.
+    # Jinx spell checker compiles a native module on first use and needs
+    # enchant-2.pc to find headers/libs via pkg-config.
+    # Set PKG_CONFIG_PATH in both shell sessions and the platform daemon.
+    home.sessionVariablesExtra = ''
+      export PKG_CONFIG_PATH="${pkgs.enchant_2.dev}/lib/pkgconfig''${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    '';
+
+    # --- Linux: systemd emacs daemon ---
     # Use `emacsclient -c` for GUI frames, `emacsclient -t` for terminal.
-    services.emacs = {
+    services.emacs = lib.mkIf pkgs.stdenv.isLinux {
       enable = true;
       defaultEditor = false;
       client.enable = true;
       startWithUserSession = "graphical";
     };
+    systemd.user.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
+      PKG_CONFIG_PATH = "${pkgs.enchant_2.dev}/lib/pkgconfig";
+    };
 
-    # Jinx spell checker compiles a native module on first use and needs
-    # enchant-2.pc to find headers/libs via pkg-config.
-    # Set PKG_CONFIG_PATH in both shell sessions and the systemd Emacs daemon.
-    home.sessionVariablesExtra = ''
-      export PKG_CONFIG_PATH="${pkgs.enchant_2.dev}/lib/pkgconfig''${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-    '';
-    systemd.user.sessionVariables.PKG_CONFIG_PATH = "${pkgs.enchant_2.dev}/lib/pkgconfig";
+    # --- macOS: launchd emacs daemon ---
+    launchd.agents.emacs = lib.mkIf pkgs.stdenv.isDarwin {
+      enable = true;
+      config = {
+        Label = "org.gnu.emacs.daemon";
+        ProgramArguments = [
+          "${config.programs.emacs.finalPackage}/bin/emacs"
+          "--fg-daemon"
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        StandardOutPath = "/tmp/emacs-daemon.log";
+        StandardErrorPath = "/tmp/emacs-daemon.err";
+        EnvironmentVariables = {
+          PKG_CONFIG_PATH = "${pkgs.enchant_2.dev}/lib/pkgconfig";
+        };
+      };
+    };
   };
 }

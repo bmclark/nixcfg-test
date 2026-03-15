@@ -181,6 +181,11 @@ Practical effect:
 
 See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) and [docs/keyboard-layout-strategy.md](../../../docs/keyboard-layout-strategy.md).
 
+## Platform Notes
+
+- **Chromium:** Linux-only (`pkgs.chromium` is not available on aarch64-darwin). On macOS, Google Chrome is installed via Homebrew cask (`darwin/common/homebrew.nix`) as the Chromium replacement.
+- **Firefox:** available on both platforms via nixpkgs.
+
 ## Design Notes
 
 - Hyprland owns window and workspace movement; tmux and Emacs should not be used as substitutes for desktop-level workspace switching.
@@ -188,4 +193,4 @@ See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) and [doc
 - The keyboard model is intentionally split: `Ctrl` for apps, `Super` for window management.
 - Browser strategy is Firefox first, Chromium second.
 
-See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md), [ADR-007](../../../docs/adr/ADR-007-hyprland-configuration-modernization.md), and [ADR-009](../../../docs/adr/ADR-009-browser-strategy.md).
+See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md), [ADR-007](../../../docs/adr/ADR-007-hyprland-configuration-modernization.md), [ADR-009](../../../docs/adr/ADR-009-browser-strategy.md), and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md).

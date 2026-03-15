@@ -1,16 +1,43 @@
-# Homebrew on macOS: minimized to only what requires system-level access.
-# Karabiner-Elements needs Accessibility + Input Monitoring permissions,
-# which makes it unsuitable for pure nixpkgs management.
-# Ghostty removed -- installed manually or via nixpkgs config-only approach.
+# Homebrew on macOS: declarative management of casks, formulae, and Mac App Store apps.
+# Karabiner-Elements needs Accessibility + Input Monitoring permissions (unsuitable for nixpkgs).
+# Ghostty has no nixpkgs macOS build; config is shared via home/features/cli/ghostty.nix.
+# onActivation.cleanup = "zap" removes anything not declared here -- add before installing.
 {...}: {
   homebrew = {
     enable = true;
     onActivation.cleanup = "zap";
-    taps = [
-      "homebrew/cask"
+
+    # No explicit taps needed -- homebrew/core and homebrew/cask are built-in.
+
+    brews = [
+      "mas" # Mac App Store CLI (used by masApps below)
+      "gemini-cli" # Google Gemini CLI (not in nixpkgs)
+      "tdd-guard" # TDD file watcher (not in nixpkgs)
     ];
+
     casks = [
-      "karabiner-elements" # Requires system-level keyboard access
+      "audacity" # Audio editor
+      "chatgpt" # OpenAI ChatGPT desktop app
+      "claude" # Anthropic Claude desktop app
+      "codex" # OpenAI Codex desktop app
+      "ghostty" # Terminal emulator (no nixpkgs macOS build)
+      "google-chrome" # Chromium replacement on macOS (nixpkgs chromium unavailable on aarch64-darwin)
+      "karabiner-elements" # Keyboard remapping (requires system-level accessibility access)
+      "logitech-g-hub" # Logitech peripheral management
+      "raycast" # Launcher / productivity tool
+      "spotify" # Music streaming
     ];
+
+    masApps = {
+      "Bitwarden" = 1352778147;
+      "Capital One Shopping" = 1477110326;
+      "GarageBand" = 682658836;
+      "iMovie" = 408981434;
+      "Keynote" = 409183694;
+      "Numbers" = 409203825;
+      "Pages" = 409201541;
+      "uBlock Origin Lite" = 6745342698;
+      "Xcode" = 497799835;
+    };
   };
 }

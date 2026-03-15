@@ -220,6 +220,13 @@ The shell includes a few fast tmux layouts:
 
 Use these when you want a ready-made starting point instead of manually splitting panes.
 
+## Platform Notes
+
+- **Clipboard:** `cpath` uses `pbcopy` on macOS and `wl-copy` on Linux (Nix interpolation selects at build time)
+- **OCR functions:** `ocrimg`, `ocrpdf`, `ocrshot` are Linux-only (use Wayland screenshot tools)
+- **Darwin aliases:** `drs` (darwin-rebuild switch) and `drt` (darwin-rebuild check) are available on macOS only
+- **Ghostty:** installed from nixpkgs on Linux, from Homebrew cask on macOS — config is shared
+
 ## Design Notes
 
 - Ghostty has no auto-logging; tmux logging fills that gap.
@@ -227,4 +234,4 @@ Use these when you want a ready-made starting point instead of manually splittin
 - tmux copy mode is `vi` only inside copy mode; shell editing stays Emacs-style.
 - The shell is intentionally Emacs-first, matching the wider keyboard strategy across the repo.
 
-See [ADR-002](../../../docs/adr/ADR-002-shell-and-terminal-choices.md), [ADR-008](../../../docs/adr/ADR-008-tmux-integration.md), and [ADR-010](../../../docs/adr/ADR-010-shell-plugin-management.md).
+See [ADR-002](../../../docs/adr/ADR-002-shell-and-terminal-choices.md), [ADR-008](../../../docs/adr/ADR-008-tmux-integration.md), [ADR-010](../../../docs/adr/ADR-010-shell-plugin-management.md), and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md).

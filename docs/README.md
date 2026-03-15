@@ -49,7 +49,8 @@ features.cli.zsh.enable = true;
 - zsh shell with Starship prompt (temporary until Powerlevel10k migration)
 - Emacs with Dracula theme
 - Karabiner-Elements for macOS keyboard remapping
-- Dracula theme definitions in `home/themes/dracula.nix`
+- Switchable themes (Dracula, Tokyo Night) in `home/themes/`
+- Declarative Homebrew management for macOS apps via `darwin/common/homebrew.nix`
 
 ## For More Details
 Explore the [ADR directory](adr/) for detailed architectural decisions and rationale behind the configuration choices.

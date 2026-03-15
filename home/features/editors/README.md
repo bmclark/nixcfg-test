@@ -143,10 +143,15 @@ Practical rule:
 - Use Ghostty + tmux when the task is terminal-first.
 - Use the Emacs terminal panel when you need shell access closely tied to the file you are editing.
 
+## Platform Notes
+
+- **Emacs daemon:** runs via `systemd` on Linux (`services.emacs`) and via `launchd` on macOS (`launchd.agents.emacs`). Both use `--fg-daemon` and set `PKG_CONFIG_PATH` for jinx spell checking.
+- `emacsclient -c` and `emacsclient -t` work identically on both platforms.
+
 ## Design Notes
 
 - The custom bindings are intentionally compatible with the VS Code Emacs MCX setup.
 - Emacs is treated as the primary IDE, not a secondary editor.
 - `GUIDE.md` is the deep manual; this README should stay short and operational.
 
-See [GUIDE.md](GUIDE.md) for the full user guide and [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) for the broader keyboard model.
+See [GUIDE.md](GUIDE.md) for the full user guide, [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) for the broader keyboard model, and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md) for platform parity decisions.

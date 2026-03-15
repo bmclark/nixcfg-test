@@ -1,6 +1,7 @@
 # Ghostty terminal emulator with switchable theme, JetBrainsMono Nerd Font, and clipboard config.
 # No auto-logging support (GitHub #5209) -- use tmux-logging plugin instead.
-# Dropdown terminal is configured in hyprland.nix via special workspace.
+# Linux: installed from nixpkgs. macOS: installed via Homebrew cask (darwin/common/homebrew.nix).
+# Dropdown terminal is configured in hyprland.nix via special workspace (Linux only).
 {
   lib,
   config,
@@ -65,8 +66,7 @@ in {
       home.packages = [pkgs.ghostty];
       xdg.configFile."ghostty/config".text = configText;
     })
-    # macOS: config-only (Ghostty.app installed manually or via Homebrew)
-    # Homebrew ghostty cask removed per Phase 9 -- user manages app install.
+    # macOS: config-only (Ghostty.app installed via darwin/common/homebrew.nix cask)
     (lib.mkIf pkgs.stdenv.isDarwin {
       home.sessionVariables.TERMINAL = "ghostty";
       home.file.".config/ghostty/config".text = configText;

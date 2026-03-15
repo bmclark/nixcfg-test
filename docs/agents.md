@@ -83,6 +83,9 @@ Start here:
 
 - NixOS: `hosts/carbon/default.nix`, `hosts/carbon/configuration.nix`, `hosts/common/default.nix`
 - macOS: `darwin/macmini/default.nix`, `darwin/macmini/configuration.nix`, `darwin/common/default.nix`
+- Homebrew / Mac App Store apps: `darwin/common/homebrew.nix`
+
+**Warning:** `homebrew.nix` has `onActivation.cleanup = "zap"` enabled. Any brew, cask, or Mac App Store app not declared in that file will be **deleted** on the next `just darwin-switch`. Always add new apps to `homebrew.nix` before switching.
 
 ### If the task changes shared user configuration
 
@@ -171,6 +174,7 @@ Use this as the first lookup table.
 | Themes | `home/themes/*.nix`, `flake.nix`, consuming modules |
 | NixOS host behavior | `hosts/carbon/configuration.nix`, `hosts/carbon/default.nix`, `hosts/common/default.nix` |
 | macOS host behavior | `darwin/macmini/configuration.nix`, `darwin/macmini/default.nix`, `darwin/common/default.nix` |
+| Homebrew / Mac App Store apps | `darwin/common/homebrew.nix` |
 | Build / switch / test commands | `justfile`, `flake.nix` |
 | Secrets / agenix | `secrets/secrets.nix`, host config, consuming module |
 | Project templates | `templates/<name>/`, `flake.nix` |
@@ -301,6 +305,7 @@ Load only the relevant documents.
 - `docs/adr/ADR-010-shell-plugin-management.md`: shell strategy
 - `docs/adr/ADR-012-switchable-theme-system.md`: theme switching design
 - `docs/adr/ADR-013-documentation-maintenance-for-user-guides.md`: docs maintenance expectations
+- `docs/adr/ADR-014-macos-platform-parity.md`: macOS platform parity decisions and Homebrew strategy
 
 ---
 
@@ -318,6 +323,10 @@ Check these before changing code:
 8. Linux VS Code and macOS VS Code differ; platform guards matter.
 9. Some docs describe aspirational structure. `flake.nix` and the concrete module files are authoritative.
 10. Use the actual current date in docs or ADR updates, not a guessed date.
+11. `pkgs.chromium` is not available on aarch64-darwin. The chromium module is guarded with `pkgs.stdenv.isLinux`. macOS uses Google Chrome via Homebrew cask.
+12. Emacs daemon uses `services.emacs` (systemd) on Linux and `launchd.agents.emacs` on macOS — do not use `services.emacs` without a Linux guard.
+13. Clipboard functions in zsh use `wl-copy` on Linux and `pbcopy` on macOS — use Nix interpolation for platform selection.
+14. Any new Homebrew cask, formula, or MAS app must be added to `darwin/common/homebrew.nix` before `darwin-switch` or `zap` will remove it.
 
 ---
 

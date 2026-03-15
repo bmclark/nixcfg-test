@@ -166,6 +166,10 @@ in {
         emacs = "emacsclient -c -a ''";
         ec = "emacsclient -c -a ''";
         et = "emacsclient -t -a ''";
+      } // lib.optionalAttrs pkgs.stdenv.isDarwin {
+        # Darwin-specific nix shortcuts
+        drs = "darwin-rebuild switch --flake .";
+        drt = "darwin-rebuild check --flake .";
       };
 
       # --- initContent with ordering ----------------------------------------
@@ -241,10 +245,10 @@ in {
           # Quick HTTP server in current directory
           serve() { python3 -m http.server "''${1:-8000}"; }
 
-          # Copy a path to the Wayland clipboard.
+          # Copy a path to the clipboard (pbcopy on macOS, wl-copy on Linux).
           cpath() {
             local target="''${1:?Usage: cpath <path>}"
-            realpath "$target" | tr -d '\n' | wl-copy
+            realpath "$target" | tr -d '\n' | ${if pkgs.stdenv.isDarwin then "pbcopy" else "wl-copy"}
             echo "Copied path: $(realpath "$target")"
           }
 
@@ -254,7 +258,8 @@ in {
             echo "Run 'nix-collect-garbage -d' to clean up"
           }
 
-          # OCR helpers for screenshots, images, and PDFs.
+          ${lib.optionalString pkgs.stdenv.isLinux ''
+          # OCR helpers for screenshots, images, and PDFs (Linux/Wayland only).
           ocrimg() {
             local file="''${1:?Usage: ocrimg <image>}"
             "$HOME/.local/bin/ocr-image" "$file"
@@ -266,7 +271,7 @@ in {
           ocrshot() {
             "$HOME/.local/bin/ocr-screenshot"
           }
-
+          ''}
           # Tmux workflow presets
           tdev() {
             tmux new-session -d -s dev -n editor
