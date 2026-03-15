@@ -10,6 +10,9 @@
 /.cache/
 /home-tmp/
 
+# Git worktrees
+/.worktrees/
+
 # Editor and OS noise
 .DS_Store
 *.swp
