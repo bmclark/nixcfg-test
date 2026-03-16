@@ -72,10 +72,18 @@ in {
 
       system.activationScripts.postActivation.text = mkAfter ''
         echo "configuring macOS Screen Sharing for ${allowedScreenSharingUsersCsv}" >&2
-        ${kickstart} -activate
-        ${kickstart} -configure -access -on -users ${escapeShellArg allowedScreenSharingUsersCsv} -privs -all
-        ${kickstart} -configure -allowAccessFor -specifiedUsers
-        ${kickstart} -restart -agent -console
+
+        # Disable Remote Management (ARD) — mutually exclusive with Screen Sharing
+        ${kickstart} -deactivate -configure -access -off 2>/dev/null || true
+
+        # Enable plain Screen Sharing (VNC on port 5900)
+        /bin/launchctl enable system/com.apple.screensharing 2>/dev/null || true
+        /bin/launchctl bootstrap system /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
+
+        # Restrict access to specified users via dscl
+        for user in ${escapeShellArgs allowedScreenSharingUsers}; do
+          /usr/bin/dscl . -merge /Groups/com.apple.access_screensharing GroupMembership "$user"
+        done
       '';
     })
   ];
