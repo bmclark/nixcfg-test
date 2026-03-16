@@ -107,6 +107,16 @@
 
   system.startup.chime = false;
 
+  power = {
+    restartAfterPowerFailure = true;
+    restartAfterFreeze = true;
+    sleep = {
+      computer = 0;  # Never sleep (always-on Mac Mini)
+      display = 60;  # Display sleeps after 60 minutes
+      harddisk = 0;  # Never spin down
+    };
+  };
+
   networking.applicationFirewall = {
     enable = true;
     allowSigned = true;
