@@ -48,6 +48,13 @@
       mru-spaces = false;
       launchanim = false;
       tilesize = 48;
+      mineffect = "scale";
+      minimize-to-application = true;
+      # Hot corners (0=disabled, 4=desktop, 10=display sleep, 13=lock screen, 14=quick note)
+      wvous-tl-corner = 13; # Lock Screen
+      wvous-tr-corner = 14; # Quick Note
+      wvous-bl-corner = 4;  # Desktop
+      wvous-br-corner = 10; # Display Sleep
     };
     finder = {
       FXPreferredViewStyle = "Nlsv";
