@@ -24,11 +24,15 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 | Physical Key | Sends | Purpose |
 |---|---|---|
 | Caps Lock | Ctrl | Emacs keybindings, app shortcuts |
-| Left Ctrl | Hyper (Ctrl+Alt+Shift+Cmd) | Window management |
-| Right Ctrl | Hyper (Ctrl+Alt+Shift+Cmd) | Window management |
+| Left Ctrl | Hyper (Ctrl+Alt+Cmd — no Shift) | Window management |
+| Right Ctrl | Hyper (Ctrl+Alt+Cmd — no Shift) | Window management |
 | Cmd | Cmd (unchanged) | macOS app shortcuts (copy/paste/save) |
 
-### Linux (Hyprland input / xkb)
+**Implementation:** CapsLock→Ctrl uses `simple_modifications`. Ctrl→Hyper uses `complex_modifications` (to avoid chaining with the CapsLock rule — `simple_modifications` operates on hardware key codes and should not chain, but `complex_modifications` is the safer, more explicit approach).
+
+**Hyper excludes Shift** so that Hyper+Shift combos (e.g., move window to workspace) are distinguishable from plain Hyper combos.
+
+### Linux (keyd remapping daemon)
 
 | Physical Key | Sends | Purpose |
 |---|---|---|
@@ -36,6 +40,27 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 | Left Ctrl | Hyper (Mod3) | Window management |
 | Right Ctrl | Hyper (Mod3) | Window management |
 | Super | Super (unchanged) | Unused for WM; available for OS-level if needed |
+
+**Implementation:** Standard xkb has no option for Ctrl→Hyper. Use `keyd` (a Linux key remapping daemon available in nixpkgs) configured via NixOS module. keyd runs at the evdev level (before Hyprland), so the remap is transparent to all apps.
+
+```
+[ids]
+*
+
+[main]
+capslock = leftcontrol
+leftcontrol = hyper
+rightcontrol = hyper
+```
+
+Hyprland sees the remapped Hyper as `Mod3`. Bind syntax uses `MOD3` (not "Hyper"):
+
+```
+$mainMod = MOD3
+bind = $mainMod, 1, workspace, 1
+```
+
+**New file:** `nixos/common/keyd.nix` — NixOS-level keyd service configuration.
 
 ### Resulting Modifier Namespaces
 
@@ -108,11 +133,12 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 
 ### Hyprland Changes
 
-- Replace all `Super` / `$mainMod` bindings with Hyper
-- Replace Ctrl+Alt+B/F/N/P focus bindings with Hyper+Arrow
-- Replace Ctrl+Alt+Shift+B/F/N/P move bindings with Hyper+Shift+Arrow
+- Replace `$mainMod = "SUPER"` with `$mainMod = "MOD3"` (Hyper via keyd)
+- Replace Ctrl+Alt+B/F/N/P focus bindings with MOD3+Arrow
+- Replace Ctrl+Alt+Shift+B/F/N/P move bindings with MOD3+Shift+Arrow
 - Update workspace app assignments to match shared layout
-- Remove Super+Shift+S screenshot binding → re-bind to Hyper+S or keep as-is (screenshots are Linux-only, no conflict)
+- Remove Super+Shift+S screenshot binding → re-bind to MOD3+S or keep as-is (screenshots are Linux-only, no conflict)
+- Remove existing `kb_options = "ctrl:nocaps"` from Hyprland input config (CapsLock remap now handled by keyd)
 
 ## Layer 3: Declarative Config Management
 
@@ -120,8 +146,9 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 
 | File | Purpose |
 |---|---|
-| `home/features/desktop/aerospace.nix` | Aerospace TOML config via `xdg.configFile`, macOS-only guard (`lib.mkIf pkgs.stdenv.isDarwin`) |
+| `home/features/desktop/aerospace.nix` | Aerospace TOML config via `xdg.configFile`, macOS-only guard (`lib.mkIf pkgs.stdenv.isDarwin`). Imported from the desktop module's `default.nix`. Aerospace auto-starts via its own login item (no launchd plist needed — the cask installer registers it). |
 | `home/features/desktop/keybindings.nix` | Shared keybinding constants and workspace/app mappings consumed by both aerospace.nix and hyprland.nix |
+| `nixos/common/keyd.nix` | NixOS-level keyd service for CapsLock→Ctrl + Ctrl→Hyper remapping (Linux only) |
 
 ### Modified Files
 
@@ -130,22 +157,48 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 | `home/features/desktop/karabiner.nix` | Replace Cmd→Ctrl remap with CapsLock→Ctrl + Ctrl→Hyper rules |
 | `home/features/desktop/hyprland.nix` | Update all binds to use Hyper, update workspace app assignments, arrow keys for focus/move |
 | `darwin/common/homebrew.nix` | Add `"aerospace"` cask |
+| `docs/adr/ADR-003-keyboard-remapping-strategy.md` | Update to reflect new modifier strategy (Hyper for WM, CapsLock→Ctrl) |
+| `docs/keyboard-layout-strategy.md` | Update to reflect new modifier strategy |
 
 ### Karabiner JSON Structure
 
 Generated declaratively in `karabiner.nix`. Key rules:
 
+CapsLock→Ctrl via `simple_modifications` (hardware-level, no chaining risk):
+
 ```json
 {
   "simple_modifications": [
-    { "from": { "key_code": "caps_lock" }, "to": [{ "key_code": "left_control" }] },
-    { "from": { "key_code": "left_control" }, "to": [{ "key_code": "left_shift", "modifiers": ["left_control", "left_option", "left_command"] }] },
-    { "from": { "key_code": "right_control" }, "to": [{ "key_code": "right_shift", "modifiers": ["right_control", "right_option", "right_command"] }] }
+    { "from": { "key_code": "caps_lock" }, "to": [{ "key_code": "left_control" }] }
   ]
 }
 ```
 
-Note: Hyper is implemented as all four modifiers pressed simultaneously (Ctrl+Alt+Shift+Cmd). The physical Ctrl key sends this chord, which Aerospace intercepts. No app uses this modifier combination, so there are zero conflicts.
+Ctrl→Hyper via `complex_modifications` (explicitly matches physical key, avoids chaining with CapsLock rule):
+
+```json
+{
+  "complex_modifications": {
+    "rules": [{
+      "description": "Physical Ctrl → Hyper (Ctrl+Alt+Cmd, no Shift)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": { "key_code": "left_control" },
+          "to": [{ "key_code": "left_control", "modifiers": ["left_option", "left_command"] }]
+        },
+        {
+          "type": "basic",
+          "from": { "key_code": "right_control" },
+          "to": [{ "key_code": "right_control", "modifiers": ["right_option", "right_command"] }]
+        }
+      ]
+    }]
+  }
+}
+```
+
+Note: Hyper is defined as Ctrl+Alt+Cmd (**excluding Shift**) so that Hyper+Shift combos work as distinct bindings. No app uses this three-modifier combination, so there are zero conflicts. Aerospace binds to `ctrl+alt+cmd` in its TOML config.
 
 ### Shared Keybindings Module (`keybindings.nix`)
 
@@ -154,18 +207,28 @@ Exports an attribute set:
 ```nix
 {
   workspaces = {
-    "1" = { name = "admin"; apps = ["Mail" "Notes" "Calendar" "Bitwarden"]; };
-    "2" = { name = "browser"; apps.darwin = ["Google Chrome"]; apps.linux = ["firefox"]; };
-    "3" = { name = "ai"; apps = ["Claude" "ChatGPT"]; };
-    "4" = { name = "editor"; apps = ["Emacs" "Code" "Xcode"]; };
-    "5" = { name = "terminal"; apps = ["Ghostty"]; };
-    "6" = { name = "media"; apps = ["Spotify" "Audacity" "GarageBand" "iMovie"]; };
+    "1" = { name = "admin";    darwin = ["Mail" "Notes" "Calendar" "Bitwarden"];  linux = ["thunderbird" "notes" "calendar" "bitwarden"]; };
+    "2" = { name = "browser";  darwin = ["Google Chrome"];                        linux = ["firefox"]; };
+    "3" = { name = "ai";       darwin = ["Claude" "ChatGPT"];                     linux = ["Claude" "ChatGPT"]; };
+    "4" = { name = "editor";   darwin = ["Emacs" "Code" "Xcode"];                 linux = ["Emacs" "Code"]; };
+    "5" = { name = "terminal"; darwin = ["Ghostty"];                               linux = ["Ghostty"]; };
+    "6" = { name = "media";    darwin = ["Spotify" "Audacity" "GarageBand" "iMovie"]; linux = ["Spotify" "Audacity"]; };
   };
   # Workspaces 7-10: no app assignments
 }
 ```
 
 Both `aerospace.nix` and `hyprland.nix` import this module and generate their respective configs from it.
+
+## Migration Notes
+
+**This change reverses the existing Cmd→Ctrl Karabiner remap (ADR-003).** Key behavioral shifts:
+
+- **macOS copy/paste** returns to native Cmd+C/V (was Ctrl+C/V via Cmd→Ctrl remap)
+- **Tmux prefix** changes from physical Cmd+A (which sent Ctrl+A) to physical CapsLock+A (which sends Ctrl+A) — same keycode, different physical key
+- **All emacs bindings** move from physical Ctrl (corner) to physical CapsLock (home row) — ergonomic improvement, muscle memory adjustment ~1-2 weeks
+- **WM bindings** change from Super to Hyper (physical Ctrl key) on both platforms
+- **ADR-003** (`docs/adr/ADR-003-keyboard-remapping-strategy.md`) and `docs/keyboard-layout-strategy.md` should be updated to reflect the new strategy
 
 ## Untouched
 
