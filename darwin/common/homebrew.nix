@@ -7,7 +7,9 @@
     enable = true;
     onActivation.cleanup = "zap";
 
-    # No explicit taps needed -- homebrew/core and homebrew/cask are built-in.
+    taps = [
+      "nikitabobko/tap" # Aerospace tiling WM
+    ];
 
     brews = [
       "mas" # Mac App Store CLI (used by masApps below)
@@ -16,6 +18,7 @@
     ];
 
     casks = [
+      "nikitabobko/tap/aerospace" # Tiling window manager (i3/Hyprland-like)
       "audacity" # Audio editor
       "chatgpt" # OpenAI ChatGPT desktop app
       "claude" # Anthropic Claude desktop app
