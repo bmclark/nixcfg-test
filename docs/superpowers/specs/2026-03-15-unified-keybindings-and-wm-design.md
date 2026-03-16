@@ -60,7 +60,7 @@ $mainMod = MOD3
 bind = $mainMod, 1, workspace, 1
 ```
 
-**New file:** `nixos/common/keyd.nix` — NixOS-level keyd service configuration.
+**New file:** `hosts/common/keyd.nix` — NixOS-level keyd service configuration.
 
 ### Resulting Modifier Namespaces
 
@@ -148,7 +148,7 @@ bind = $mainMod, 1, workspace, 1
 |---|---|
 | `home/features/desktop/aerospace.nix` | Aerospace TOML config via `xdg.configFile`, macOS-only guard (`lib.mkIf pkgs.stdenv.isDarwin`). Imported from the desktop module's `default.nix`. Aerospace auto-starts via its own login item (no launchd plist needed — the cask installer registers it). |
 | `home/features/desktop/keybindings.nix` | Shared keybinding constants and workspace/app mappings consumed by both aerospace.nix and hyprland.nix |
-| `nixos/common/keyd.nix` | NixOS-level keyd service for CapsLock→Ctrl + Ctrl→Hyper remapping (Linux only) |
+| `hosts/common/keyd.nix` | NixOS-level keyd service for CapsLock→Ctrl + Ctrl→Hyper remapping (Linux only) |
 
 ### Modified Files
 
