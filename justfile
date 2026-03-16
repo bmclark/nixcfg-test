@@ -61,10 +61,18 @@ _require-darwin-rebuild:
 darwin-switch-host SYSTEM:
     @just _require-darwin-rebuild
     @sudo darwin-rebuild switch --flake .#{{SYSTEM}} --impure
+    @just _reload-aerospace
 
 darwin-switch:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
     just darwin-switch-host $HOST
+
+_reload-aerospace:
+    @if pgrep -q AeroSpace 2>/dev/null; then \
+        aerospace reload-config && echo "AeroSpace config reloaded"; \
+    else \
+        echo "AeroSpace is not running — start it with: open -a AeroSpace"; \
+    fi
 
 darwin-test:
     @just _require-darwin-rebuild
