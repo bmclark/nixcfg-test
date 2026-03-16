@@ -1,6 +1,6 @@
 # Hyprland window manager with full rice: switchable theme, blur, window rules,
 # gestures, and workspace assignments. Aligned with ADR-003 (keyboard strategy)
-# and ADR-004 (theme standardization).
+# and ADR-004 (theme standardization). WM keybindings use Hyper (MOD3 via keyd).
 {
   config,
   lib,
@@ -14,6 +14,11 @@ with lib; let
   stripHash = color: builtins.replaceStrings ["#"] [""] color;
   # Simple rgba helper keeps Dracula palette usage consistent throughout the config.
   rgba = color: alpha: "rgba(${stripHash color}${alpha})";
+  kb = import ./keybindings.nix;
+  # Generate workspace assignment windowrules from shared keybindings module
+  workspaceRules = lib.concatLists (lib.mapAttrsToList (ws: def:
+    map (app: "workspace ${ws}, match:class ^(${app})$") def.linux
+  ) kb.workspaces);
 in {
   options.features.desktop.hyprland.enable = mkEnableOption "hyprland config";
 
@@ -46,7 +51,7 @@ in {
           "swww-daemon && sleep 0.5 && $HOME/.local/bin/wallpaper-random"
           "waybar"
           "blueman-applet"
-          # Dropdown terminal: starts hidden in special workspace, toggled with Super+`
+          # Dropdown terminal: starts hidden in special workspace, toggled with Hyper+`
           "[workspace special:terminal silent] $TERMINAL"
         ];
 
@@ -65,7 +70,7 @@ in {
           kb_variant = "";
           kb_model = "";
           kb_rules = "";
-          kb_options = "ctrl:nocaps"; # CapsLock → Ctrl
+          kb_options = ""; # Key remapping handled by keyd (CapsLock→Ctrl, Ctrl→Hyper)
           follow_mouse = 1;
           sensitivity = 0;
           touchpad.natural_scroll = false;
@@ -172,10 +177,8 @@ in {
           # Media / full-screen rules (idleinhibit removed in 0.53+, use hypridle)
           "fullscreen on, float on, match:title ^(wlogout)$"
 
-          # Workspace assignments
-          "workspace 1, match:class ^(Emacs)$"
-          "workspace 2, match:class ^(firefox)$"
-          "workspace 3, match:class ^(code-url-handler)$" # VS Code
+          # Workspace assignments (generated from keybindings.nix)
+        ] ++ workspaceRules ++ [
 
           # Force full opacity on browsers (blur looks bad through text)
           "opacity 1.0 override 1.0, match:class ^(firefox|chromium-browser)$"
@@ -185,15 +188,16 @@ in {
         ];
 
         # --- Keybindings -----------------------------------------------------
-        "$mainMod" = "SUPER";
-        # Ctrl-focused bindings follow CUA conventions, Super controls the WM, and Emacs-style navigation
-        # handles directional focus per ADR-003.
+        "$mainMod" = "MOD3"; # Hyper key (physical Ctrl via keyd)
+        # Hyper (MOD3 via keyd) controls the WM. Arrow keys for directional focus.
+        # CUA bindings (Ctrl via CapsLock) and Emacs navigation are unaffected.
         bind = [
           # Core launcher bindings
           "$mainMod, Return, exec, $TERMINAL"
           "$mainMod, D, exec, wofi --show drun"
           "$mainMod, Space, togglefloating"
           "$mainMod, F, fullscreen"
+          "$mainMod, W, killactive"
           "$mainMod, E, exec, thunar"
           "$mainMod, L, exec, hyprlock"
           "$mainMod, Escape, exec, wlogout -p layer-shell"
@@ -211,17 +215,17 @@ in {
           "ALT, Tab, cyclenext"
           "ALT SHIFT, Tab, cyclenext, prev"
 
-          # Emacs-style focus navigation
-          "CTRL ALT, B, movefocus, l"
-          "CTRL ALT, F, movefocus, r"
-          "CTRL ALT, P, movefocus, u"
-          "CTRL ALT, N, movefocus, d"
+          # Window focus (arrow keys)
+          "$mainMod, left, movefocus, l"
+          "$mainMod, right, movefocus, r"
+          "$mainMod, up, movefocus, u"
+          "$mainMod, down, movefocus, d"
 
-          # Emacs-style window movement
-          "CTRL ALT SHIFT, B, movewindow, l"
-          "CTRL ALT SHIFT, F, movewindow, r"
-          "CTRL ALT SHIFT, P, movewindow, u"
-          "CTRL ALT SHIFT, N, movewindow, d"
+          # Window movement (arrow keys + shift)
+          "$mainMod SHIFT, left, movewindow, l"
+          "$mainMod SHIFT, right, movewindow, r"
+          "$mainMod SHIFT, up, movewindow, u"
+          "$mainMod SHIFT, down, movewindow, d"
 
           # Workspace management
           "$mainMod, 1, workspace, 1"
@@ -248,8 +252,8 @@ in {
           # Screenshots
           "$mainMod SHIFT, S, exec, bash -lc 'grim -g \"$(slurp)\" \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
           "$mainMod SHIFT, Print, exec, bash -lc 'grim \"$HOME/Pictures/Screenshots/$(date +%Y-%m-%d-%H%M%S).png\"'"
-          "$mainMod CTRL, S, exec, $HOME/.local/bin/screenshot-area-annotate"
-          "$mainMod CTRL, O, exec, $HOME/.local/bin/ocr-screenshot"
+          "$mainMod ALT, S, exec, $HOME/.local/bin/screenshot-area-annotate"
+          "$mainMod ALT, O, exec, $HOME/.local/bin/ocr-screenshot"
           "$mainMod, V, exec, $HOME/.local/bin/cliphist-wofi"
           "$mainMod SHIFT, C, exec, hyprpicker -a"
 
