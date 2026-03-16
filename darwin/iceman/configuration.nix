@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   imports = [
     ../common/homebrew.nix
   ];
@@ -148,6 +148,12 @@
       harddisk = 0;  # Never spin down
     };
   };
+
+  system.activationScripts.postActivation.text = lib.mkAfter ''
+    echo "--- FileVault status ---" >&2
+    /usr/bin/fdesetup status >&2
+    echo "------------------------" >&2
+  '';
 
   networking.applicationFirewall = {
     enable = true;
