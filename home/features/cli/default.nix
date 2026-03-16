@@ -7,6 +7,20 @@
   ...
 }: let
   palette = theme.palette;
+  tailscaleCli =
+    if pkgs.stdenv.isDarwin
+    then
+      pkgs.writeShellApplication {
+        name = "tailscale";
+        text = ''
+          if [[ ! -x /Applications/Tailscale.app/Contents/MacOS/Tailscale ]]; then
+            echo "Tailscale.app is not installed in /Applications" >&2
+            exit 1
+          fi
+          exec /Applications/Tailscale.app/Contents/MacOS/Tailscale "$@"
+        '';
+      }
+    else pkgs.tailscale;
 in {
   imports = [
     ./fish.nix
@@ -312,7 +326,7 @@ in {
     # mc is managed via programs.mc above
     ncdu # Interactive disk usage: ncdu /path
     ripgrep # Fast grep (aliased: grep → rg)
-    tailscale # Tailscale CLI for VPN status and auth flows
+    tailscaleCli # Tailscale CLI; on macOS this wraps the standalone app bundle
     go-task # Taskfile runner: task, task --list
     tealdeer # Fast tldr client: tldr tar
     tokei # Lines of code counter: tokei . (aliased: loc)

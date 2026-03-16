@@ -226,6 +226,7 @@ Use these when you want a ready-made starting point instead of manually splittin
 - **OCR functions:** `ocrimg`, `ocrpdf`, `ocrshot` are Linux-only (use Wayland screenshot tools)
 - **Darwin aliases:** `drs` (darwin-rebuild switch) and `drt` (darwin-rebuild check) are available on macOS only
 - **Ghostty:** installed from nixpkgs on Linux, from Homebrew cask on macOS — config is shared
+- **Tailscale on macOS:** the `tailscale` shell command intentionally wraps the bundled CLI inside `/Applications/Tailscale.app` so terminal commands talk to the standalone GUI client instead of a separate nixpkgs CLI build
 
 ## Design Notes
 

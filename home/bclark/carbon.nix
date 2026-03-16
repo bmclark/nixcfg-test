@@ -24,6 +24,7 @@
       wayland.enable = true;
       firefox.enable = true;
       chromium.enable = true;
+      remoteDesktop.enable = true;
     };
     development = {
       git.enable = true;

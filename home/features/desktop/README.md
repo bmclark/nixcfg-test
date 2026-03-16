@@ -25,6 +25,7 @@ On the macOS host (`macmini`), Hyprland is not used. The main desktop-specific b
 | Firefox | Primary browser with stronger privacy defaults | Chromium for normal daily browsing |
 | Chromium | Compatibility fallback | Firefox when a site is broken or requires Chromium behavior |
 | Karabiner | macOS key remapping for app shortcuts | Per-app remapping by hand |
+| Remmina | Remote desktop sessions such as the Mac Screen Sharing setup | Ad hoc VNC command lines when you want saved profiles or a GUI |
 
 ## Desktop Movement And Navigation
 
@@ -116,6 +117,18 @@ Chromium is the compatibility browser. Use it when:
 - a site needs Chromium-specific behavior
 - DRM/video behavior differs
 - enterprise tooling is unreliable in Firefox
+
+## Remote Desktop
+
+`carbon` includes Remmina for remote desktop sessions.
+
+For the macOS Screen Sharing setup in this repo:
+- launch Remmina from Wofi for a GUI workflow
+- or run `macmini-remote` in a shell
+- pass a Tailscale IP if MagicDNS is not resolving: `macmini-remote 100.x.y.z`
+
+The helper defaults to `macmini`, which matches the macOS host name managed in the Darwin config.
+Authenticate the Mac to Tailscale from the menu bar app on `macmini`; the Linux side only needs the reachable host name or Tailscale IP.
 
 ## Desktop Services
 

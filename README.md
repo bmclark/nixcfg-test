@@ -35,6 +35,8 @@ Another standing directive is that user-facing shell tooling should feel polishe
 - Just-based build automation with theme switching
 - Per-project development environments (nix-shell / nix develop)
 - direnv + nix-direnv for automatic dev shell loading
+- macOS Screen Sharing enabled for remote desktop over Tailscale
+- Remmina client + `macmini-remote` helper on NixOS for reaching the Mac
 - Plymouth boot splash with manufacturer logo
 - Firewall (SSH-only inbound)
 - Agenix secrets management (age-encrypted, decrypted at activation)
@@ -216,6 +218,10 @@ See `secrets/secrets.nix` for the full setup.
 - **Karabiner not working on macOS**
   Grant Accessibility and Input Monitoring permissions, then restart with
   `launchctl kickstart -k gui/$(id -u)/org.pqrs.karabiner.karabiner_console_user_server`.
+- **Tailscale on macOS is acting weird in the terminal**
+  The `tailscale` command is expected to target the bundled CLI inside `Tailscale.app`. Sign in through the Tailscale menu bar app, then use `tailscale status` or `ujust tailscale-status` from a fresh shell to verify state.
+- **Connecting to macOS remote desktop from Linux**
+  Bring up Tailscale on both machines, then connect your VNC client to the Mac's Tailscale IP and authenticate as `bclark`. If your client only supports legacy VNC passwords, add one in a follow-up change instead of putting it in the Nix store.
 - **Hyprland not starting**
   Check logs via `journalctl -u display-manager` and confirm Hyprland is enabled in `hosts/carbon/configuration.nix`.
 - **Hyprland services not starting**

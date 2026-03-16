@@ -98,6 +98,11 @@
     allowSigned = true;
   };
 
+  remoteAccess.screenSharing = {
+    enable = true;
+    allowedUsers = ["bclark"];
+  };
+
   system.primaryUser = "bclark";
   system.stateVersion = 5;
 }

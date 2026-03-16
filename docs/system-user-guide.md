@@ -208,6 +208,17 @@ On `carbon`, use the Hyprland dropdown terminal with `Super+\`` for:
 
 On `macmini`, use a Ghostty tab (`Ctrl+Shift+T`) for the same purpose — there is no dropdown terminal on macOS.
 
+### Pattern: remote into `macmini` from Linux
+
+1. Make sure Tailscale is connected on both machines (`ujust tailscale-status` is enough to verify).
+2. Find the Mac's Tailscale IP from the menu bar app or `tailscale ip -4`.
+3. On `carbon`, either launch Remmina from the app launcher or run `macmini-remote <tailscale-ip>`.
+4. Sign in to the Mac as `bclark`.
+
+`macmini-remote` defaults to `macmini`, so if Tailscale MagicDNS is enabled you can usually just run `macmini-remote`.
+
+This setup uses macOS Screen Sharing rather than a third-party remote desktop stack. If you need a legacy VNC password for a client that cannot do user-based auth, wire it through secrets instead of hardcoding it in Nix.
+
 ### Pattern: machine-wide utility commands from any directory
 
 Use `ujust` when you want the host-level utility `justfile` instead of a repo-local one.
