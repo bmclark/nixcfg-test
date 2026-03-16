@@ -24,6 +24,7 @@ in {
     ./firefox.nix
     ./chromium.nix
     ./karabiner.nix
+    ./aerospace.nix
   ];
 
   options.features.desktop.remoteDesktop = {
