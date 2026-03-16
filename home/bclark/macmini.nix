@@ -31,6 +31,7 @@
       firefox.enable = true;
       chromium.enable = true;
       karabiner.enable = true;
+      aerospace.enable = true;
     };
     editors = {
       emacs.enable = true;
