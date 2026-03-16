@@ -62,6 +62,13 @@
       ShowPathbar = true;
       AppleShowAllExtensions = true;
       _FXShowPosixPathInTitle = true;
+      NewWindowTarget = "PfHm"; # New windows open to home
+      FXEnableExtensionChangeWarning = false;
+      ShowExternalHardDrivesOnDesktop = true;
+      ShowRemovableMediaOnDesktop = true;
+      ShowMountedServersOnDesktop = true;
+      FXDefaultSearchScope = "SCcf"; # Search current folder by default
+      _FXSortFoldersFirst = true;
     };
     trackpad = {
       Clicking = true;
