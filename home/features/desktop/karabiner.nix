@@ -15,34 +15,47 @@ with lib; let
       {
         name = "Default";
         selected = true;
+        # CapsLock → Ctrl at hardware level (no chaining risk)
+        simple_modifications = [
+          {
+            from.key_code = "caps_lock";
+            to = [{key_code = "left_control";}];
+          }
+        ];
         complex_modifications = {
           rules = [
             {
-              description = "Remap left command to left control";
+              description = "Physical Left Ctrl → Hyper (Ctrl+Alt+Cmd, no Shift)";
               manipulators = [
                 {
                   type = "basic";
                   from = {
-                    key_code = "left_command";
+                    key_code = "left_control";
                     modifiers.optional = ["any"];
                   };
                   to = [
-                    {key_code = "left_control";}
+                    {
+                      key_code = "left_control";
+                      modifiers = ["left_option" "left_command"];
+                    }
                   ];
                 }
               ];
             }
             {
-              description = "Remap right command to right control";
+              description = "Physical Right Ctrl → Hyper (Ctrl+Alt+Cmd, no Shift)";
               manipulators = [
                 {
                   type = "basic";
                   from = {
-                    key_code = "right_command";
+                    key_code = "right_control";
                     modifiers.optional = ["any"];
                   };
                   to = [
-                    {key_code = "right_control";}
+                    {
+                      key_code = "right_control";
+                      modifiers = ["right_option" "right_command"];
+                    }
                   ];
                 }
               ];
@@ -59,7 +72,7 @@ in {
   config =
     mkIf cfg.enable
     (mkIf pkgs.stdenv.isDarwin {
-      # Keep application shortcuts on Ctrl while WM shortcuts live on Super.
+      # CapsLock → Ctrl (emacs), physical Ctrl → Hyper (WM via Aerospace).
       xdg.configFile."karabiner/karabiner.json".text =
         builtins.toJSON karabinerConfig;
     });
