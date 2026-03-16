@@ -46,6 +46,9 @@ in {
         outer.top = 10
         outer.bottom = 10
 
+        # --- App Assignments (must be before [mode] sections in TOML) ---------------
+        ${appAssignments}
+
         # --- Keybindings ---------------------------------------------------------
         # Hyper = ctrl-alt-cmd (physical Ctrl key via Karabiner)
 
@@ -102,8 +105,6 @@ in {
         # Use a named workspace 'S' and toggle between it and the previous workspace.
         ctrl-alt-cmd-backtick = 'workspace S'
 
-        # --- App Assignments -----------------------------------------------------
-        ${appAssignments}
       '';
     });
 }

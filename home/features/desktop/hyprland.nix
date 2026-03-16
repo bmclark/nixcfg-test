@@ -204,7 +204,7 @@ in {
           "$mainMod, comma, workspace, r-1"
           "$mainMod, period, workspace, r+1"
 
-          # Dropdown terminal (Super+` toggles special:terminal workspace)
+          # Dropdown terminal (Hyper+` toggles special:terminal workspace)
           "$mainMod, grave, togglespecialworkspace, terminal"
 
           # Wallpaper controls
