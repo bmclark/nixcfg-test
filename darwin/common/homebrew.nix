@@ -19,7 +19,6 @@
     casks = [
       "nikitabobko/tap/aerospace" # Tiling window manager (i3/Hyprland-like)
       "audacity" # Audio editor
-      "alt-tab" # Alt+Tab-style app switcher on macOS
       "chatgpt" # OpenAI ChatGPT desktop app
       "claude" # Anthropic Claude desktop app
       "codex" # OpenAI Codex desktop app
@@ -29,7 +28,7 @@
       "logitech-g-hub" # Logitech peripheral management
       "raycast" # Launcher / productivity tool
       "spotify" # Music streaming
-      "tailscale" # VPN mesh network (menu bar app)
+      "tailscale-app" # VPN mesh network (menu bar app)
     ];
 
     masApps = {
