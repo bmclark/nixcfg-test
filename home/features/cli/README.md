@@ -167,7 +167,7 @@ Examples:
 - `ujust rebuild`
 - `ujust rollback`
 
-`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It aborts if `$HOME/nixcfg` is already dirty so it does not accidentally commit unrelated changes. Pass a custom commit message with `ujust update "chore: weekly flake update"`.
+`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It aborts if the nixcfg checkout is already dirty so it does not accidentally commit unrelated changes. The checkout path comes from `NIXCFG_REPO`, which defaults to `~/nixcfg`. Pass a custom commit message with `ujust update "chore: weekly flake update"`.
 
 `ujust nixcfg-update-switch` is the explicit nixcfg-scoped name for the same workflow. `ujust nixcfg-update` still does the narrower flake-input update only.
 

@@ -37,7 +37,7 @@ user-services:
   @systemctl --user --failed
 
 host-info:
-  @bash -eu -c 'host="$(hostname -s)"; os="$(uname -s)"; kernel="$(uname -r)"; uptime_info="$(uptime -p 2>/dev/null | sed "s/^up //")"; if [ -z "$uptime_info" ]; then uptime_info="$(uptime | sed -E "s/^.*up ([^,]+),.*$/\1/")"; fi; shell_name="$(basename "$SHELL")"; if command -v tailscale >/dev/null 2>&1; then tail_state="$(tailscale status --json 2>/dev/null | jq -r ".BackendState // empty" 2>/dev/null || true)"; tail_ip="$(tailscale ip -4 2>/dev/null | head -n1 || true)"; else tail_state="unavailable"; tail_ip=""; fi; if [ -L /run/current-system ]; then generation="$(basename "$(readlink /run/current-system)")"; elif command -v darwin-rebuild >/dev/null 2>&1 && [ -L /nix/var/nix/profiles/system ]; then generation="$(basename "$(readlink /nix/var/nix/profiles/system)")"; else generation="unknown"; fi; if [ -d "$HOME/nixcfg/.git" ]; then if git -C "$HOME/nixcfg" diff --quiet && git -C "$HOME/nixcfg" diff --cached --quiet; then tree_state="clean"; tree_color="2"; else tree_state="dirty"; tree_color="3"; fi; flake_lock="$(date -r "$HOME/nixcfg/flake.lock" "+%Y-%m-%d %H:%M" 2>/dev/null || stat -c "%y" "$HOME/nixcfg/flake.lock" 2>/dev/null || echo unknown)"; else tree_state="unknown"; tree_color="7"; flake_lock="unknown"; fi; if [ -n "$tail_ip" ]; then tail_label="$tail_ip"; elif [ -n "$tail_state" ]; then tail_label="$tail_state"; else tail_label="disconnected"; fi; card="$(printf "Host: %s\nOS: %s\nKernel: %s\nUptime: %s\nShell: %s\nTailscale: %s\nGeneration: %s\nnixcfg tree: %s\nflake.lock: %s" "$host" "$os" "$kernel" "$uptime_info" "$shell_name" "$tail_label" "$generation" "$tree_state" "$flake_lock")"; gum style --border normal --margin "1 0" --padding "1 2" --border-foreground 12 --foreground 15 "$card"'
+  @bash -eu -c 'repo="${NIXCFG_REPO:-$HOME/nixcfg}"; host="$(hostname -s)"; os="$(uname -s)"; kernel="$(uname -r)"; uptime_info="$(uptime -p 2>/dev/null | sed "s/^up //")"; if [ -z "$uptime_info" ]; then uptime_info="$(uptime | sed -E "s/^.*up ([^,]+),.*$/\1/")"; fi; shell_name="$(basename "$SHELL")"; if command -v tailscale >/dev/null 2>&1; then tail_state="$(tailscale status --json 2>/dev/null | jq -r ".BackendState // empty" 2>/dev/null || true)"; tail_ip="$(tailscale ip -4 2>/dev/null | head -n1 || true)"; else tail_state="unavailable"; tail_ip=""; fi; if [ -L /run/current-system ]; then generation="$(basename "$(readlink /run/current-system)")"; elif command -v darwin-rebuild >/dev/null 2>&1 && [ -L /nix/var/nix/profiles/system ]; then generation="$(basename "$(readlink /nix/var/nix/profiles/system)")"; else generation="unknown"; fi; if [ -d "$repo/.git" ]; then if git -C "$repo" diff --quiet && git -C "$repo" diff --cached --quiet; then tree_state="clean"; tree_color="2"; else tree_state="dirty"; tree_color="3"; fi; flake_lock="$(date -r "$repo/flake.lock" "+%Y-%m-%d %H:%M" 2>/dev/null || stat -c "%y" "$repo/flake.lock" 2>/dev/null || echo unknown)"; else tree_state="unknown"; tree_color="7"; flake_lock="unknown"; fi; if [ -n "$tail_ip" ]; then tail_label="$tail_ip"; elif [ -n "$tail_state" ]; then tail_label="$tail_state"; else tail_label="disconnected"; fi; card="$(printf "Host: %s\nOS: %s\nKernel: %s\nUptime: %s\nShell: %s\nTailscale: %s\nGeneration: %s\nnixcfg tree: %s\nflake.lock: %s" "$host" "$os" "$kernel" "$uptime_info" "$shell_name" "$tail_label" "$generation" "$tree_state" "$flake_lock")"; gum style --border normal --margin "1 0" --padding "1 2" --border-foreground 12 --foreground 15 "$card"'
 
 doctor:
   @bash -eu -c '\
@@ -70,7 +70,8 @@ doctor:
     echo; section "nix-index"; \
     if [ -e "$HOME/.cache/nix-index/files" ]; then ok "database present"; else warn "database missing; run: nix-index"; fi; \
     echo; section "nixcfg"; \
-    if just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" check >/tmp/ujust-check.$$ 2>&1; then ok "flake check passed"; \
+    repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
+    if just --justfile "$repo/justfile" --working-directory "$repo" check >/tmp/ujust-check.$$ 2>&1; then ok "flake check passed"; \
     else warn "flake check reported issues"; sed -n "1,20p" /tmp/ujust-check.$$; fi; \
     rm -f /tmp/ujust-check.$$ \
   '
@@ -100,14 +101,16 @@ tailscale-down:
   fi
 
 nixcfg-check:
-  @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" check
+  @repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
+    just --justfile "$repo/justfile" --working-directory "$repo" check
 
 nixcfg-update:
-  @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" update
+  @repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
+    just --justfile "$repo/justfile" --working-directory "$repo" update
 
 nixcfg-update-switch MESSAGE="chore: update flake inputs":
   @bash -eu -o pipefail -c '\
-    repo="$HOME/nixcfg"; \
+    repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
     if [ -n "$(git -C "$repo" status --porcelain)" ]; then \
       echo "nixcfg repo has uncommitted changes; aborting update-switch" >&2; \
       echo "commit, stash, or clean the repo first" >&2; \
@@ -127,10 +130,12 @@ update MESSAGE="chore: update flake inputs":
   @just --justfile "$HOME/.config/just/justfile" nixcfg-update-switch "{{MESSAGE}}"
 
 nixcfg-switch:
-  @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" switch
+  @repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
+    just --justfile "$repo/justfile" --working-directory "$repo" switch
 
 nixcfg-home-switch:
-  @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" home-switch
+  @repo="${NIXCFG_REPO:-$HOME/nixcfg}"; \
+    just --justfile "$repo/justfile" --working-directory "$repo" home-switch
 
 rebuild:
   @just --justfile "$HOME/.config/just/justfile" nixcfg-switch

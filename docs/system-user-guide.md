@@ -314,7 +314,7 @@ For nixcfg specifically, the universal layer also exposes:
 - `ujust rebuild`
 - `ujust rollback`
 
-`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It refuses to run if `$HOME/nixcfg` already has uncommitted changes so it does not bundle unrelated work into the update commit.
+`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It refuses to run if the nixcfg checkout already has uncommitted changes so it does not bundle unrelated work into the update commit. The checkout path comes from `NIXCFG_REPO`, which defaults to `~/nixcfg`.
 
 `ujust nixcfg-update-switch` is the explicit nixcfg-scoped name for the same workflow. `ujust nixcfg-update` still does only the flake-input refresh.
 

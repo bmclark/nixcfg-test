@@ -7,6 +7,7 @@
   ...
 }: let
   palette = theme.palette;
+  nixcfgRepo = "${config.home.homeDirectory}/nixcfg";
   tailscaleCli =
     if pkgs.stdenv.isDarwin
     then
@@ -32,6 +33,7 @@ in {
   ];
 
   home.sessionPath = ["$HOME/.local/bin"];
+  home.sessionVariables.NIXCFG_REPO = nixcfgRepo;
   xdg.configFile."just/justfile".text = builtins.readFile ./ujust.just;
 
   home.file.".local/bin/ujust" = {
@@ -39,6 +41,8 @@ in {
     text = ''
       #!/usr/bin/env bash
       set -euo pipefail
+      : "''${NIXCFG_REPO:=${nixcfgRepo}}"
+      export NIXCFG_REPO
       exec just \
         --justfile "$HOME/.config/just/justfile" \
         --working-directory "$PWD" \
