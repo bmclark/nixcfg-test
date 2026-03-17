@@ -1,5 +1,5 @@
 {...}: {
-  # Entry point for the carbon NixOS configuration.
+  # Entry point for the maverick NixOS configuration.
   imports = [
     ./configuration.nix
     ./hardware-configuration.nix

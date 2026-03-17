@@ -1,8 +1,8 @@
 # NixCfg Implementation Plan
 
 Cross-platform NixOS + nix-darwin unified configuration for two systems:
-- **carbon** -- NixOS laptop (x86_64-linux)
-- **macmini** -- Mac Mini (aarch64-darwin)
+- **maverick** -- NixOS laptop (x86_64-linux)
+- **iceman** -- Mac Mini (aarch64-darwin)
 
 ## Overview
 
@@ -32,7 +32,7 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 |--------|------|
 | Create | `home/features/development/git.nix` |
 | Modify | `home/features/development/default.nix` |
-| Modify | `home/bclark/carbon.nix`, `home/bclark/macmini.nix` |
+| Modify | `home/bclark/maverick.nix`, `home/bclark/iceman.nix` |
 
 - `programs.git`: identity, defaultBranch = "main", push.autoSetupRemote, pull.rebase
 - `programs.git.delta`: Dracula syntax-theme, line-numbers, side-by-side
@@ -82,7 +82,7 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 |--------|------|
 | Create | `home/features/cli/tmux.nix` |
 | Modify | `home/features/cli/default.nix` |
-| Modify | `home/bclark/carbon.nix`, `home/bclark/macmini.nix` |
+| Modify | `home/bclark/maverick.nix`, `home/bclark/iceman.nix` |
 
 - Prefix: Ctrl+A, mouse enabled, 100k history, base index 1
 - keyMode: vi (copy-mode only; shell stays emacs via bindkey -e)
@@ -98,7 +98,7 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 |--------|------|
 | Create | `home/features/cli/atuin.nix` |
 | Modify | `home/features/cli/default.nix` |
-| Modify | `home/bclark/carbon.nix`, `home/bclark/macmini.nix` |
+| Modify | `home/bclark/maverick.nix`, `home/bclark/iceman.nix` |
 
 - Fuzzy search, local-only (no sync), compact style, preview enabled
 
@@ -117,7 +117,7 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 **Fonts:**
 - Add: hack-font, nerd-fonts.jetbrains-mono, nerd-fonts.symbols-only, meslo-lgs-nf
 - fontconfig fallback chain: FiraCode → Hack → JetBrainsMono
-- Enable fonts on macmini too
+- Enable fonts on iceman too
 
 ---
 
@@ -143,7 +143,7 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 | Modify | `home/features/desktop/firefox.nix` |
 | Create | `home/features/desktop/chromium.nix` |
 | Modify | `home/features/desktop/default.nix` |
-| Modify | `home/bclark/carbon.nix`, `home/bclark/macmini.nix` |
+| Modify | `home/bclark/maverick.nix`, `home/bclark/iceman.nix` |
 
 **Firefox:** cross-platform, privacy extensions (uBlock, Privacy Badger, LocalCDN, ClearURLs, Cookie AutoDelete, Multi-Account Containers, Canvas Blocker), Dracula theme
 
@@ -251,8 +251,8 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 | `home/features/desktop/default.nix` | Chromium import |
 | `home/features/desktop/hyprland.nix` | Full rice |
 | `home/features/desktop/wayland.nix` | Theme-aware wallpaper |
-| `home/bclark/carbon.nix` | Enable new features |
-| `home/bclark/macmini.nix` | Enable new features + fonts |
+| `home/bclark/maverick.nix` | Enable new features |
+| `home/bclark/iceman.nix` | Enable new features + fonts |
 | `darwin/common/homebrew.nix` | Remove Ghostty, keep Karabiner only |
 | `flake.nix` | Theme specialArgs, optional vscode-extensions input |
 | `justfile` | Theme recipe |
@@ -267,8 +267,8 @@ Batch 7 (final):                 Phase 11 (documentation + ADRs)
 ## Verification Checklist
 
 - [ ] `nix flake check` -- no evaluation errors
-- [ ] `just switch` on NixOS (carbon)
-- [ ] `just darwin-switch` on macOS (macmini)
+- [ ] `just switch` on NixOS (maverick)
+- [ ] `just darwin-switch` on macOS (iceman)
 - [ ] Ghostty: Dracula, FiraCode, 100k scrollback
 - [ ] Tmux: Dracula status, Ctrl+A prefix, logging
 - [ ] Prompt: 2-line powerline, git status, transient

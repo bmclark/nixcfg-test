@@ -19,12 +19,12 @@ Adopt a feature-based modular architecture with these pillars:
 1. **Platform separation**: Dedicated directories for NixOS (`hosts/`) and macOS (`darwin/`) system configurations.
 2. **Feature modules**: User configuration split into categorized modules under `home/features/cli`, `desktop`, `development`, and `editors`.
 3. **Enable pattern**: Each feature defines `options.features.<category>.<feature>.enable = lib.mkEnableOption "...";` and gates configuration behind `lib.mkIf cfg.enable`, adding platform guards (`pkgs.stdenv.isLinux`, `pkgs.stdenv.isDarwin`) as needed.
-4. **User configuration**: Host-specific files (`home/bclark/carbon.nix`, `home/bclark/macmini.nix`) import feature modules and toggle them per host.
+4. **User configuration**: Host-specific files (`home/bclark/maverick.nix`, `home/bclark/iceman.nix`) import feature modules and toggle them per host.
 5. **Common configuration**: Shared logic centralized in `hosts/common/`, `darwin/common/`, and `home/common/`.
 6. **Home-manager integration**: Home-manager runs as a module in both NixOS and nix-darwin with `useGlobalPkgs = true; useUserPackages = true;`.
 7. **Dotfiles strategy**: Placeholder modules in `home/bclark/dotfiles/` bridge to the external dotfiles repository (see `docs/dotfiles-migration.md`).
 
-This design is implemented in `flake.nix`, modules such as `home/features/cli/zsh.nix`, and host configs like `home/bclark/carbon.nix`.
+This design is implemented in `flake.nix`, modules such as `home/features/cli/zsh.nix`, and host configs like `home/bclark/maverick.nix`.
 
 ## Consequences
 **Positive**

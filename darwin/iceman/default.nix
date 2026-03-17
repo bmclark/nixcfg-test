@@ -1,5 +1,5 @@
 {...}: {
-  # Main entrypoint for the macmini nix-darwin configuration.
+  # Main entrypoint for the iceman nix-darwin configuration.
   imports = [
     ../common/default.nix
     ./configuration.nix

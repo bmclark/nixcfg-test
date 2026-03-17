@@ -18,10 +18,10 @@ Do not assume prior context beyond this file.
 
 This repository manages one NixOS host and one macOS host from a single flake:
 
-- `carbon`: NixOS laptop
-- `macmini`: macOS machine managed with `nix-darwin`
+- `maverick`: NixOS laptop
+- `iceman`: macOS machine managed with `nix-darwin`
 
-Most user-facing configuration is implemented as modular home-manager features under `home/features/`, then enabled per host in `home/bclark/carbon.nix` or `home/bclark/macmini.nix`.
+Most user-facing configuration is implemented as modular home-manager features under `home/features/`, then enabled per host in `home/bclark/maverick.nix` or `home/bclark/iceman.nix`.
 
 When adding or changing user-facing shell commands, CLI workflows, or terminal dashboards, prefer polished UX by default: use `gum` and similar shell sugar when it meaningfully improves readability, discoverability, QoL, and ease of use.
 
@@ -47,10 +47,10 @@ For a new task, load files in this order until you have enough context:
 3. `flake.nix`
 4. `justfile`
 5. The host config affected by the task:
-   - `home/bclark/carbon.nix`
-   - `home/bclark/macmini.nix`
-   - `hosts/carbon/configuration.nix`
-   - `darwin/macmini/configuration.nix`
+   - `home/bclark/maverick.nix`
+   - `home/bclark/iceman.nix`
+   - `hosts/maverick/configuration.nix`
+   - `darwin/iceman/configuration.nix`
 6. The relevant feature module or system module
 7. Any ADR or doc specifically covering the area you are changing
 
@@ -66,8 +66,8 @@ Use this procedure instead of guessing.
 
 Start here:
 
-- `home/bclark/carbon.nix`
-- `home/bclark/macmini.nix`
+- `home/bclark/maverick.nix`
+- `home/bclark/iceman.nix`
 - `home/features/<category>/default.nix`
 - `home/features/<category>/<feature>.nix`
 
@@ -81,8 +81,8 @@ Interpretation:
 
 Start here:
 
-- NixOS: `hosts/carbon/default.nix`, `hosts/carbon/configuration.nix`, `hosts/common/default.nix`
-- macOS: `darwin/macmini/default.nix`, `darwin/macmini/configuration.nix`, `darwin/common/default.nix`
+- NixOS: `hosts/maverick/default.nix`, `hosts/maverick/configuration.nix`, `hosts/common/default.nix`
+- macOS: `darwin/iceman/default.nix`, `darwin/iceman/configuration.nix`, `darwin/common/default.nix`
 - Homebrew / Mac App Store apps: `darwin/common/homebrew.nix`
 
 **Warning:** `homebrew.nix` has `onActivation.cleanup = "zap"` enabled. Any brew, cask, or Mac App Store app not declared in that file will be **deleted** on the next `just darwin-switch`. Always add new apps to `homebrew.nix` before switching.
@@ -145,8 +145,8 @@ When you need more context, trace imports in this order:
 Practical examples:
 
 - A shell task usually flows through `home/bclark/<host>.nix` -> `home/features/cli/default.nix` -> `home/features/cli/zsh.nix`
-- A Hyprland task usually flows through `hosts/carbon/default.nix` and `home/bclark/carbon.nix` -> `home/features/desktop/default.nix` -> `home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`
-- A macOS keyboard task usually flows through `darwin/macmini/configuration.nix` and `home/bclark/macmini.nix` -> `home/features/desktop/karabiner.nix`
+- A Hyprland task usually flows through `hosts/maverick/default.nix` and `home/bclark/maverick.nix` -> `home/features/desktop/default.nix` -> `home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`
+- A macOS keyboard task usually flows through `darwin/iceman/configuration.nix` and `home/bclark/iceman.nix` -> `home/features/desktop/karabiner.nix`
 
 Do not load the whole repository by default. Load the minimum set that explains the path from flake -> host -> feature -> concrete implementation.
 
@@ -168,12 +168,12 @@ Use this as the first lookup table.
 | Emacs | `home/features/editors/emacs.nix`, `home/features/editors/default.nix` |
 | Firefox | `home/features/desktop/firefox.nix`, host file |
 | Chromium | `home/features/desktop/chromium.nix`, host file |
-| Hyprland | `home/features/desktop/hyprland.nix`, `home/features/desktop/wayland.nix`, `docs/hyprland-configuration.md`, `home/bclark/carbon.nix`, `hosts/carbon/configuration.nix` |
+| Hyprland | `home/features/desktop/hyprland.nix`, `home/features/desktop/wayland.nix`, `docs/hyprland-configuration.md`, `home/bclark/maverick.nix`, `hosts/maverick/configuration.nix` |
 | Fonts | `home/features/desktop/fonts.nix`, `home/themes/README.md` |
-| Karabiner | `home/features/desktop/karabiner.nix`, `darwin/macmini/configuration.nix`, `home/bclark/macmini.nix` |
+| Karabiner | `home/features/desktop/karabiner.nix`, `darwin/iceman/configuration.nix`, `home/bclark/iceman.nix` |
 | Themes | `home/themes/*.nix`, `flake.nix`, consuming modules |
-| NixOS host behavior | `hosts/carbon/configuration.nix`, `hosts/carbon/default.nix`, `hosts/common/default.nix` |
-| macOS host behavior | `darwin/macmini/configuration.nix`, `darwin/macmini/default.nix`, `darwin/common/default.nix` |
+| NixOS host behavior | `hosts/maverick/configuration.nix`, `hosts/maverick/default.nix`, `hosts/common/default.nix` |
+| macOS host behavior | `darwin/iceman/configuration.nix`, `darwin/iceman/default.nix`, `darwin/common/default.nix` |
 | Homebrew / Mac App Store apps | `darwin/common/homebrew.nix` |
 | Build / switch / test commands | `justfile`, `flake.nix` |
 | Secrets / agenix | `secrets/secrets.nix`, host config, consuming module |
@@ -193,7 +193,7 @@ When documents and code disagree, prefer these sources:
 | NixOS system behavior | `hosts/` |
 | macOS system behavior | `darwin/` |
 | User environment and apps | `home/` |
-| Enabled features per host | `home/bclark/carbon.nix`, `home/bclark/macmini.nix` |
+| Enabled features per host | `home/bclark/maverick.nix`, `home/bclark/iceman.nix` |
 | Theme palette values | `home/themes/*.nix` |
 | Design rationale | `docs/adr/` |
 | Planned but not necessarily implemented work | `docs/plan.md` |
@@ -260,7 +260,7 @@ Common conventions:
 
 - feature modules live in `home/features/<category>/`
 - feature hub files are `home/features/<category>/default.nix`
-- features are enabled explicitly in `home/bclark/carbon.nix` or `home/bclark/macmini.nix`
+- features are enabled explicitly in `home/bclark/maverick.nix` or `home/bclark/iceman.nix`
 - cross-platform logic uses `pkgs.stdenv.isLinux` and `pkgs.stdenv.isDarwin`
 - theme-aware modules should use palette attributes from `home/themes/*.nix`, not hardcoded colors
 
@@ -268,21 +268,21 @@ Common conventions:
 
 ## Current Host Model
 
-### `carbon`
+### `maverick`
 
 - NixOS
 - x86_64-linux
 - Hyprland / Wayland desktop
-- system config under `hosts/carbon/`
-- user config under `home/bclark/carbon.nix`
+- system config under `hosts/maverick/`
+- user config under `home/bclark/maverick.nix`
 
-### `macmini`
+### `iceman`
 
 - macOS via `nix-darwin`
 - aarch64-darwin
 - no Hyprland
-- system config under `darwin/macmini/`
-- user config under `home/bclark/macmini.nix`
+- system config under `darwin/iceman/`
+- user config under `home/bclark/iceman.nix`
 
 Shared user experience is implemented mostly through home-manager features.
 

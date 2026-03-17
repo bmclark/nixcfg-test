@@ -10,7 +10,7 @@ Operating this configuration requires running a variety of verbose Nix and syste
 - Flake updates
 - Garbage collection and store maintenance
 
-Remembering raw commands like `sudo nixos-rebuild switch --flake .#carbon` or `darwin-rebuild switch --flake .#macmini` is error-prone. Options included shell scripts, Makefiles, Justfile recipes, or Nix-based apps.
+Remembering raw commands like `sudo nixos-rebuild switch --flake .#maverick` or `darwin-rebuild switch --flake .#iceman` is error-prone. Options included shell scripts, Makefiles, Justfile recipes, or Nix-based apps.
 
 ## Decision
 Standardize on a repository-level `justfile` that collects common workflows:

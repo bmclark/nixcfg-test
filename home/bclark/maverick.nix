@@ -1,4 +1,4 @@
-# NixOS laptop (carbon) -- x86_64-linux with Hyprland.
+# NixOS laptop (maverick) -- x86_64-linux with Hyprland.
 {pkgs, ...}: {
   imports = [
     ../common/default.nix

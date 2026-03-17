@@ -184,7 +184,7 @@ Post-implementation deep-dives for the nixcfg unified configuration. Each sectio
 - SSH config management via home-manager `programs.ssh`
   - Host aliases, jump hosts, key management
   - Per-host settings
-- ~~GPG key management via home-manager `programs.gpg`~~ **DONE** (agent + pinentry + git signing workflow on carbon)
+- ~~GPG key management via home-manager `programs.gpg`~~ **DONE** (agent + pinentry + git signing workflow on maverick)
   - ~~Signing commits~~ **DONE**
   - Password store integration -- **PARTIAL** (`rbw` workflow documented; full backup/export policy deferred)
 
@@ -194,13 +194,13 @@ Post-implementation deep-dives for the nixcfg unified configuration. Each sectio
 
 **Goal:** OS-level configuration, automation, security, and maintenance.
 
-### NixOS (carbon)
+### NixOS (maverick)
 - ~~Systemd services: custom user services for background tasks~~ **DONE** (emacs daemon, flake-update timer)
 - ~~Power management: TLP for laptop battery optimization~~ **DONE** (battery thresholds, CPU governors, WiFi power saving, USB autosuspend)
 - ~~Plymouth boot splash (Dracula themed)~~ **DONE** (bgrt manufacturer logo with systemd initrd)
 - Secure boot (lanzaboote) -- **DEFERRED**
 
-### nix-darwin (macmini) -- **DEFERRED** (to be done on the Mac)
+### nix-darwin (iceman) -- **DEFERRED** (to be done on the Mac)
 - Additional system defaults (`defaults write` equivalents)
   - Dock: autohide, icon size, minimize effect
   - Finder: show extensions, default view, sidebar items
@@ -213,6 +213,10 @@ Post-implementation deep-dives for the nixcfg unified configuration. Each sectio
 - ~~Automatic updates strategy:~~ **DONE** (weekly systemd timer, Sundays 09:00)
 - ~~CI: GitHub Actions for `nix flake check` on push~~ **DONE** (.github/workflows/check.yml)
 - Nix binary cache (cachix) -- **SKIPPED** (not worth it for 2-machine personal setup)
+- Host rename cleanup -- **TODO after both machines are converted**
+  - Remove flake aliases: `carbon`, `macmini`, `bryansmacmini`, `nixos`
+  - Remove home-manager aliases: `bclark@carbon`, `bclark@macmini`, `bclark@bryansmacmini`
+  - Remove the `macmini-remote` compatibility wrapper and keep `iceman-remote` only
 
 ### Security
 - ~~Secrets management: `agenix`~~ **DONE** (flake input, NixOS module, secrets/ directory with template)

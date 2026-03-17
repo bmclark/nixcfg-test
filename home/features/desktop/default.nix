@@ -7,14 +7,22 @@
 }:
 with lib; let
   cfg = config.features.desktop.remoteDesktop;
-  macminiRemote = pkgs.writeShellApplication {
+  remoteDesktopScript = ''
+    default_target=${escapeShellArg cfg.defaultHost}
+    target="''${1:-$default_target}"
+    exec remmina -c "vnc://$target"
+  '';
+  icemanRemote = pkgs.writeShellApplication {
+    name = "iceman-remote";
+    runtimeInputs = [pkgs.remmina];
+    text = remoteDesktopScript;
+  };
+  # Temporary compatibility wrapper. Remove after `iceman-remote` is the only
+  # helper referenced in shell history, docs, and personal scripts.
+  macminiRemoteCompat = pkgs.writeShellApplication {
     name = "macmini-remote";
     runtimeInputs = [pkgs.remmina];
-    text = ''
-      default_target=${escapeShellArg cfg.defaultHost}
-      target="''${1:-$default_target}"
-      exec remmina -c "vnc://$target"
-    '';
+    text = remoteDesktopScript;
   };
 in {
   imports = [
@@ -32,11 +40,11 @@ in {
 
     defaultHost = mkOption {
       type = types.str;
-      default = "macmini";
+      default = "iceman";
       example = "100.101.102.103";
       description = ''
-        Default host or Tailscale IP for the `macmini-remote` helper.
-        The default assumes Tailscale MagicDNS resolves `macmini`.
+        Default host or Tailscale IP for the `iceman-remote` helper.
+        The default assumes Tailscale MagicDNS resolves `iceman`.
       '';
     };
   };
@@ -48,7 +56,8 @@ in {
     (mkIf (cfg.enable && pkgs.stdenv.isLinux) {
       home.packages = [
         pkgs.remmina
-        macminiRemote
+        icemanRemote
+        macminiRemoteCompat
       ];
     })
   ];

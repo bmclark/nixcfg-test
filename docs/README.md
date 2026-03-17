@@ -1,14 +1,14 @@
 # nixcfg Documentation
 
-This repository contains the NixOS and nix-darwin configuration that manages a NixOS laptop (`carbon`) and a macOS Mac Mini (`macmini`) using home-manager integration.
+This repository contains the NixOS and nix-darwin configuration that manages a NixOS laptop (`maverick`) and a macOS Mac Mini (`iceman`) using home-manager integration.
 
 ## Repository Structure
 - `flake.nix` - Main flake defining system and home-manager configurations
 - `justfile` - Build automation commands (see Quick Start below)
-- `hosts/` - NixOS system configurations (`carbon` laptop)
-- `darwin/` - macOS system configurations (`macmini`)
+- `hosts/` - NixOS system configurations (`maverick` laptop)
+- `darwin/` - macOS system configurations (`iceman`)
 - `home/` - Home-manager configurations
-  - `bclark/` - User-specific configs (`carbon.nix`, `macmini.nix`, `home.nix`, `dotfiles/`)
+  - `bclark/` - User-specific configs (`maverick.nix`, `iceman.nix`, `home.nix`, `dotfiles/`)
   - `features/` - Modular feature configurations (`cli/`, `desktop/`, `development/`, `editors/`)
   - `common/` - Shared home-manager settings
   - `themes/` - Theme definitions (`dracula.nix`)
@@ -27,18 +27,18 @@ This repository contains the NixOS and nix-darwin configuration that manages a N
 Feature modules live in `home/features/` and follow a consistent pattern:
 - Organized by category (`cli`, `desktop`, `development`, `editors`)
 - Each feature exposes an enable option `features.<category>.<feature>.enable`
-- User configs (`home/bclark/carbon.nix`, `home/bclark/macmini.nix`) toggle features per host
+- User configs (`home/bclark/maverick.nix`, `home/bclark/iceman.nix`) toggle features per host
 - Platform guards (`pkgs.stdenv.isLinux`, `pkgs.stdenv.isDarwin`) keep modules cross-platform friendly
 
-Example: enabling zsh in `home/bclark/carbon.nix`
+Example: enabling zsh in `home/bclark/maverick.nix`
 
 ```nix
 features.cli.zsh.enable = true;
 ```
 
 ## Platform Support
-- **carbon** (NixOS laptop): Hyprland desktop, development tooling, Dracula theme throughout
-- **macmini** (macOS): nix-darwin managed system, Homebrew integration, Karabiner remapping
+- **maverick** (NixOS laptop): Hyprland desktop, development tooling, Dracula theme throughout
+- **iceman** (macOS): nix-darwin managed system, Homebrew integration, Karabiner remapping
 - Shared feature modules keep CLI tools, editors, and development experience consistent
 
 ## Key Technologies

@@ -5,7 +5,7 @@
 
 ## Context
 
-The macmini (macOS/nix-darwin) and carbon (NixOS) share extensive home-manager config for CLI tools, editors, themes, and dev tooling. However, several platform-specific gaps existed:
+The iceman (macOS/nix-darwin) and maverick (NixOS) share extensive home-manager config for CLI tools, editors, themes, and dev tooling. However, several platform-specific gaps existed:
 
 - Emacs daemon used systemd (Linux-only)
 - Some zsh functions used Wayland tools (wl-copy, Wayland screenshot tools)
@@ -40,7 +40,7 @@ Prefer nix > Homebrew > Mac App Store > manual install:
 
 ### macOS system defaults
 
-`darwin/macmini/configuration.nix` sets developer-focused defaults: Dark mode, fast key repeat, disabled auto-correct and smart quotes, tap-to-click trackpad, firewall enabled, screenshots to `~/Pictures/Screenshots`.
+`darwin/iceman/configuration.nix` sets developer-focused defaults: Dark mode, fast key repeat, disabled auto-correct and smart quotes, tap-to-click trackpad, firewall enabled, screenshots to `~/Pictures/Screenshots`.
 
 ## Consequences
 

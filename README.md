@@ -3,8 +3,8 @@ _NixOS and nix-darwin configuration for managing a NixOS laptop and macOS Mac Mi
 
 ## Overview
 This repository manages two systems through a single flake:
-- **carbon** — NixOS laptop running Hyprland
-- **macmini** — macOS Mac Mini managed with nix-darwin
+- **maverick** — NixOS laptop running Hyprland
+- **iceman** — macOS Mac Mini managed with nix-darwin
 
 Both hosts share common CLI tooling, editors, and development settings via home-manager. Dracula theming and keyboard shortcuts (Ctrl for apps, Super for window management) stay consistent across platforms.
 
@@ -36,7 +36,7 @@ Another standing directive is that user-facing shell tooling should feel polishe
 - Per-project development environments (nix-shell / nix develop)
 - direnv + nix-direnv for automatic dev shell loading
 - macOS Screen Sharing enabled for remote desktop over Tailscale
-- Remmina client + `macmini-remote` helper on NixOS for reaching the Mac
+- Remmina client + `iceman-remote` helper on NixOS for reaching the Mac
 - Plymouth boot splash with manufacturer logo
 - Firewall (SSH-only inbound)
 - Agenix secrets management (age-encrypted, decrypted at activation)
@@ -56,8 +56,8 @@ Another standing directive is that user-facing shell tooling should feel polishe
    cd ~/nixcfg
    ```
 3. **Review and customize**
-   - Toggle features in `home/bclark/carbon.nix` or `home/bclark/macmini.nix`
-   - Adjust system settings in `hosts/carbon/configuration.nix` or `darwin/macmini/configuration.nix`
+   - Toggle features in `home/bclark/maverick.nix` or `home/bclark/iceman.nix`
+   - Adjust system settings in `hosts/maverick/configuration.nix` or `darwin/iceman/configuration.nix`
    - Update user details in `home/bclark/home.nix`
 4. **Build and switch**
    - Current machine: `just switch`
@@ -99,10 +99,10 @@ nixcfg/
 ├── secrets/               # agenix-encrypted secrets
 │   └── secrets.nix        # Secret definitions and public keys
 ├── hosts/                 # NixOS system configurations
-│   ├── carbon/            # NixOS laptop (firewall, plymouth, TLP, etc.)
+│   ├── maverick/            # NixOS laptop (firewall, plymouth, TLP, etc.)
 │   └── common/            # Shared NixOS settings
 ├── darwin/                # macOS system configurations
-│   ├── macmini/           # macOS Mac Mini
+│   ├── iceman/           # macOS Mac Mini
 │   └── common/            # Shared macOS settings (Homebrew)
 ├── home/                  # Home-manager configurations
 │   ├── bclark/            # User-specific configs (per-host feature flags)
@@ -152,7 +152,7 @@ features = {
 Explore `home/features/` to see all modules. Each feature directory has a README.
 
 ## Hyprland Configuration (NixOS)
-The carbon laptop runs Hyprland with a carefully tuned configuration:
+The maverick laptop runs Hyprland with a carefully tuned configuration:
 - **Aesthetics**: Glass blur effects, soft shadows, smooth animations with custom bezier curves
 - **Window rules**: Dialogs float, PiP pins, browsers get full opacity, workspace assignments
 - **Keyboard**: CUA/Emacs-style bindings (Ctrl+W to close, Alt+Tab to switch, Ctrl+Alt+B/F/P/N for navigation)
@@ -223,7 +223,7 @@ See `secrets/secrets.nix` for the full setup.
 - **Connecting to macOS remote desktop from Linux**
   Bring up Tailscale on both machines, then connect your VNC client to the Mac's Tailscale IP and authenticate as `bclark`. If your client only supports legacy VNC passwords, add one in a follow-up change instead of putting it in the Nix store.
 - **Hyprland not starting**
-  Check logs via `journalctl -u display-manager` and confirm Hyprland is enabled in `hosts/carbon/configuration.nix`.
+  Check logs via `journalctl -u display-manager` and confirm Hyprland is enabled in `hosts/maverick/configuration.nix`.
 - **Hyprland services not starting**
   Ensure systemd integration is enabled. Check service status with `systemctl --user status hypridle` or `systemctl --user status hyprpaper`. See the [Hyprland Configuration Guide](docs/hyprland-configuration.md) for detailed troubleshooting.
 - **Audio not working**

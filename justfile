@@ -1,6 +1,9 @@
 # Helper commands for managing this flake across NixOS, nix-darwin, and home-manager.
 # Requires `just` (install with `nix-shell -p just` or add to your system packages).
 # Recipes are grouped by platform and workflow for quick navigation.
+#
+# Use explicit `path:` flake refs so working-tree renames and untracked files
+# are visible during local rebuilds and checks.
 
 # --------------------------------------------------
 # Default
@@ -14,41 +17,41 @@ _require-nixos-rebuild:
 
 nixos-switch-host SYSTEM:
     @just _require-nixos-rebuild
-    @sudo nixos-rebuild switch --flake .#{{SYSTEM}} --impure
+    @sudo nixos-rebuild switch --flake path:$(pwd)#{{SYSTEM}} --impure
 
 nixos-switch:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
     just nixos-switch-host $HOST
 
 nixos-test:
     @just _require-nixos-rebuild
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
-    sudo nixos-rebuild test --flake .#$HOST --impure
+    if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
+    sudo nixos-rebuild test --flake path:$(pwd)#$HOST --impure
 
 nixos-boot:
     @just _require-nixos-rebuild
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
-    sudo nixos-rebuild boot --flake .#$HOST --impure
+    if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
+    sudo nixos-rebuild boot --flake path:$(pwd)#$HOST --impure
 
 nixos-build SYSTEM:
     @just _require-nixos-rebuild
-    @nixos-rebuild build --flake .#{{SYSTEM}} --impure
+    @nixos-rebuild build --flake path:$(pwd)#{{SYSTEM}} --impure
 
 build-current:
     @if [ "$(uname -s)" = "Darwin" ]; then \
         just darwin-build; \
     else \
         HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-        if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+        if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
         just nixos-build $HOST; \
     fi
 
 deploy-to HOST SYSTEM:
     @just _require-nixos-rebuild
-    @nixos-rebuild switch --flake .#{{SYSTEM}} --target-host {{HOST}} --use-remote-sudo
+    @nixos-rebuild switch --flake path:$(pwd)#{{SYSTEM}} --target-host {{HOST}} --use-remote-sudo
 
 deploy SYSTEM:
     @just deploy-to {{SYSTEM}} {{SYSTEM}}
@@ -60,7 +63,7 @@ _require-darwin-rebuild:
 
 darwin-switch-host SYSTEM:
     @just _require-darwin-rebuild
-    @sudo darwin-rebuild switch --flake .#{{SYSTEM}} --impure
+    @sudo darwin-rebuild switch --flake path:$(pwd)#{{SYSTEM}} --impure
     @just _reload-aerospace
 
 darwin-switch:
@@ -77,12 +80,12 @@ _reload-aerospace:
 darwin-test:
     @just _require-darwin-rebuild
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    darwin-rebuild check --flake .#$HOST --impure
+    darwin-rebuild check --flake path:$(pwd)#$HOST --impure
 
 darwin-build:
     @just _require-darwin-rebuild
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    darwin-rebuild build --flake .#$HOST --impure
+    darwin-rebuild build --flake path:$(pwd)#$HOST --impure
 
 # --------------------------------------------------
 # Home Manager Commands
@@ -92,20 +95,20 @@ _require-home-manager:
 
 home-switch-host HOST:
     @just _require-home-manager
-    @NIXPKGS_ALLOW_UNFREE=1 home-manager switch --impure --flake .#bclark@{{HOST}}
+    @NIXPKGS_ALLOW_UNFREE=1 home-manager switch --impure --flake path:$(pwd)#bclark@{{HOST}}
 
 home-switch:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
     just home-switch-host $HOST
 
 home-build-host HOST:
     @just _require-home-manager
-    @NIXPKGS_ALLOW_UNFREE=1 home-manager build --impure --flake .#bclark@{{HOST}}
+    @NIXPKGS_ALLOW_UNFREE=1 home-manager build --impure --flake path:$(pwd)#bclark@{{HOST}}
 
 home-build:
     @HOST=${HOST:-$(hostname -s | tr '[:upper:]' '[:lower:]' | tr -cd '[:alnum:]')} ; \
-    if [ "$HOST" = "nixos" ]; then HOST=carbon; fi ; \
+    if [ "$HOST" = "nixos" ]; then HOST=maverick; fi ; \
     just home-build-host $HOST
 
 # --------------------------------------------------
@@ -125,7 +128,7 @@ test:
     fi
 
 build-all:
-    @just nixos-build carbon
+    @just nixos-build maverick
     @if command -v darwin-rebuild >/dev/null 2>&1; then \
         just darwin-build; \
     else \
@@ -135,10 +138,10 @@ build-all:
 # --------------------------------------------------
 # Update Workflow
 update:
-    @nix flake update
+    @nix flake update path:$(pwd)
 
 update-input INPUT:
-    @nix flake lock --update-input {{INPUT}}
+    @nix flake lock --update-input {{INPUT}} path:$(pwd)
 
 # Updates flake, rebuilds both systems, and switches current machine; cross-host switching requires remote access setup.
 update-all: update
@@ -187,16 +190,16 @@ ocr-pdf FILE PAGE="1":
 # --------------------------------------------------
 # Flake Utilities
 check:
-    @nix flake check
+    @nix flake check path:$(pwd)
 
 show:
-    @nix flake show
+    @nix flake show path:$(pwd)
 
 show-json:
-    @nix flake show --json
+    @nix flake show --json path:$(pwd)
 
 check-trace:
-    @nix flake check --show-trace
+    @nix flake check --show-trace path:$(pwd)
 
 # --------------------------------------------------
 # Git Workflow
@@ -224,6 +227,6 @@ theme THEME="dracula":
 # --------------------------------------------------
 # Development Environments
 dev-shell:
-    @nix develop
+    @nix develop path:$(pwd)
 
 dev: dev-shell

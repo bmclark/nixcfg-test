@@ -269,7 +269,7 @@ Includes hooks for: trailing whitespace, YAML/JSON/TOML validation, private key 
 
 ### Signing and Secrets Workflow
 
-Use this flow on `carbon`:
+Use this flow on `maverick`:
 
 ```bash
 # Verify the secret key is present

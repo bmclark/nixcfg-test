@@ -4,7 +4,7 @@ Window manager, Wayland desktop services, browsers, fonts, and keyboard remappin
 
 ## Start Here
 
-On the NixOS laptop (`carbon`), the desktop is built around **Hyprland**:
+On the NixOS laptop (`maverick`), the desktop is built around **Hyprland**:
 - Hyprland manages windows and workspaces.
 - Waybar shows status and workspace state.
 - Wofi launches apps.
@@ -12,7 +12,7 @@ On the NixOS laptop (`carbon`), the desktop is built around **Hyprland**:
 - Hyprlock locks the screen.
 - Ghostty is the main terminal app.
 
-On the macOS host (`macmini`), Hyprland is not used. The main desktop-specific behavior is Karabiner remapping `Cmd` to `Ctrl` so application shortcuts match the Linux setup more closely.
+On the macOS host (`iceman`), Hyprland is not used. The main desktop-specific behavior is Karabiner remapping `Cmd` to `Ctrl` so application shortcuts match the Linux setup more closely.
 
 ## What To Use When
 
@@ -31,7 +31,7 @@ On the macOS host (`macmini`), Hyprland is not used. The main desktop-specific b
 
 ### Hyprland basics
 
-These bindings are the main way to move around the graphical desktop on `carbon`.
+These bindings are the main way to move around the graphical desktop on `maverick`.
 
 | Key | Action |
 |-----|--------|
@@ -120,15 +120,15 @@ Chromium is the compatibility browser. Use it when:
 
 ## Remote Desktop
 
-`carbon` includes Remmina for remote desktop sessions.
+`maverick` includes Remmina for remote desktop sessions.
 
 For the macOS Screen Sharing setup in this repo:
 - launch Remmina from Wofi for a GUI workflow
-- or run `macmini-remote` in a shell
-- pass a Tailscale IP if MagicDNS is not resolving: `macmini-remote 100.x.y.z`
+- or run `iceman-remote` in a shell
+- pass a Tailscale IP if MagicDNS is not resolving: `iceman-remote 100.x.y.z`
 
-The helper defaults to `macmini`, which matches the macOS host name managed in the Darwin config.
-Authenticate the Mac to Tailscale from the menu bar app on `macmini`; the Linux side only needs the reachable host name or Tailscale IP.
+The helper defaults to `iceman`, which matches the macOS host name managed in the Darwin config.
+Authenticate the Mac to Tailscale from the menu bar app on `iceman`; the Linux side only needs the reachable host name or Tailscale IP.
 
 ## Desktop Services
 
@@ -153,7 +153,7 @@ Useful behaviors:
 
 ### Thunar and removable media
 
-Thunar is the lightweight graphical file browser on `carbon`.
+Thunar is the lightweight graphical file browser on `maverick`.
 
 Use it for:
 - browsing directories visually
@@ -167,7 +167,7 @@ Removable media is automounted by `udiskie`, so mounted drives should show up in
 
 ### OCR and document helpers
 
-`carbon` includes a lightweight OCR workflow:
+`maverick` includes a lightweight OCR workflow:
 - `ocrshot` or `Super+Ctrl+O` grabs a screen region, OCRs it, and copies the text
 - `ocrimg <file>` OCRs an image and copies the text
 - `ocrpdf <file> [page]` OCRs a PDF page and copies the text

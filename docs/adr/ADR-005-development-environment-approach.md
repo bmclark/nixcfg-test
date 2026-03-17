@@ -13,7 +13,7 @@ The goal is to keep the system lean while making it easy for projects to declare
 
 ## Decision
 Adopt per-project Nix shells (`shell.nix` or flake-based `devShells`) for development environments:
-- System configurations (`hosts/carbon/configuration.nix`, `darwin/macmini/configuration.nix`) install only essential, language-agnostic tooling (git, editors, CLI utilities).
+- System configurations (`hosts/maverick/configuration.nix`, `darwin/iceman/configuration.nix`) install only essential, language-agnostic tooling (git, editors, CLI utilities).
 - Feature modules provide shared developer tooling (zsh, ghostty, tmux, fzf, ripgrep, etc.).
 - Individual projects define their toolchains in `shell.nix`/flake files. Example:
 

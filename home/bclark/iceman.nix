@@ -1,4 +1,4 @@
-# macOS Mac Mini (macmini) -- aarch64-darwin with nix-darwin.
+# macOS Mac Mini (iceman) -- aarch64-darwin with nix-darwin.
 {
   pkgs,
   config,
@@ -38,7 +38,7 @@
     };
   };
 
-  # Weekly flake update timer (Sunday 9am) -- mirrors carbon's systemd timer.
+  # Weekly flake update timer (Sunday 9am) -- mirrors maverick's systemd timer.
   launchd.agents.flake-update = {
     enable = true;
     config = {

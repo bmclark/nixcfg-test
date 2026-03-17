@@ -10,9 +10,9 @@
 let
   # Add your SSH public keys here (from ~/.ssh/id_ed25519.pub or similar)
   # bclark = "ssh-ed25519 AAAA...";
-  # carbon = "ssh-ed25519 AAAA..."; # host key from /etc/ssh/ssh_host_ed25519_key.pub
+  # maverick = "ssh-ed25519 AAAA..."; # host key from /etc/ssh/ssh_host_ed25519_key.pub
 in {
   # Example:
-  # "wifi-passwords.age".publicKeys = [bclark carbon];
-  # "api-tokens.age".publicKeys = [bclark carbon];
+  # "wifi-passwords.age".publicKeys = [bclark maverick];
+  # "api-tokens.age".publicKeys = [bclark maverick];
 }

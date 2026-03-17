@@ -1,7 +1,7 @@
 # Hyprland Configuration Guide
 
 ## Overview
-The `carbon` laptop runs a modernized Hyprland environment managed through home-manager modules (`home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`). The configuration aligns with [ADR-003](adr/ADR-003-keyboard-remapping-strategy.md) for keyboard philosophy and [ADR-004](adr/ADR-004-theme-standardization.md) for Dracula theming, while the modernization work is captured in [ADR-007](adr/ADR-007-hyprland-configuration-modernization.md). Hyprland integrates tightly with PipeWire audio, BlueZ Bluetooth support, and desktop environment services such as udiskie and polkit for a polished, unix-porn-inspired experience.
+The `maverick` laptop runs a modernized Hyprland environment managed through home-manager modules (`home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`). The configuration aligns with [ADR-003](adr/ADR-003-keyboard-remapping-strategy.md) for keyboard philosophy and [ADR-004](adr/ADR-004-theme-standardization.md) for Dracula theming, while the modernization work is captured in [ADR-007](adr/ADR-007-hyprland-configuration-modernization.md). Hyprland integrates tightly with PipeWire audio, BlueZ Bluetooth support, and desktop environment services such as udiskie and polkit for a polished, unix-porn-inspired experience.
 
 ## Keyboard Shortcuts
 Hyprland adheres to CUA conventions (Ctrl for application actions), keeps Super reserved for window manager responsibilities, and adds Emacs-style navigation for consistency across platforms.
@@ -63,8 +63,8 @@ Hyprland adheres to CUA conventions (Ctrl for application actions), keeps Super 
 ## Configuration Files
 - `home/features/desktop/hyprland.nix` — Core window manager configuration (keybindings, animations, window rules).  
 - `home/features/desktop/wayland.nix` — Companion services (hyprpaper, hypridle, wofi, dunst, waybar, udiskie, etc.).  
-- `hosts/carbon/configuration.nix` — System-level services (PipeWire, BlueZ, polkit, portals).  
-Enable or disable modules via `home/bclark/carbon.nix` to tailor the desktop setup.
+- `hosts/maverick/configuration.nix` — System-level services (PipeWire, BlueZ, polkit, portals).  
+Enable or disable modules via `home/bclark/maverick.nix` to tailor the desktop setup.
 
 ## Audio System
 ### PipeWire

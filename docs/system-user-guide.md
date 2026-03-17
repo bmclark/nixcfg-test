@@ -6,7 +6,7 @@ A beginner-first guide for using this setup effectively on day one. This documen
 
 This system has four main layers:
 
-1. **Desktop layer**: Hyprland on `carbon`, macOS desktop on `macmini`
+1. **Desktop layer**: Hyprland on `maverick`, macOS desktop on `iceman`
 2. **Terminal layer**: Ghostty
 3. **Terminal workspace layer**: tmux
 4. **Editor layer**: Emacs
@@ -30,8 +30,8 @@ Do not force one tool to do another tool's job:
 
 | Host | Platform | Main desktop behavior |
 |------|----------|-----------------------|
-| `carbon` | NixOS | Hyprland desktop with Ghostty, tmux, Emacs, Firefox, VS Code |
-| `macmini` | macOS | Native macOS desktop with Ghostty, tmux, Emacs, Firefox, VS Code, Karabiner remap |
+| `maverick` | NixOS | Hyprland desktop with Ghostty, tmux, Emacs, Firefox, VS Code |
+| `iceman` | macOS | Native macOS desktop with Ghostty, tmux, Emacs, Firefox, VS Code, Karabiner remap |
 
 Shared expectations:
 - application shortcuts use `Ctrl`
@@ -42,10 +42,10 @@ Shared expectations:
 
 ### 1. Open a terminal
 
-On `carbon`:
+On `maverick`:
 - press `Super+Return` to open Ghostty
 
-On `macmini`:
+On `iceman`:
 - open Ghostty from the app launcher (installed via Homebrew cask — `darwin/common/homebrew.nix`)
 - if fresh setup: run `just darwin-switch` first to install Ghostty and all other Homebrew casks
 - Karabiner-Elements will need Accessibility and Input Monitoring permissions granted manually in System Settings > Privacy & Security
@@ -83,7 +83,7 @@ Then use `C-c p p` to switch into a project and let Emacs restore the IDE layout
 
 ## Moving Around The System
 
-### macOS (macmini)
+### macOS (iceman)
 
 macOS uses native desktop management instead of Hyprland:
 - use Mission Control (`Ctrl+Up`) and Spaces for virtual desktops
@@ -94,7 +94,7 @@ macOS uses native desktop management instead of Hyprland:
 
 ### Hyprland
 
-Hyprland owns desktop-level movement on `carbon`.
+Hyprland owns desktop-level movement on `maverick`.
 
 | Key | Action |
 |-----|--------|
@@ -201,21 +201,21 @@ Use:
 
 ### Pattern: quick check without disturbing your main layout
 
-On `carbon`, use the Hyprland dropdown terminal with `Super+\`` for:
+On `maverick`, use the Hyprland dropdown terminal with `Super+\`` for:
 - one-off git status
 - package/version checks
 - a quick `journalctl`, `kubectl`, or `rg`
 
-On `macmini`, use a Ghostty tab (`Ctrl+Shift+T`) for the same purpose — there is no dropdown terminal on macOS.
+On `iceman`, use a Ghostty tab (`Ctrl+Shift+T`) for the same purpose — there is no dropdown terminal on macOS.
 
-### Pattern: remote into `macmini` from Linux
+### Pattern: remote into `iceman` from Linux
 
 1. Make sure Tailscale is connected on both machines (`ujust tailscale-status` is enough to verify).
 2. Find the Mac's Tailscale IP from the menu bar app or `tailscale ip -4`.
-3. On `carbon`, either launch Remmina from the app launcher or run `macmini-remote <tailscale-ip>`.
+3. On `maverick`, either launch Remmina from the app launcher or run `iceman-remote <tailscale-ip>`.
 4. Sign in to the Mac as `bclark`.
 
-`macmini-remote` defaults to `macmini`, so if Tailscale MagicDNS is enabled you can usually just run `macmini-remote`.
+`iceman-remote` defaults to `iceman`, so if Tailscale MagicDNS is enabled you can usually just run `iceman-remote`.
 
 This setup uses macOS Screen Sharing rather than a third-party remote desktop stack. If you need a legacy VNC password for a client that cannot do user-based auth, wire it through secrets instead of hardcoding it in Nix.
 

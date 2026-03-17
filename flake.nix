@@ -3,8 +3,8 @@
     NixOS and nix-darwin configuration for managing multiple systems.
 
     Managed systems:
-    - carbon: NixOS laptop with Hyprland
-    - macmini: macOS Mac Mini with nix-darwin
+    - maverick: NixOS laptop with Hyprland
+    - iceman: macOS Mac Mini with nix-darwin
 
     Features:
     - Modular feature-based architecture
@@ -83,18 +83,28 @@
 
     homeManagerModules = {};
 
-    homeConfigurations = {
-      "bclark@carbon" = home-manager.lib.homeManagerConfiguration {
+    homeConfigurations = let
+      maverickHome = home-manager.lib.homeManagerConfiguration {
         pkgs = mkPkgs "x86_64-linux";
         extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
-        modules = [./home/bclark/carbon.nix];
+        modules = [./home/bclark/maverick.nix];
       };
 
-      "bclark@macmini" = home-manager.lib.homeManagerConfiguration {
+      icemanHome = home-manager.lib.homeManagerConfiguration {
         pkgs = mkPkgs "aarch64-darwin";
         extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
-        modules = [./home/bclark/macmini.nix];
+        modules = [./home/bclark/iceman.nix];
       };
+    in {
+      "bclark@maverick" = maverickHome;
+      "bclark@iceman" = icemanHome;
+
+      # Temporary compatibility aliases for pre-rename hostnames and existing
+      # workflows. Remove once both machines have switched cleanly to
+      # `maverick` / `iceman` and any shell aliases have been updated.
+      "bclark@carbon" = maverickHome;
+      "bclark@macmini" = icemanHome;
+      "bclark@bryansmacmini" = icemanHome;
     };
 
     # Project templates: nix flake init -t .#python (etc.)
@@ -122,11 +132,11 @@
     };
 
     nixosConfigurations = let
-      carbonSystem =
+      maverickSystem =
         nixpkgs.lib.nixosSystem {
           specialArgs = {inherit inputs outputs theme themeName;};
           modules = [
-            ./hosts/carbon
+            ./hosts/maverick
             agenix.nixosModules.default
             home-manager.nixosModules.home-manager
             {
@@ -135,24 +145,26 @@
                 useUserPackages = true;
                 backupFileExtension = "hm-backup";
                 extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
-                users.bclark = import ./home/bclark/carbon.nix;
+                users.bclark = import ./home/bclark/maverick.nix;
               };
             }
           ];
         };
     in {
-      carbon = carbonSystem;
-      # Provide a default alias so `nixos-rebuild switch --flake .` works
-      # on machines that still report the factory `nixos` hostname.
-      nixos = carbonSystem;
+      maverick = maverickSystem;
+      # Temporary compatibility aliases for the old hostname and factory
+      # default hostname. Remove after the laptop is consistently rebuilding
+      # as `maverick`.
+      carbon = maverickSystem;
+      nixos = maverickSystem;
     };
 
     darwinConfigurations = let
-      macminiSystem = inputs.nix-darwin.lib.darwinSystem {
+      icemanSystem = inputs.nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         specialArgs = {inherit inputs outputs theme themeName;};
         modules = [
-          ./darwin/macmini
+          ./darwin/iceman
           home-manager.darwinModules.home-manager
           {
             home-manager = {
@@ -160,16 +172,17 @@
               useUserPackages = true;
               backupFileExtension = "hm-backup";
               extraSpecialArgs = {inherit inputs outputs theme themeName nix-vscode-extensions;};
-              users.bclark = import ./home/bclark/macmini.nix;
+              users.bclark = import ./home/bclark/iceman.nix;
             };
           }
         ];
       };
     in {
-      macmini = macminiSystem;
-      # Alias so `darwin-rebuild switch --flake .` works when hostname
-      # reports as "bryansmacmini" (from "Bryans-Mac-mini").
-      bryansmacmini = macminiSystem;
+      iceman = icemanSystem;
+      # Temporary compatibility aliases for the old hostnames. Remove after
+      # the Mac is consistently rebuilding as `iceman`.
+      macmini = icemanSystem;
+      bryansmacmini = icemanSystem;
     };
   };
 }
