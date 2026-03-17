@@ -5,6 +5,7 @@
 # Local development environments
 /.direnv/
 /.devenv/
+/.claude/settings.local.json
 
 # Local caches and ephemeral work dirs
 /.cache/
