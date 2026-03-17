@@ -138,10 +138,10 @@ build-all:
 # --------------------------------------------------
 # Update Workflow
 update:
-    @nix flake update path:$(pwd)
+    @nix flake update --flake path:$(pwd)
 
 update-input INPUT:
-    @nix flake lock --update-input {{INPUT}} path:$(pwd)
+    @nix flake lock --update-input {{INPUT}} --flake path:$(pwd)
 
 # Updates flake, rebuilds both systems, and switches current machine; cross-host switching requires remote access setup.
 update-all: update
