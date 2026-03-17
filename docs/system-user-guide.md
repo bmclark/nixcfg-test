@@ -307,10 +307,13 @@ Examples:
 For nixcfg specifically, the universal layer also exposes:
 - `ujust nixcfg-check`
 - `ujust nixcfg-update`
+- `ujust nixcfg-update-switch`
 - `ujust nixcfg-switch`
 - `ujust nixcfg-home-switch`
 - `ujust rebuild`
 - `ujust rollback`
+
+`ujust nixcfg-update-switch` updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It refuses to run if `$HOME/nixcfg` already has uncommitted changes so it does not bundle unrelated work into the update commit.
 
 For host operations, it also exposes:
 - `ujust tailscale-status`

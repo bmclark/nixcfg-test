@@ -158,12 +158,15 @@ Examples:
 - `ujust nixcfg-check`
 - `ujust nixcfg-switch`
 - `ujust nixcfg-update`
+- `ujust nixcfg-update-switch`
 - `ujust doctor`
 - `ujust host-info`
 - `ujust tailscale-status`
 - `ujust tailscale-up`
 - `ujust rebuild`
 - `ujust rollback`
+
+`ujust nixcfg-update-switch` updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It aborts if `$HOME/nixcfg` is already dirty so it does not accidentally commit unrelated changes. Pass a custom commit message with `ujust nixcfg-update-switch "chore: weekly flake update"`.
 
 Use plain `just` when you want the current project's nearest `justfile`.
 

@@ -105,6 +105,24 @@ nixcfg-check:
 nixcfg-update:
   @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" update
 
+nixcfg-update-switch MESSAGE="chore: update flake inputs":
+  @bash -eu -o pipefail -c '\
+    repo="$HOME/nixcfg"; \
+    if [ -n "$(git -C "$repo" status --porcelain)" ]; then \
+      echo "nixcfg repo has uncommitted changes; aborting update-switch" >&2; \
+      echo "commit, stash, or clean the repo first" >&2; \
+      exit 1; \
+    fi; \
+    just --justfile "$repo/justfile" --working-directory "$repo" update; \
+    if [ -z "$(git -C "$repo" diff --name-only -- flake.lock)" ] && [ -z "$(git -C "$repo" diff --cached --name-only -- flake.lock)" ]; then \
+      echo "flake.lock unchanged; skipping commit"; \
+    else \
+      git -C "$repo" add flake.lock; \
+      git -C "$repo" commit -m "{{MESSAGE}}"; \
+    fi; \
+    just --justfile "$repo/justfile" --working-directory "$repo" switch \
+  '
+
 nixcfg-switch:
   @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" switch
 
