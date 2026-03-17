@@ -298,6 +298,7 @@ Use `ujust` when you want the host-level utility `justfile` instead of a repo-lo
 
 Examples:
 - `ujust now`
+- `ujust update`
 - `ujust weather NYC`
 - `ujust ports`
 - `ujust ocr-shot`
@@ -313,7 +314,9 @@ For nixcfg specifically, the universal layer also exposes:
 - `ujust rebuild`
 - `ujust rollback`
 
-`ujust nixcfg-update-switch` updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It refuses to run if `$HOME/nixcfg` already has uncommitted changes so it does not bundle unrelated work into the update commit.
+`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It refuses to run if `$HOME/nixcfg` already has uncommitted changes so it does not bundle unrelated work into the update commit.
+
+`ujust nixcfg-update-switch` is the explicit nixcfg-scoped name for the same workflow. `ujust nixcfg-update` still does only the flake-input refresh.
 
 For host operations, it also exposes:
 - `ujust tailscale-status`

@@ -151,6 +151,7 @@ Use `ujust` for commands that should work from any directory on the machine, ins
 
 Examples:
 - `ujust now`
+- `ujust update`
 - `ujust weather NYC`
 - `ujust ports`
 - `ujust ocr-shot`
@@ -166,7 +167,9 @@ Examples:
 - `ujust rebuild`
 - `ujust rollback`
 
-`ujust nixcfg-update-switch` updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It aborts if `$HOME/nixcfg` is already dirty so it does not accidentally commit unrelated changes. Pass a custom commit message with `ujust nixcfg-update-switch "chore: weekly flake update"`.
+`ujust update` is the high-level system update command. It updates flake inputs, commits `flake.lock`, and then runs the normal host-appropriate `switch`. It aborts if `$HOME/nixcfg` is already dirty so it does not accidentally commit unrelated changes. Pass a custom commit message with `ujust update "chore: weekly flake update"`.
+
+`ujust nixcfg-update-switch` is the explicit nixcfg-scoped name for the same workflow. `ujust nixcfg-update` still does the narrower flake-input update only.
 
 Use plain `just` when you want the current project's nearest `justfile`.
 

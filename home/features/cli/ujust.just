@@ -123,6 +123,9 @@ nixcfg-update-switch MESSAGE="chore: update flake inputs":
     just --justfile "$repo/justfile" --working-directory "$repo" switch \
   '
 
+update MESSAGE="chore: update flake inputs":
+  @just --justfile "$HOME/.config/just/justfile" nixcfg-update-switch "{{MESSAGE}}"
+
 nixcfg-switch:
   @just --justfile "$HOME/nixcfg/justfile" --working-directory "$HOME/nixcfg" switch
 
