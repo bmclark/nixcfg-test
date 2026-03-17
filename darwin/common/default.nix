@@ -81,9 +81,9 @@ in {
         /bin/launchctl bootstrap system /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
 
         # Restrict access to specified users via dscl
-        for user in ${escapeShellArgs allowedScreenSharingUsers}; do
-          /usr/bin/dscl . -merge /Groups/com.apple.access_screensharing GroupMembership "$user"
-        done
+        ${concatMapStringsSep "\n        " (user:
+          "/usr/bin/dscl . -merge /Groups/com.apple.access_screensharing GroupMembership ${escapeShellArg user}"
+        ) allowedScreenSharingUsers}
       '';
     })
   ];

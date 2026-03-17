@@ -62,7 +62,7 @@
       ShowPathbar = true;
       AppleShowAllExtensions = true;
       _FXShowPosixPathInTitle = true;
-      NewWindowTarget = "PfHm"; # New windows open to home
+      NewWindowTarget = "Home";
       FXEnableExtensionChangeWarning = false;
       ShowExternalHardDrivesOnDesktop = true;
       ShowRemovableMediaOnDesktop = true;
@@ -143,9 +143,9 @@
     restartAfterPowerFailure = true;
     restartAfterFreeze = true;
     sleep = {
-      computer = 0;  # Never sleep (always-on Mac Mini)
-      display = 60;  # Display sleeps after 60 minutes
-      harddisk = 0;  # Never spin down
+      computer = "never";  # Always-on Mac Mini
+      display = 60;        # Display sleeps after 60 minutes
+      harddisk = "never";  # Never spin down
     };
   };
 
