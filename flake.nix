@@ -35,6 +35,7 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
   };
@@ -44,6 +45,7 @@
     agenix,
     home-manager,
     mcp-nixos,
+    nix-homebrew,
     nix-vscode-extensions,
     nixpkgs,
     nixpkgs-stable,
@@ -165,7 +167,15 @@
         specialArgs = {inherit inputs outputs theme themeName;};
         modules = [
           ./darwin/iceman
+          nix-homebrew.darwinModules.nix-homebrew
           home-manager.darwinModules.home-manager
+          {
+            nix-homebrew = {
+              enable = true;
+              autoMigrate = true;
+              user = "bclark";
+            };
+          }
           {
             home-manager = {
               useGlobalPkgs = true;
