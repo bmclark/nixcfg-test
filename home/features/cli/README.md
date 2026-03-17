@@ -37,32 +37,32 @@ Recommended daily flow:
 
 The shell uses Emacs-style editing.
 
-| Key | Action |
+| Physical key | Action |
 |-----|--------|
-| `Ctrl+A` | Move to start of line |
-| `Ctrl+E` | Move to end of line |
-| `Ctrl+K` | Kill to end of line |
-| `Ctrl+U` | Kill to start of line |
-| `Ctrl+W` | Delete previous word |
-| `Ctrl+Y` | Yank last killed text |
-| `Ctrl+R` | History search |
+| `CapsLock+A` | Move to start of line |
+| `CapsLock+E` | Move to end of line |
+| `CapsLock+K` | Kill to end of line |
+| `CapsLock+U` | Kill to start of line |
+| `CapsLock+W` | Delete previous word |
+| `CapsLock+Y` | Yank last killed text |
+| `CapsLock+R` | History search |
 
-If you are inside tmux, `Ctrl+A` is tmux prefix first. Press `Ctrl+A Ctrl+A` to send a literal `Ctrl+A` to the shell.
+If you are inside tmux, `CapsLock+]` is the primary prefix and `CapsLock+A` is a backup prefix. Press `CapsLock+A CapsLock+A` if you need to send a literal `Ctrl+A` to the shell while the backup prefix is still enabled.
 
 ### Ghostty
 
 Ghostty is the terminal application, not the session manager.
 
-| Key | Action |
+| Physical key | Action |
 |-----|--------|
-| `Ctrl+Shift+T` | New tab |
-| `Ctrl+Tab` | Next tab |
-| `Ctrl+Shift+Tab` | Previous tab |
-| `Ctrl+Shift+W` | Close current surface/tab |
-| `Ctrl+Shift+C` | Copy |
-| `Ctrl+Shift+V` | Paste |
-| `Ctrl+=` / `Ctrl+-` / `Ctrl+0` | Increase / decrease / reset font size |
-| `Ctrl+Shift+Up` / `Ctrl+Shift+Down` | Jump between shell prompts |
+| `CapsLock+Shift+T` | New tab |
+| `CapsLock+,` | Previous tab |
+| `CapsLock+.` | Next tab |
+| `CapsLock+Shift+W` | Close current surface/tab |
+| `CapsLock+Shift+C` | Copy |
+| `CapsLock+Shift+V` | Paste |
+| `CapsLock+=` / `CapsLock+-` / `CapsLock+0` | Increase / decrease / reset font size |
+| `CapsLock+Shift+Up` / `CapsLock+Shift+Down` | Jump between shell prompts |
 
 Ghostty tabs are best for separate top-level contexts, such as one tab for local work and one for SSH. Use tmux inside a tab when you need panes, persistence, or logging.
 
@@ -70,15 +70,18 @@ Ghostty tabs are best for separate top-level contexts, such as one tab for local
 
 tmux is the main workspace manager for terminal work.
 
-| Key | Action |
+| Physical key | Action |
 |-----|--------|
-| `Ctrl+A` | Prefix |
+| `CapsLock+]` | Primary prefix |
+| `CapsLock+A` | Backup prefix |
 | `Prefix + c` | New window |
 | `Prefix + |` | Split left/right |
 | `Prefix + -` | Split top/bottom |
-| `Alt+Left/Right/Up/Down` | Move between panes |
-| `Shift+Left` / `Shift+Right` | Previous / next window |
-| `Ctrl+Shift+Left/Right/Up/Down` | Resize current pane |
+| `Shift+Left/Right` | Previous / next window |
+| `Shift+Down` | New window |
+| `Prefix + Left/Right/Up/Down` | Move between panes |
+| `Prefix + ,` / `Prefix + .` | Swap with previous / next pane |
+| `Prefix + Shift+Left/Right/Up/Down` | Resize current pane |
 | `Prefix + f` | Fuzzy-find sessions, windows, panes |
 | `Prefix + Space` | Highlight visible URLs/paths/hashes to copy |
 | `Prefix + r` | Reload tmux config |
@@ -232,7 +235,9 @@ Use these when you want a ready-made starting point instead of manually splittin
 
 - Ghostty has no auto-logging; tmux logging fills that gap.
 - tmux sessions auto-save every 15 minutes and restore on startup.
-- tmux copy mode is `vi` only inside copy mode; shell editing stays Emacs-style.
+- tmux copy mode now uses Emacs-style movement as well, so shell and tmux selection share the same basic navigation model.
+- tmux mouse mode is on, and mouse drag selection copies to the system clipboard through `pbcopy` on macOS.
+- tmux logging auto-starts for new panes.
 - The shell is intentionally Emacs-first, matching the wider keyboard strategy across the repo.
 
 See [ADR-002](../../../docs/adr/ADR-002-shell-and-terminal-choices.md), [ADR-008](../../../docs/adr/ADR-008-tmux-integration.md), [ADR-010](../../../docs/adr/ADR-010-shell-plugin-management.md), and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md).

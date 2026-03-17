@@ -78,11 +78,12 @@ These are the extra bindings or behaviors on `iceman`:
 
 | Shortcut / command | Action |
 |-----|--------|
-| `Ctrl+\`` | Jump to workspace `S` scratch space |
+| `Ctrl+\`` | Toggle scratch workspace `S`, creating a Ghostty there on first use |
 | `Ctrl+,` / `Ctrl+.` | Previous / next workspace |
 | `Ctrl+E` | Open Finder |
 | `Ctrl+L` | Lock screen |
-| `Cmd+Tab` | Native macOS app switching |
+| `Alt+Tab` | AltTab app switching |
+| `Cmd+Tab` | Native macOS app switching still available |
 | `drs` | Rebuild nix-darwin |
 | `drt` | Check nix-darwin config without switching |
 
@@ -130,7 +131,7 @@ Use it for:
 
 Do not treat it as your main long-lived work area; that is better handled by a normal Ghostty window with tmux inside.
 
-On `iceman`, `Ctrl+\`` toggles into and back out of workspace `S`. Use it the same way if you keep a scratch Ghostty window there.
+On `iceman`, `Ctrl+\`` toggles into and back out of workspace `S`. On first use it creates a Ghostty there automatically, then reuses that scratch terminal afterward.
 
 ## Browsers
 

@@ -21,6 +21,8 @@ Current checkpoint for the Darwin work tracked by ADR-014 and the follow-on Aero
 - [x] **Stage Manager:** disabled
 - [x] **.DS_Store:** disabled on network and USB volumes
 - [x] **FileVault visibility:** status check emitted during `darwin-switch`
+- [x] **AltTab app switcher:** declarative cask added so physical `Alt+Tab` can match Linux muscle memory
+- [x] **Scratch Ghostty workspace:** physical `Ctrl+\`` now creates and reuses a Ghostty on workspace `S`
 
 ## Still Deferred
 
@@ -31,7 +33,7 @@ Current checkpoint for the Darwin work tracked by ADR-014 and the follow-on Aero
 ## Notes
 
 - Karabiner still requires manual Accessibility and Input Monitoring approval in System Settings after install.
-- macOS GUI shortcuts stay native: app switching is still `Cmd+Tab`, and copy/paste in GUI apps is still `Cmd+C/V/X`.
+- AltTab can provide physical `Alt+Tab` app switching on macOS, while native `Cmd+Tab` and `Cmd+C/V/X` still remain available.
 - The shared window-manager layer now uses `Hyper` on both hosts; in practice that is the physical `Ctrl` key.
 
 ## App Parity Snapshot

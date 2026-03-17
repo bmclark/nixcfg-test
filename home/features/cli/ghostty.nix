@@ -52,8 +52,8 @@
     # Keybinds: tab management
     keybind = ctrl+shift+t=new_tab
     keybind = ctrl+shift+w=close_surface
-    keybind = ctrl+tab=next_tab
-    keybind = ctrl+shift+tab=previous_tab
+    keybind = ctrl+period=next_tab
+    keybind = ctrl+comma=previous_tab
   '';
 in {
   options.features.cli.ghostty.enable =

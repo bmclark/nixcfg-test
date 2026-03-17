@@ -15,13 +15,13 @@ The configuration needs a terminal multiplexer for:
 
 **Tmux via home-manager** with the following configuration:
 
-- **Prefix**: `Ctrl+A` (screen-style, avoids conflict with Emacs `Ctrl+B`)
-- **Key mode**: `vi` for copy-mode; shell stays in emacs mode via `bindkey -e` in zsh
-- **Mouse**: enabled for pane selection and resizing
+- **Prefix**: `Ctrl+]` primary with `Ctrl+A` retained as a backup during transition
+- **Key mode**: `emacs` for copy-mode; shell stays in emacs mode via `bindkey -e` in zsh
+- **Mouse**: enabled for pane selection, resizing, and clipboard-backed selection
 - **Theme**: Dracula plugin with CPU/RAM/battery status segments
 - **Logging**: `tmux-logging` plugin stores session logs in `~/tmux-logs/`
-- **Plugins**: sensible, dracula, yank, pain-control, logging (all from nixpkgs)
-- **Keybindings**: `|`/`-` for splits, Alt+arrows for pane nav, Shift+arrows for windows
+- **Plugins**: sensible, dracula, yank, pain-control, logging, resurrect, continuum, tmux-fzf, thumbs (all from nixpkgs)
+- **Keybindings**: `|`/`-` for splits, Shift+Left/Right for tmux windows, Shift+Down for new window, Prefix+arrows for pane nav, Prefix+`,`/`.` for pane swap, Prefix+Shift+arrows for resize
 
 ### Session Logging
 
@@ -37,13 +37,14 @@ Ghostty has no built-in session logging capability (see [GitHub issue #5209](htt
 - Session logging gap filled without switching terminal emulators
 - Consistent across NixOS and macOS
 - Declarative plugin management via home-manager (no TPM runtime manager)
-- Vi copy-mode allows efficient text selection while shell retains emacs keybindings
+- Copy mode now matches shell-style emacs movement, reducing context switching
+- Mouse selection can copy directly into the clipboard flow
 
 **Negative**
 - Adds a layer between terminal and shell (minor complexity)
 - Users must remember tmux prefix for multiplexer commands
-- Logging requires manual activation per pane
+- The backup `Ctrl+A` prefix still steals shell beginning-of-line inside tmux until it is removed
 
 **Neutral**
-- `Ctrl+A` prefix conflicts with shell beginning-of-line, but `Ctrl+A Ctrl+A` sends literal `Ctrl+A`
+- Logging auto-starts for new panes, but the manual logging commands still exist
 - May eventually be replaced by Ghostty native logging if implemented upstream

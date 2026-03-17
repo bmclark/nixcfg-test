@@ -1,5 +1,5 @@
-# Tmux configuration with Dracula theme, session logging, persistence, and vi copy-mode.
-# Prefix: Ctrl+A (screen-style). Shell stays in emacs mode via bindkey -e in zsh.
+# Tmux configuration with Dracula theme, session logging, persistence, and emacs copy-mode.
+# Prefix: Ctrl+] primary, Ctrl+A backup. Shell stays in emacs mode via bindkey -e in zsh.
 # Logging plugin compensates for Ghostty lacking auto-logging (GitHub #5209).
 {
   config,
@@ -15,12 +15,12 @@ in {
   config = mkIf cfg.enable {
     programs.tmux = {
       enable = true;
-      prefix = "C-a";
+      prefix = "C-]";
       mouse = true;
       historyLimit = 100000;
       baseIndex = 1;
       escapeTime = 0;
-      keyMode = "vi"; # vi mode for copy-mode; shell emacs mode is set in zsh.nix
+      keyMode = "emacs"; # shell and copy-mode both use emacs-style movement
       terminal = "tmux-256color";
       sensibleOnTop = true;
 
@@ -34,6 +34,9 @@ in {
             set -g @dracula-plugins "cpu-usage ram-usage battery"
             set -g @dracula-show-left-icon session
             set -g @dracula-border-contrast true
+            set -g @dracula-show-flags true
+            set -g @dracula-refresh-rate 5
+            set -g @dracula-show-empty-plugins false
           '';
         }
         yank
@@ -82,25 +85,34 @@ in {
       ];
 
       extraConfig = ''
+        # Keep Ctrl+A as a transitional backup prefix while Ctrl+] becomes primary.
+        set -g prefix2 C-a
+        bind C-a send-prefix
+
         # Split panes with | and - (more intuitive than % and ")
         bind | split-window -h -c "#{pane_current_path}"
         bind - split-window -v -c "#{pane_current_path}"
 
-        # Pane navigation with Alt+arrows
-        bind -n M-Left select-pane -L
-        bind -n M-Right select-pane -R
-        bind -n M-Up select-pane -U
-        bind -n M-Down select-pane -D
-
-        # Window navigation with Shift+arrows
+        # Window navigation with upstream-style Shift+Left/Right and Shift+Down.
         bind -n S-Left previous-window
         bind -n S-Right next-window
+        bind -n S-Down new-window -c "#{pane_current_path}"
 
-        # Pane resizing with Ctrl+Shift+arrows
-        bind -n C-S-Left resize-pane -L 2
-        bind -n C-S-Right resize-pane -R 2
-        bind -n C-S-Up resize-pane -U 2
-        bind -n C-S-Down resize-pane -D 2
+        # Pane navigation with Prefix+arrows
+        bind Left select-pane -L
+        bind Right select-pane -R
+        bind Up select-pane -U
+        bind Down select-pane -D
+
+        # Pane swapping with Prefix+, / Prefix+.
+        bind comma swap-pane -t :-
+        bind period swap-pane -t :+
+
+        # Pane resizing with Prefix+Shift+arrows
+        bind S-Left resize-pane -L 2
+        bind S-Right resize-pane -R 2
+        bind S-Up resize-pane -U 2
+        bind S-Down resize-pane -D 2
 
         # New windows/panes inherit current path
         bind c new-window -c "#{pane_current_path}"
@@ -108,6 +120,10 @@ in {
         # Terminal overrides for true color and Ghostty
         set -ga terminal-overrides ",xterm-256color:Tc"
         set -ga terminal-overrides ",ghostty:Tc"
+
+        # Pane border labels and client sizing
+        set -g pane-border-status top
+        setw -g aggressive-resize on
 
         # Renumber windows when one is closed
         set -g renumber-windows on

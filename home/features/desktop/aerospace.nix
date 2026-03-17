@@ -34,6 +34,37 @@ with lib; let
       exec "/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession" -suspend
     '';
   };
+  scratchTerminal = pkgs.writeShellApplication {
+    name = "aerospace-scratch-terminal";
+    runtimeInputs = [pkgs.jq];
+    text = ''
+      current_workspace="$(${aerospaceBin} list-workspaces --focused --format '%{workspace}' 2>/dev/null || true)"
+
+      if [ "$current_workspace" = "S" ]; then
+        exec ${aerospaceBin} workspace-back-and-forth
+      fi
+
+      if ${aerospaceBin} list-windows --workspace S --format '%{app-name}' 2>/dev/null | grep -Fxq Ghostty; then
+        exec ${aerospaceBin} workspace --auto-back-and-forth S
+      fi
+
+      before_ids="$(${aerospaceBin} list-windows --all --json 2>/dev/null | jq '[.[] | select(."app-name" == "Ghostty") | ."window-id"]')"
+
+      ${aerospaceBin} workspace S
+      open -na Ghostty
+
+      for _ in $(seq 1 50); do
+        new_id="$(${aerospaceBin} list-windows --all --json 2>/dev/null | jq -r --argjson before "$before_ids" '[.[] | select(."app-name" == "Ghostty" and (.["window-id"] as $id | ($before | index($id) | not))) | ."window-id"] | max // empty')"
+        if [ -n "$new_id" ]; then
+          ${aerospaceBin} move-node-to-workspace --window-id "$new_id" S
+          exec ${aerospaceBin} focus --window-id "$new_id"
+        fi
+        sleep 0.1
+      done
+
+      exec ${aerospaceBin} workspace --auto-back-and-forth S
+    '';
+  };
 
   # Build workspace-to-app TOML blocks for macOS (matches by app display name)
   appAssignments = concatStringsSep "\n" (
@@ -135,9 +166,9 @@ in {
         ctrl-alt-cmd-e = 'exec-and-forget open -a Finder'
 
         # Scratch workspace toggle
-        # Aerospace doesn't have Hyprland's "special workspace" concept,
-        # but auto-back-and-forth makes a named scratch workspace behave similarly.
-        ctrl-alt-cmd-backtick = 'workspace --auto-back-and-forth S'
+        # If no Ghostty exists on S yet, create one and move it there as an exception
+        # to the normal workspace-5 Ghostty assignment.
+        ctrl-alt-cmd-backtick = 'exec-and-forget ${scratchTerminal}/bin/aerospace-scratch-terminal'
 
       '';
     });

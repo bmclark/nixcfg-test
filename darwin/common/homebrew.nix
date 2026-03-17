@@ -19,6 +19,7 @@
     casks = [
       "nikitabobko/tap/aerospace" # Tiling window manager (i3/Hyprland-like)
       "audacity" # Audio editor
+      "alt-tab" # Alt+Tab-style app switcher on macOS
       "chatgpt" # OpenAI ChatGPT desktop app
       "claude" # Anthropic Claude desktop app
       "codex" # OpenAI Codex desktop app

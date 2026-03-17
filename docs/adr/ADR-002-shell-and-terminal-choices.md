@@ -21,7 +21,7 @@ The previous setup used Fish + Kitty. Existing personal dotfiles already rely on
 - Plugins managed natively via home-manager (see [ADR-010](ADR-010-shell-plugin-management.md)): syntax highlighting, autosuggestions, history substring search.
 - Integrations for tools like zoxide, eza, fzf, atuin, and direnv are enabled via zsh hooks.
 - Comprehensive aliases for navigation, git, nix, and modern CLI replacements.
-- Emacs keybindings explicit via `bindkey -e` (tmux uses vi keyMode for copy-mode).
+- Emacs keybindings explicit via `bindkey -e` (tmux copy-mode also stays emacs-style).
 - Hyprland auto-starts on tty1 for the NixOS host.
 - Transient prompt via manual `zle-line-init` (home-manager's `enableTransience` is Fish-only).
 

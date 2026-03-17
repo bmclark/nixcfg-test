@@ -40,7 +40,7 @@ All shortcut tables below prefer the physical key sequence you should actually p
 Platform-native macOS shortcuts stay native:
 
 - GUI app copy/paste is still `Cmd+C/V/X`
-- app switching is still `Cmd+Tab`
+- `Cmd+Tab` still works natively
 - quit is still `Cmd+Q`
 
 ## Learn These First
@@ -54,7 +54,8 @@ If you only memorize a few things, start here:
 | `Ctrl+1` .. `Ctrl+0` | Go to workspace 1..10 | Main desktop navigation |
 | `Ctrl+Shift+1` .. `Ctrl+Shift+0` | Move a window to workspace 1..10 | Main desktop organization tool |
 | `Ctrl+\`` | Scratch terminal / scratch workspace | Quick temporary work area |
-| `CapsLock+A` | `Ctrl+A` | Shell beginning-of-line and tmux prefix |
+| `CapsLock+]` | `Ctrl+]` | Primary tmux prefix |
+| `CapsLock+A` | `Ctrl+A` | Shell beginning-of-line, with tmux backup-prefix compatibility |
 
 ## Platform Overview
 
@@ -138,11 +139,12 @@ Aerospace owns desktop movement and workspace placement on `iceman`.
 
 | Shortcut / command | Action |
 |--------------------|--------|
-| `Ctrl+\`` | Jump to workspace `S` scratch space |
+| `Ctrl+\`` | Toggle scratch workspace `S`, creating a Ghostty there on first use |
 | `Ctrl+,` / `Ctrl+.` | Previous / next workspace |
 | `Ctrl+E` | Open Finder |
 | `Ctrl+L` | Lock screen |
-| `Cmd+Tab` | Native macOS app switching |
+| `Alt+Tab` | AltTab app switching |
+| `Cmd+Tab` | Native macOS app switching still available |
 | `drs` | Rebuild nix-darwin config |
 | `drt` | Check nix-darwin config without switching |
 
@@ -178,7 +180,7 @@ Ghostty is the terminal app. Use tabs lightly.
 | Physical key | Action |
 |--------------|--------|
 | `CapsLock+Shift+T` | New tab |
-| `CapsLock+Tab` / `CapsLock+Shift+Tab` | Next / previous tab |
+| `CapsLock+,` / `CapsLock+.` | Previous / next tab |
 | `CapsLock+Shift+W` | Close current tab or surface |
 | `CapsLock+Shift+C` / `CapsLock+Shift+V` | Copy / paste |
 | `CapsLock+Shift+Up` / `CapsLock+Shift+Down` | Jump between prompts |
@@ -196,17 +198,24 @@ tmux owns persistent terminal layouts.
 
 | Physical key | Action |
 |--------------|--------|
-| `CapsLock+A` | Prefix |
+| `CapsLock+]` | Primary prefix |
+| `CapsLock+A` | Backup prefix |
 | `Prefix + c` | New window |
 | `Prefix + |` | Split vertically into left/right panes |
 | `Prefix + -` | Split horizontally into top/bottom panes |
-| `Alt+arrows` | Move between panes |
 | `Shift+Left` / `Shift+Right` | Previous / next tmux window |
-| `CapsLock+Shift+arrows` | Resize pane |
+| `Shift+Down` | New tmux window |
+| `Prefix + Left` / `Right` / `Up` / `Down` | Move between panes |
+| `Prefix + ,` / `Prefix + .` | Swap with previous / next pane |
+| `Prefix + Shift+Left` / `Right` / `Up` / `Down` | Resize pane |
 | `Prefix + f` | Fuzzy-find sessions/windows/panes |
 | `Prefix + Space` | Copy visible URLs, paths, hashes, IPs |
 
-Physical reminder: `Prefix` means `CapsLock+A`.
+Physical reminder: `Prefix` means `CapsLock+]` by default, with `CapsLock+A` still available as a backup prefix.
+
+tmux notes:
+- mouse mode is enabled, so you can select with the mouse and copy through the clipboard integration
+- pane logging auto-starts for new panes
 
 Use tmux windows for broad task separation:
 - editor shell
@@ -270,7 +279,7 @@ On `maverick`, use the Hyprland dropdown terminal with `Ctrl+\`` for:
 - package/version checks
 - a quick `journalctl`, `kubectl`, or `rg`
 
-On `iceman`, use `Ctrl+\`` to jump to workspace `S` if you keep a scratch terminal there, or open a Ghostty tab with `CapsLock+Shift+T` for the same purpose.
+On `iceman`, use `Ctrl+\`` to toggle into and back out of workspace `S`. On first use it creates a Ghostty there automatically, then reuses that scratch terminal afterward.
 
 ### Pattern: remote into `iceman` from Linux
 

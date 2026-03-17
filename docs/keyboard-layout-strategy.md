@@ -46,8 +46,8 @@ These bindings exist on both hosts:
 
 | Action | macOS physical key | Linux physical key |
 |---|---|---|
-| Scratch access | `Ctrl+\`` jumps to workspace `S` | `Ctrl+\`` toggles the special terminal workspace |
-| App switcher | `Cmd+Tab` | `Alt+Tab` / `Alt+Shift+Tab` |
+| Scratch access | `Ctrl+\`` toggles workspace `S`, creating a Ghostty there on first use | `Ctrl+\`` toggles the special terminal workspace |
+| App switcher | `Alt+Tab` (AltTab), `Cmd+Tab` still native | `Alt+Tab` / `Alt+Shift+Tab` |
 | Previous / next workspace | `Ctrl+,` / `Ctrl+.` | `Ctrl+,` / `Ctrl+.` |
 | File manager | `Ctrl+E` opens Finder | `Ctrl+E` opens Thunar |
 | Lock screen | `Ctrl+L` | `Ctrl+L` |
@@ -70,14 +70,17 @@ Workspace assignments come from `home/features/desktop/keybindings.nix`:
 | `5` | Terminal | Ghostty | Ghostty |
 | `6` | Media | Spotify, Audacity, GarageBand, iMovie | Spotify, Audacity |
 | `7-10` | Flexible | no automatic assignment | no automatic assignment |
-| `S` | Scratch | manual scratch workspace on macOS | n/a |
+| `S` | Scratch | Ghostty scratch workspace on macOS | n/a |
 
 ## Common Physical-Key Examples
 
 | Action | macOS physical key | Linux physical key | Result |
 |---|---|---|---|
 | Shell beginning of line | `CapsLock+A` | `CapsLock+A` | logical `Ctrl+A` |
-| tmux prefix | `CapsLock+A` | `CapsLock+A` | logical `Ctrl+A` |
+| tmux primary prefix | `CapsLock+]` | `CapsLock+]` | logical `Ctrl+]` |
+| tmux backup prefix | `CapsLock+A` | `CapsLock+A` | logical `Ctrl+A` |
+| tmux swap previous / next pane | `Prefix + CapsLock+,` / `Prefix + CapsLock+.` | `Prefix + CapsLock+,` / `Prefix + CapsLock+.` | swap with previous / next pane |
+| Ghostty previous / next tab | `CapsLock+,` / `CapsLock+.` | `CapsLock+,` / `CapsLock+.` | logical `Ctrl+,` / `Ctrl+.` |
 | Ghostty copy | `CapsLock+Shift+C` | `CapsLock+Shift+C` | logical `Ctrl+Shift+C` |
 | GUI app copy | `Cmd+C` | `CapsLock+C` | native GUI copy |
 | VS Code command palette | `Cmd+Shift+P` | `CapsLock+Shift+P` | open command palette |
@@ -90,8 +93,9 @@ Workspace assignments come from `home/features/desktop/keybindings.nix`:
 - `CapsLock` no longer toggles caps. Use `Shift` for uppercase.
 - The physical `Ctrl` key no longer sends plain `Ctrl`. It is fully committed to `Hyper`.
 - macOS GUI shortcuts stay native: `Cmd+C/V/X`, `Cmd+Tab`, `Cmd+Q`, and similar shortcuts are not remapped.
+- AltTab adds physical `Alt+Tab` app switching on macOS without removing native `Cmd+Tab`.
 - Ghostty and tmux still use logical `Ctrl`, so their shortcuts are physically `CapsLock` combos in this setup.
-- `Hyper+\`` is only scratch-space access on macOS. It is not a true Hyprland-style dropdown terminal.
+- `Hyper+\`` on macOS now treats workspace `S` as a reusable Ghostty scratch terminal, but it is still not a true Hyprland-style dropdown terminal.
 - AeroSpace keeps `1..10` and `S` persistent so workspace cycling and assignments remain stable.
 
 ## Configuration Files
