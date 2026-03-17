@@ -230,7 +230,7 @@ in {
             mkdir -p "$name" && cd "$name" || return 1
             git init
             if [[ -n "$template" ]]; then
-              nix flake init -t "${NIXCFG_REPO:-$HOME/nixcfg}#$template"
+              nix flake init -t "''${NIXCFG_REPO:-$HOME/nixcfg}#$template"
               echo "Initialized $template flake template"
             fi
             echo "use flake" > .envrc
