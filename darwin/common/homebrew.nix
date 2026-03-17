@@ -13,7 +13,6 @@
 
     brews = [
       "mas" # Mac App Store CLI (used by masApps below)
-      "gemini-cli" # Google Gemini CLI (not in nixpkgs)
       "tdd-guard" # TDD file watcher (not in nixpkgs)
     ];
 

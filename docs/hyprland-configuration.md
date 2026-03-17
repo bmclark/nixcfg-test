@@ -3,62 +3,68 @@
 ## Overview
 The `maverick` laptop runs a modernized Hyprland environment managed through home-manager modules (`home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`). The configuration aligns with [ADR-003](adr/ADR-003-keyboard-remapping-strategy.md) for keyboard philosophy and [ADR-004](adr/ADR-004-theme-standardization.md) for Dracula theming, while the modernization work is captured in [ADR-007](adr/ADR-007-hyprland-configuration-modernization.md). Hyprland integrates tightly with PipeWire audio, BlueZ Bluetooth support, and desktop environment services such as udiskie and polkit for a polished, unix-porn-inspired experience.
 
-## Keyboard Shortcuts
-Hyprland adheres to CUA conventions (Ctrl for application actions), keeps Super reserved for window manager responsibilities, and adds Emacs-style navigation for consistency across platforms.
+In this guide, `Hyper` means the physical `Ctrl` key. `keyd` remaps physical `Ctrl` to Hyper/Mod3, while `CapsLock` becomes logical `Ctrl` for shell and editor shortcuts.
+The shortcut tables below lead with the physical keys you actually press.
 
-### Window Management (Super)
-| Shortcut | Action |
+## Keyboard Shortcuts
+Hyprland follows the shared keyboard strategy: logical `Ctrl` lives on `CapsLock` for applications, while `Hyper` on the physical `Ctrl` key owns window management.
+
+### Window Management (Hyper)
+| Physical key | Action |
 |----------|--------|
-| Super+Return | Launch terminal (Ghostty) |
-| Super+D | Open wofi application launcher |
-| Super+E | Open Thunar file manager |
-| Super+Space | Toggle floating window state |
-| Super+F | Toggle fullscreen |
-| Super+L | Lock screen with hyprlock |
-| Super+Escape | Open wlogout session menu |
+| Ctrl+Return | Launch terminal (Ghostty) |
+| Ctrl+D | Open wofi application launcher |
+| Ctrl+E | Open Thunar file manager |
+| Ctrl+Space | Toggle floating window state |
+| Ctrl+F | Toggle fullscreen |
+| Ctrl+W | Close active window |
+| Ctrl+L | Lock screen with hyprlock |
+| Ctrl+Escape | Open wlogout session menu |
 | Alt+F4 | Close active window |
 
-### Window Navigation (Emacs-style)
-| Shortcut | Action |
+### Window Navigation
+| Physical key | Action |
 |----------|--------|
 | Alt+Tab | Cycle windows forward |
 | Alt+Shift+Tab | Cycle windows backward |
-| Ctrl+Alt+B | Focus window to the left |
-| Ctrl+Alt+F | Focus window to the right |
-| Ctrl+Alt+P | Focus window above |
-| Ctrl+Alt+N | Focus window below |
+| Ctrl+Left | Focus window to the left |
+| Ctrl+Right | Focus window to the right |
+| Ctrl+Up | Focus window above |
+| Ctrl+Down | Focus window below |
 
-### Window Movement (Emacs-style)
-| Shortcut | Action |
+### Window Movement
+| Physical key | Action |
 |----------|--------|
-| Ctrl+Alt+Shift+B | Move window left |
-| Ctrl+Alt+Shift+F | Move window right |
-| Ctrl+Alt+Shift+P | Move window up |
-| Ctrl+Alt+Shift+N | Move window down |
+| Ctrl+Shift+Left | Move window left |
+| Ctrl+Shift+Right | Move window right |
+| Ctrl+Shift+Up | Move window up |
+| Ctrl+Shift+Down | Move window down |
 
 ### Workspace Management
-| Shortcut | Action |
+| Physical key | Action |
 |----------|--------|
-| Super+1..9 | Switch to workspace 1..9 |
-| Super+Shift+1..9 | Move window to workspace 1..9 |
-| Super+Comma | Previous workspace |
-| Super+Period | Next workspace |
-| Super+Mouse Wheel | Cycle workspaces |
+| Ctrl+1..0 | Switch to workspace 1..10 |
+| Ctrl+Shift+1..0 | Move window to workspace 1..10 |
+| Ctrl+Comma | Previous workspace |
+| Ctrl+Period | Next workspace |
+| Ctrl+Grave | Toggle the dropdown terminal workspace |
+| Ctrl+Mouse Wheel | Cycle workspaces |
 
 ### Screenshots
-| Shortcut | Action |
+| Physical key | Action |
 |----------|--------|
-| Super+Shift+S | Region screenshot (grim + slurp) |
-| Super+Shift+Print | Fullscreen screenshot |
-| Super+Ctrl+S | Region screenshot with annotation in Swappy |
-| Super+Ctrl+O | OCR selected region to clipboard |
-| Super+Shift+C | Pick a screen color to the clipboard |
+| Ctrl+Shift+S | Region screenshot (grim + slurp) |
+| Ctrl+Shift+Print | Fullscreen screenshot |
+| Ctrl+Alt+S | Region screenshot with annotation in Swappy |
+| Ctrl+Alt+O | OCR selected region to clipboard |
+| Ctrl+V | Open clipboard history picker |
+| Ctrl+Shift+C | Pick a screen color to the clipboard |
 
 ### Mouse Bindings
-| Shortcut | Action |
+| Physical key | Action |
 |----------|--------|
-| Super+Left Click | Move window |
-| Super+Right Click | Resize window |
+| Ctrl+Left Click | Move window |
+| Ctrl+Right Click | Resize window |
 
 ## Configuration Files
 - `home/features/desktop/hyprland.nix` — Core window manager configuration (keybindings, animations, window rules).  
@@ -93,10 +99,10 @@ Enable or disable modules via `home/bclark/maverick.nix` to tailor the desktop s
 
 ### Wofi (Launcher)
 - Themed with Dracula colors and transparency.  
-- Controlled via Super+D. Adjust style or behaviour in the `programs.wofi` section.
+- Controlled via Ctrl+D. Adjust style or behaviour in the `programs.wofi` section.
 
 ### Clipboard and OCR helpers
-- `cliphist` stores clipboard history and `Super+V` opens a picker.  
+- `cliphist` stores clipboard history and `Ctrl+V` opens a picker.
 - `ocr-screenshot`, `ocr-image`, and `ocr-pdf` extract text with `tesseract` and copy it to the clipboard.  
 - `swappy` provides inline screenshot annotation for quick markups.
 
@@ -122,7 +128,7 @@ Enable or disable modules via `home/bclark/maverick.nix` to tailor the desktop s
 ### File Management
 - Thunar with `thunar-volman` (removable media) and `thunar-archive-plugin` (archives).  
 - Thumbnail generation via Tumbler (enabled at the system level).  
-- Super+E opens Thunar.
+- Ctrl+E opens Thunar.
 - Custom actions add open-terminal-here, copy-path, OCR-image, and OCR-PDF helpers.
 
 ### Automounting

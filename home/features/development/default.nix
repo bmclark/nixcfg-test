@@ -43,6 +43,7 @@
     # --- AI coding tools -----------------------------------------------------
     claude-code # Claude AI coding assistant CLI
     codex # OpenAI Codex CLI
+    gemini-cli # Google Gemini CLI
     # aider-chat — disabled: upstream trio-websocket test failure on aarch64-darwin
 
     # --- Build tools -----------------------------------------------------------

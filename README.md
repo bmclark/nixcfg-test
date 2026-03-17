@@ -6,7 +6,7 @@ This repository manages two systems through a single flake:
 - **maverick** — NixOS laptop running Hyprland
 - **iceman** — macOS Mac Mini managed with nix-darwin
 
-Both hosts share common CLI tooling, editors, and development settings via home-manager. Dracula theming and keyboard shortcuts (Ctrl for apps, Super for window management) stay consistent across platforms.
+Both hosts share common CLI tooling, editors, and development settings via home-manager. Dracula theming and keyboard ergonomics stay consistent across platforms: logical `Ctrl` lives on `CapsLock`, and window management lives on `Hyper` via the physical `Ctrl` key.
 
 The broader project goal is to keep the user experience as consistent as practical across NixOS, macOS, and future machines: same tools where possible, same keybindings where possible, and the same mental model for terminal, editor, and desktop workflows.
 
@@ -15,7 +15,7 @@ Another standing directive is that user-facing shell tooling should feel polishe
 ## Features
 - Dracula theme everywhere (Hyprland, Ghostty, tmux, VS Code, Emacs, Starship, waybar, wofi, dunst, fzf, bat, git delta)
 - Switchable themes: Dracula, Tokyo Night, SynthWave '84 via `just theme <name>`
-- CUA/Emacs-style keyboard shortcuts (Ctrl for apps, Super for WM, Emacs navigation)
+- CUA/Emacs-style keyboard shortcuts (logical Ctrl via CapsLock, Hyper for WM, native Cmd preserved on macOS)
 - Modular feature-based architecture with per-host enable flags
 - Cross-platform CLI tools (zsh, Ghostty, tmux, atuin, fzf, ripgrep, etc.)
 - Zsh with native plugins (syntax highlighting, autosuggestions, nix completions)
@@ -24,14 +24,15 @@ Another standing directive is that user-facing shell tooling should feel polishe
 - Atuin fuzzy shell history search
 - Git with delta (side-by-side diffs, Dracula syntax theme)
 - VS Code with Dracula, Emacs MCX keybindings, Nix LSP (nil + alejandra)
-- Vanilla Emacs with Dracula theme (runs as systemd daemon, use `emacsclient`)
+- Vanilla Emacs with Dracula theme (runs as a background service; use `emacsclient`)
 - Firefox (privacy-focused, 10+ extensions) + Chromium (fallback)
-- Hyprland window manager with full rice (blur, shadows, animations, window rules, hyprexpo)
+- Hyprland window manager with full rice (blur, shadows, animations, window rules)
+- Aerospace tiling window manager on macOS with shared workspace assignments
 - Complete Wayland ecosystem (waybar, wofi, dunst, hyprpaper, hypridle, wlsunset)
 - PipeWire audio with PulseAudio compatibility
 - Bluetooth support with battery reporting and Blueman GUI
 - Desktop niceties (automounting, polkit, file manager)
-- Karabiner-Elements for macOS keyboard remapping (Cmd→Ctrl)
+- Karabiner-Elements for macOS keyboard remapping (CapsLock→Ctrl, Ctrl→Hyper)
 - Just-based build automation with theme switching
 - Per-project development environments (nix-shell / nix develop)
 - direnv + nix-direnv for automatic dev shell loading
@@ -41,7 +42,7 @@ Another standing directive is that user-facing shell tooling should feel polishe
 - Firewall (SSH-only inbound)
 - Agenix secrets management (age-encrypted, decrypted at activation)
 - CVE monitoring via vulnix
-- Weekly automatic flake update (systemd timer)
+- Weekly automatic flake update (systemd on Linux, launchd on macOS)
 - CI via GitHub Actions (`nix flake check` on push/PR)
 - Night light (wlsunset, location-based)
 
@@ -141,6 +142,7 @@ features = {
     chromium.enable = true;
     fonts.enable = true;
     karabiner.enable = true; # macOS only
+    aerospace.enable = true; # macOS only
   };
   development = {
     git.enable = true;
@@ -155,8 +157,8 @@ Explore `home/features/` to see all modules. Each feature directory has a README
 The maverick laptop runs Hyprland with a carefully tuned configuration:
 - **Aesthetics**: Glass blur effects, soft shadows, smooth animations with custom bezier curves
 - **Window rules**: Dialogs float, PiP pins, browsers get full opacity, workspace assignments
-- **Keyboard**: CUA/Emacs-style bindings (Ctrl+W to close, Alt+Tab to switch, Ctrl+Alt+B/F/P/N for navigation)
-- **Plugins**: hyprexpo for workspace overview (Super+Tab)
+- **Keyboard**: Hyper-driven window management (physical Ctrl via keyd), Alt+Tab switching, arrow-key directional focus, and logical Ctrl via CapsLock for app/editor shortcuts
+- **Plugins**: hyprexpo is currently disabled pending compatibility fixes with the current Hyprland release
 - **Audio**: PipeWire with PulseAudio compatibility, WirePlumber session management, waybar integration
 - **Bluetooth**: BlueZ with battery reporting, Blueman GUI, waybar bluetooth module
 - **Services**: hyprpaper (wallpapers), hypridle (idle management), wofi (launcher), dunst (notifications)
@@ -174,8 +176,10 @@ See the [Hyprland Configuration Guide](docs/hyprland-configuration.md) for keybo
 5. Extend the `justfile` with new host-specific commands if needed.
 
 ## Documentation
+If you're new to the setup, start with the [System User Guide](docs/system-user-guide.md) and then the [Keyboard Layout Strategy](docs/keyboard-layout-strategy.md).
+
 - [System User Guide](docs/system-user-guide.md)
-- [Architecture Decision Records](docs/adr/) (ADR-001 through ADR-013)
+- [Architecture Decision Records](docs/adr/) (ADR-001 through ADR-014)
 - [Keyboard Shortcut Conflicts](docs/keyboard-shortcut-conflicts.md)
 - [Hyprland Configuration Guide](docs/hyprland-configuration.md)
 - [Keyboard Layout Strategy](docs/keyboard-layout-strategy.md)
@@ -205,7 +209,7 @@ See `secrets/secrets.nix` for the full setup.
 
 ## Maintenance
 - Update dependencies: `just update`
-- Automatic updates: flake inputs update weekly (Sunday 09:00 via systemd timer)
+- Automatic updates: flake inputs update weekly (Sunday 09:00 via systemd on Linux, launchd on macOS)
 - Garbage collection: `just gc` (7 days) or `just gc-old` (30 days)
 - Optimize store: `just optimize`
 - Clean everything: `just clean`
@@ -216,8 +220,8 @@ See `secrets/secrets.nix` for the full setup.
 - **Build fails with "attribute 'X' missing"**
   Run `just update` to refresh inputs and verify the attribute exists in nixpkgs.
 - **Karabiner not working on macOS**
-  Grant Accessibility and Input Monitoring permissions, then restart with
-  `launchctl kickstart -k gui/$(id -u)/org.pqrs.karabiner.karabiner_console_user_server`.
+  Grant Accessibility and Input Monitoring permissions, then restart the login agent with
+  `launchctl kickstart -k gui/$(id -u)/org.nixos.karabiner-elements`.
 - **Tailscale on macOS is acting weird in the terminal**
   The `tailscale` command is expected to target the bundled CLI inside `Tailscale.app`. Sign in through the Tailscale menu bar app, then use `tailscale status` or `ujust tailscale-status` from a fresh shell to verify state.
 - **Connecting to macOS remote desktop from Linux**

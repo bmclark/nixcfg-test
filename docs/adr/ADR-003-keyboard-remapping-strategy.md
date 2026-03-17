@@ -17,7 +17,7 @@ Working across NixOS and macOS should feel consistent, especially for keyboard-d
 2. **Physical Ctrl → Hyper (Ctrl+Alt+Cmd, no Shift)**
    Window management uses Hyper as a dedicated modifier. No app uses this three-modifier chord, so there are zero conflicts. Hyper excludes Shift so that Hyper+Shift combos work as distinct bindings.
 3. **macOS remapping via Karabiner-Elements**
-   `home/features/desktop/karabiner.nix` renders `karabiner.json`: CapsLock→Ctrl via `simple_modifications`, Ctrl→Hyper via `complex_modifications`.
+   `home/features/desktop/karabiner.nix` renders `karabiner.json`: CapsLock→Ctrl and Ctrl→Hyper are both implemented as ordered `complex_modifications` so CapsLock is consumed before the Hyper mapping.
 4. **Linux remapping via keyd**
    `hosts/common/keyd.nix` configures the keyd daemon: CapsLock→Ctrl, Ctrl→Hyper (Mod3). Runs at evdev level before Hyprland.
 5. **Window managers use Hyper**

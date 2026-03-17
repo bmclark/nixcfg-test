@@ -12,60 +12,89 @@ On the NixOS laptop (`maverick`), the desktop is built around **Hyprland**:
 - Hyprlock locks the screen.
 - Ghostty is the main terminal app.
 
-On the macOS host (`iceman`), Hyprland is not used. The main desktop-specific behavior is Karabiner remapping `Cmd` to `Ctrl` so application shortcuts match the Linux setup more closely.
+On the macOS host (`iceman`), the desktop is built around **Aerospace** plus **Karabiner**:
+- Aerospace manages windows and workspaces.
+- Karabiner maps `CapsLock -> Ctrl` and physical `Ctrl -> Hyper`.
+- Raycast is the app launcher.
+- Ghostty is the main terminal app.
 
 ## What To Use When
 
 | Tool | Use it for | Prefer it over |
 |------|------------|----------------|
-| Hyprland | Moving windows, switching workspaces, layout control, locking, screenshots | Using app-level tabs or panes to simulate OS-level workspace management |
-| Wofi | Launching apps quickly | Digging through menus |
+| Hyprland / Aerospace | Moving windows, switching workspaces, layout control | Using app-level tabs or panes to simulate OS-level workspace management |
+| Wofi / Raycast | Launching apps quickly | Digging through menus |
 | Waybar | Seeing workspace state, media, battery, network, bluetooth, audio | Opening multiple settings panels just to check status |
 | Hyprlock | Locking the session | Logging out when you only need to step away |
 | Firefox | Primary browser with stronger privacy defaults | Chromium for normal daily browsing |
-| Chromium | Compatibility fallback | Firefox when a site is broken or requires Chromium behavior |
-| Karabiner | macOS key remapping for app shortcuts | Per-app remapping by hand |
+| Chromium / Google Chrome | Compatibility fallback | Firefox when a site is broken or requires Chromium behavior |
+| Karabiner | macOS keyboard remapping for the shared Ctrl / Hyper layout | Per-app remapping by hand |
 | Remmina | Remote desktop sessions such as the Mac Screen Sharing setup | Ad hoc VNC command lines when you want saved profiles or a GUI |
 
 ## Desktop Movement And Navigation
 
-### Hyprland basics
+In these docs, `Hyper` means the physical `Ctrl` key. Logical `Ctrl` lives on `CapsLock`.
+The shortcut tables below lead with the physical keys you actually press.
 
-These bindings are the main way to move around the graphical desktop on `maverick`.
+### Shared Hyper layer
 
-| Key | Action |
+These bindings exist on both hosts:
+
+| Physical key | Action |
 |-----|--------|
-| `Super+Return` | Open a new terminal |
-| `Super+D` | Open the app launcher |
-| `Super+E` | Open Thunar |
-| `Super+Space` | Toggle floating for the current window |
-| `Super+F` | Toggle fullscreen |
-| `Super+L` | Lock screen |
-| `Super+Escape` | Open logout/power menu |
-| `Super+\`` | Toggle the dropdown terminal |
-| `Super+,` / `Super+.` | Previous / next workspace |
-| `Super+1` .. `Super+0` | Switch to workspace 1..10 |
-| `Super+Shift+1` .. `Super+Shift+0` | Move current window to workspace 1..10 |
+| `Ctrl+Return` | Open a new terminal |
+| `Ctrl+D` | Open the app launcher |
+| `Ctrl+Space` | Toggle floating for the current window |
+| `Ctrl+F` | Toggle fullscreen |
+| `Ctrl+W` | Close the active window |
+| `Ctrl+1` .. `Ctrl+0` | Switch to workspace 1..10 |
+| `Ctrl+Shift+1` .. `Ctrl+Shift+0` | Move current window to workspace 1..10 |
+| `Ctrl+Left` / `Right` / `Up` / `Down` | Focus window left / right / up / down |
+| `Ctrl+Shift+Left` / `Right` / `Up` / `Down` | Move window left / right / up / down |
+
+### Linux-specific Hyprland bindings
+
+These are the extra bindings provided on `maverick`:
+
+| Physical key | Action |
+|-----|--------|
+| `Ctrl+E` | Open Thunar |
+| `Ctrl+L` | Lock screen |
+| `Ctrl+Escape` | Open logout/power menu |
+| `Ctrl+\`` | Toggle the dropdown terminal |
+| `Ctrl+,` / `Ctrl+.` | Previous / next workspace |
 | `Alt+Tab` / `Alt+Shift+Tab` | Cycle windows forward / backward |
 | `Alt+F4` | Close active window |
-| `Ctrl+Alt+B/F/P/N` | Focus window left / right / up / down |
-| `Ctrl+Alt+Shift+B/F/P/N` | Move window left / right / up / down |
-| `Super+Shift+S` | Area screenshot |
-| `Super+Shift+Print` | Full screenshot |
-| `Super+Ctrl+S` | Area screenshot and annotate in Swappy |
-| `Super+Ctrl+O` | OCR selected screen region to clipboard |
-| `Super+V` | Clipboard history picker |
-| `Super+Shift+C` | Pick a screen color to the clipboard |
+| `Ctrl+Shift+S` | Area screenshot |
+| `Ctrl+Shift+Print` | Full screenshot |
+| `Ctrl+Alt+S` | Area screenshot and annotate in Swappy |
+| `Ctrl+Alt+O` | OCR selected screen region to clipboard |
+| `Ctrl+V` | Clipboard history picker |
+| `Ctrl+Shift+C` | Pick a screen color to the clipboard |
 
-Mouse actions:
+### macOS-specific Aerospace bindings
 
-| Key | Action |
+These are the extra bindings or behaviors on `iceman`:
+
+| Shortcut / command | Action |
 |-----|--------|
-| `Super+Left click drag` | Move window |
-| `Super+Right click drag` | Resize window |
-| `Super+mouse wheel` | Cycle workspaces |
+| `Ctrl+\`` | Jump to workspace `S` scratch space |
+| `Ctrl+,` / `Ctrl+.` | Previous / next workspace |
+| `Ctrl+E` | Open Finder |
+| `Ctrl+L` | Lock screen |
+| `Cmd+Tab` | Native macOS app switching |
+| `drs` | Rebuild nix-darwin |
+| `drt` | Check nix-darwin config without switching |
 
-Touchpad:
+Hyprland mouse actions:
+
+| Physical key | Action |
+|-----|--------|
+| `Ctrl+Left click drag` | Move window |
+| `Ctrl+Right click drag` | Resize window |
+| `Ctrl+mouse wheel` | Cycle workspaces |
+
+Hyprland touchpad:
 
 | Gesture | Action |
 |---------|--------|
@@ -73,23 +102,26 @@ Touchpad:
 
 ### Workspaces and automatic placement
 
-Some apps are placed on fixed workspaces:
+Some apps are placed on fixed workspaces on both hosts:
 
-| Workspace | App |
-|-----------|-----|
-| `1` | Emacs |
-| `2` | Firefox |
-| `3` | VS Code |
+| Workspace | Purpose | macOS apps | Linux apps |
+|-----------|---------|------------|------------|
+| `1` | Admin | Mail, Notes, Calendar, Bitwarden | thunderbird, notes, calendar, Bitwarden |
+| `2` | Browser | Safari, Google Chrome | firefox, chromium |
+| `3` | AI / chat | Claude, ChatGPT, Codex | Claude, ChatGPT |
+| `4` | Editor | Emacs, Code, Xcode | Emacs, Code |
+| `5` | Terminal | Ghostty | Ghostty |
+| `6` | Media | Spotify, Audacity, GarageBand, iMovie | Spotify, Audacity |
 
 That means a good default workflow is:
-- `Super+1` for editing/writing in Emacs
-- `Super+2` for browser work
-- `Super+3` for VS Code if needed
+- `Ctrl+4` for editing/coding
+- `Ctrl+2` for browser work
+- `Ctrl+5` for terminal work
 - use later workspaces for project-specific terminals, chat, or misc apps
 
-### Dropdown terminal
+### Scratch access
 
-`Super+\`` opens a terminal on a special hidden workspace that drops down from the top of the screen.
+On `maverick`, `Ctrl+\`` opens a terminal on a special hidden workspace that drops down from the top of the screen.
 
 Use it for:
 - quick commands
@@ -97,6 +129,8 @@ Use it for:
 - one-off git or system checks
 
 Do not treat it as your main long-lived work area; that is better handled by a normal Ghostty window with tmux inside.
+
+On `iceman`, `Ctrl+\`` toggles into and back out of workspace `S`. Use it the same way if you keep a scratch Ghostty window there.
 
 ## Browsers
 
@@ -117,6 +151,20 @@ Chromium is the compatibility browser. Use it when:
 - a site needs Chromium-specific behavior
 - DRM/video behavior differs
 - enterprise tooling is unreliable in Firefox
+
+## Cross-Platform App Parity
+
+Apps now installed on both hosts through Nix or nixpkgs where possible:
+- `gemini-cli` via home-manager on both hosts
+- Bitwarden desktop on Linux via nixpkgs, Bitwarden on macOS via Mac App Store
+- Spotify on Linux via nixpkgs, Spotify on macOS via Homebrew cask
+- Audacity on Linux via nixpkgs, Audacity on macOS via Homebrew cask
+
+Still not shared declaratively on `maverick`:
+- `tdd-guard` is the remaining Linuxbrew candidate; this repo does not manage Linuxbrew yet
+- `Claude` desktop app is macOS-only
+- `ChatGPT` desktop app is macOS-only
+- macOS-only system tools remain mac-only: Aerospace, Karabiner-Elements, Raycast, Logitech G Hub
 
 ## Remote Desktop
 
@@ -168,7 +216,7 @@ Removable media is automounted by `udiskie`, so mounted drives should show up in
 ### OCR and document helpers
 
 `maverick` includes a lightweight OCR workflow:
-- `ocrshot` or `Super+Ctrl+O` grabs a screen region, OCRs it, and copies the text
+- `ocrshot` or `Ctrl+Alt+O` grabs a screen region, OCRs it, and copies the text
 - `ocrimg <file>` OCRs an image and copies the text
 - `ocrpdf <file> [page]` OCRs a PDF page and copies the text
 - `zathura <file.pdf>` opens PDFs in a keyboard-friendly viewer
@@ -180,17 +228,25 @@ The session follows a staged idle chain:
 - lock engages after 15 minutes
 - displays power down after 20 minutes
 
-Use `Super+L` when leaving the machine instead of waiting for idle.
+Use `Ctrl+L` when leaving the machine instead of waiting for idle.
 
 ## macOS Notes
 
-Karabiner remaps both `Cmd` keys to `Ctrl`. The point is consistency for application shortcuts, not to make macOS behave exactly like Hyprland.
+Karabiner does not remap `Cmd` any more. The current model is:
+
+- `CapsLock` sends logical `Ctrl`
+- physical `Ctrl` sends `Hyper`
+- `Cmd` stays native for macOS GUI shortcuts
 
 Practical effect:
-- `Cmd+C` behaves like `Ctrl+C`
-- `Cmd+V` behaves like `Ctrl+V`
-- `Cmd+S` behaves like `Ctrl+S`
-- native macOS shortcuts that expect real `Cmd`, especially quit behavior, may no longer act normally
+- `Cmd+C`, `Cmd+V`, `Cmd+Q`, and `Cmd+Tab` keep their normal macOS behavior
+- `Ctrl+Return` launches Ghostty
+- `Ctrl+D` launches Raycast
+- `Ctrl+E` opens Finder
+- `Ctrl+L` locks the screen
+- `Ctrl+1..0` and `Ctrl+Shift+1..0` manage Aerospace workspaces
+- `Ctrl+,` / `Ctrl+.` cycle the persistent `1..10` workspaces
+- Karabiner still needs Accessibility and Input Monitoring permissions after install
 
 See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) and [docs/keyboard-layout-strategy.md](../../../docs/keyboard-layout-strategy.md).
 
@@ -203,7 +259,7 @@ See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md) and [doc
 
 - Hyprland owns window and workspace movement; tmux and Emacs should not be used as substitutes for desktop-level workspace switching.
 - Use Ghostty tabs sparingly and tmux heavily if you want durable terminal workflows.
-- The keyboard model is intentionally split: `Ctrl` for apps, `Super` for window management.
+- The keyboard model is intentionally split: logical `Ctrl` on `CapsLock`, `Hyper` on physical `Ctrl`, native `Cmd` preserved on macOS.
 - Browser strategy is Firefox first, Chromium second.
 
 See [ADR-003](../../../docs/adr/ADR-003-keyboard-remapping-strategy.md), [ADR-007](../../../docs/adr/ADR-007-hyprland-configuration-modernization.md), [ADR-009](../../../docs/adr/ADR-009-browser-strategy.md), and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md).

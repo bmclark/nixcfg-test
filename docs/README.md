@@ -17,11 +17,26 @@ This repository contains the NixOS and nix-darwin configuration that manages a N
 
 ## Quick Links
 - [System User Guide](system-user-guide.md)
+- [macOS Parity Status](mac-parity-todo.md)
 - [Architecture Decision Records](adr/)
 - [Keyboard Shortcut Conflicts](keyboard-shortcut-conflicts.md)
 - [Keyboard Layout Strategy](keyboard-layout-strategy.md)
 - [Dotfiles Migration Strategy](dotfiles-migration.md)
 - [Quick Start Guide](../README.md#quick-start)
+
+## New Here?
+
+Read the docs in this order if you are trying to get productive quickly:
+
+1. [System User Guide](system-user-guide.md) for the day-one workflow and the physical keys to press
+2. [Keyboard Layout Strategy](keyboard-layout-strategy.md) for the full modifier model and platform differences
+3. [macOS Parity Status](mac-parity-todo.md) if you need to know what is still intentionally platform-specific
+4. Feature docs for the area you actually use most:
+   [CLI](../home/features/cli/README.md),
+   [Desktop](../home/features/desktop/README.md),
+   [Editors](../home/features/editors/README.md),
+   [Development](../home/features/development/README.md)
+5. [Architecture Decision Records](adr/) only when you need the why behind the setup
 
 ## Feature Module System
 Feature modules live in `home/features/` and follow a consistent pattern:
@@ -38,17 +53,18 @@ features.cli.zsh.enable = true;
 
 ## Platform Support
 - **maverick** (NixOS laptop): Hyprland desktop, development tooling, Dracula theme throughout
-- **iceman** (macOS): nix-darwin managed system, Homebrew integration, Karabiner remapping
+- **iceman** (macOS): nix-darwin managed system, Homebrew integration, Aerospace, and Karabiner
 - Shared feature modules keep CLI tools, editors, and development experience consistent
 
 ## Key Technologies
 - NixOS and nix-darwin for declarative system configuration
 - home-manager integrated as modules for user environments
 - Hyprland window manager (NixOS)
+- Aerospace window manager (macOS)
 - Ghostty terminal emulator (both platforms)
 - zsh shell with Starship prompt (temporary until Powerlevel10k migration)
 - Emacs with Dracula theme
-- Karabiner-Elements for macOS keyboard remapping
+- Karabiner-Elements for macOS keyboard remapping (`CapsLock -> Ctrl`, `Ctrl -> Hyper`)
 - Switchable themes (Dracula, Tokyo Night) in `home/themes/`
 - Declarative Homebrew management for macOS apps via `darwin/common/homebrew.nix`
 

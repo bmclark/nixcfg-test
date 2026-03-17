@@ -2,105 +2,108 @@
 
 ## Overview
 
-Three modifier namespaces provide a consistent shortcut experience across NixOS (Hyprland) and macOS (Aerospace):
+The keyboard model is split into three namespaces so text editing, app shortcuts, and window management stop fighting each other:
 
-| Namespace | Modifier | Physical Key | Use |
+| Namespace | Logical Modifier | Physical Key | Primary Use |
 |---|---|---|---|
-| Text/App | Ctrl | CapsLock | Emacs navigation, shell, CUA shortcuts |
-| Window Manager | Hyper (Ctrl+Alt+Cmd) | Physical Ctrl | WM operations (workspaces, focus, tiling) |
-| Platform App | Cmd (macOS) / Ctrl (Linux) | Cmd / CapsLock | Copy/paste in GUI apps |
+| Text / editing | `Ctrl` | `CapsLock` | Emacs navigation, shell editing, terminal shortcuts, Linux app shortcuts |
+| Window manager | `Hyper` | Physical `Ctrl` | Hyprland / Aerospace workspaces, focus, movement, layout |
+| Platform-native app | `Cmd` on macOS, `Super` on Linux | `Cmd` / `Super` | Native OS shortcuts that should stay native |
 
-## Key Remapping
+## Physical Remapping
 
 | Physical Key | macOS (Karabiner) | Linux (keyd) |
 |---|---|---|
-| CapsLock | Ctrl | Ctrl |
-| Left/Right Ctrl | Hyper (Ctrl+Alt+Cmd) | Hyper (Mod3) |
-| Cmd/Super | Cmd (unchanged) | Super (unchanged) |
+| `CapsLock` | `Ctrl` | `Ctrl` |
+| `Left/Right Ctrl` | `Hyper` (`Ctrl+Alt+Cmd`) | `Hyper` (`Mod3`) |
+| `Cmd` / `Super` | unchanged | unchanged |
 
-## Window Manager Keybindings (identical, both platforms)
+How to read the rest of the docs:
 
-| Action | Binding |
-|---|---|
-| Switch to workspace 1-9 | Hyper+1-9 |
-| Switch to workspace 10 | Hyper+0 |
-| Move window to workspace 1-9 | Hyper+Shift+1-9 |
-| Focus left/right/down/up | Hyper+←/→/↓/↑ |
-| Move window left/right/down/up | Hyper+Shift+←/→/↓/↑ |
-| Toggle fullscreen | Hyper+F |
-| Toggle float | Hyper+Space |
-| Close window | Hyper+W |
-| Launch terminal | Hyper+Return |
-| App launcher (Raycast/wofi) | Hyper+D |
-| Dropdown terminal | Hyper+` |
-| Cycle windows | Alt+Tab |
+- `Ctrl+X` means the logical `Ctrl` modifier, which is the physical `CapsLock` key on both hosts.
+- `Hyper+X` means the physical `Ctrl` key on both hosts.
+- User-facing shortcut tables should prefer the physical key sequence where possible.
 
-## Workspace Layout
+## Shared Window-Manager Bindings
+
+These bindings exist on both hosts:
+
+| Physical key | Logical binding | Action |
+|---|---|---|
+| `Ctrl+Return` | `Hyper+Return` | Launch terminal |
+| `Ctrl+D` | `Hyper+D` | App launcher |
+| `Ctrl+1-9` | `Hyper+1-9` | Switch to workspace 1-9 |
+| `Ctrl+0` | `Hyper+0` | Switch to workspace 10 |
+| `Ctrl+Shift+1-9` | `Hyper+Shift+1-9` | Move window to workspace 1-9 |
+| `Ctrl+Shift+0` | `Hyper+Shift+0` | Move window to workspace 10 |
+| `Ctrl+Left` / `Right` / `Down` / `Up` | `Hyper+Left` / `Right` / `Down` / `Up` | Focus left / right / down / up |
+| `Ctrl+Shift+Left` / `Right` / `Down` / `Up` | `Hyper+Shift+Left` / `Right` / `Down` / `Up` | Move window left / right / down / up |
+| `Ctrl+F` | `Hyper+F` | Toggle fullscreen |
+| `Ctrl+Space` | `Hyper+Space` | Toggle floating |
+| `Ctrl+W` | `Hyper+W` | Close window |
+
+## Platform-Specific Desktop Bindings
+
+| Action | macOS physical key | Linux physical key |
+|---|---|---|
+| Scratch access | `Ctrl+\`` jumps to workspace `S` | `Ctrl+\`` toggles the special terminal workspace |
+| App switcher | `Cmd+Tab` | `Alt+Tab` / `Alt+Shift+Tab` |
+| Previous / next workspace | `Ctrl+,` / `Ctrl+.` | `Ctrl+,` / `Ctrl+.` |
+| File manager | `Ctrl+E` opens Finder | `Ctrl+E` opens Thunar |
+| Lock screen | `Ctrl+L` | `Ctrl+L` |
+| Session menu | use macOS UI | `Ctrl+Escape` |
+| Region screenshot | use macOS Screenshot | `Ctrl+Shift+S` |
+| Screenshot + annotate | use macOS Screenshot / Preview | `Ctrl+Alt+S` |
+| OCR selected region | use macOS Live Text | `Ctrl+Alt+O` |
+| Clipboard history | use Raycast / app-native flows | `Ctrl+V` |
+
+## Shared Workspace Layout
+
+Workspace assignments come from `home/features/desktop/keybindings.nix`:
 
 | Workspace | Purpose | macOS Apps | Linux Apps |
 |---|---|---|---|
-| 1 | Admin | Mail, Notes, Calendar, Bitwarden | thunderbird, notes, calendar, bitwarden |
-| 2 | Browser | Chrome | Firefox |
-| 3 | AI/Chat | Claude, ChatGPT | Claude, ChatGPT |
-| 4 | Editor | Emacs, VS Code, Xcode | Emacs, VS Code |
-| 5 | Terminal | Ghostty | Ghostty |
-| 6 | Media | Spotify, Audacity, GarageBand, iMovie | Spotify, Audacity |
-| 7-10 | Flexible | (none) | (none) |
+| `1` | Admin | Mail, Notes, Calendar, Bitwarden | thunderbird, notes, calendar, Bitwarden |
+| `2` | Browser | Safari, Google Chrome | firefox, chromium |
+| `3` | AI / chat | Claude, ChatGPT, Codex | Claude, ChatGPT |
+| `4` | Editor | Emacs, Code, Xcode | Emacs, Code |
+| `5` | Terminal | Ghostty | Ghostty |
+| `6` | Media | Spotify, Audacity, GarageBand, iMovie | Spotify, Audacity |
+| `7-10` | Flexible | no automatic assignment | no automatic assignment |
+| `S` | Scratch | manual scratch workspace on macOS | n/a |
 
-## Cross-Platform Keybinding Chain
+## Common Physical-Key Examples
 
-| Action | NixOS (physical key) | macOS (physical key) | Result |
+| Action | macOS physical key | Linux physical key | Result |
 |---|---|---|---|
-| Tmux prefix | CapsLock+A | CapsLock+A | Ctrl+A → Tmux activates |
-| Copy (terminal) | CapsLock+Shift+C | Cmd+C | Clipboard copy |
-| Copy (GUI app) | CapsLock+C | Cmd+C | Clipboard copy |
-| VS Code cmd palette | CapsLock+Shift+P | Cmd+Shift+P | Command palette |
-| Line start (zsh) | CapsLock+A | CapsLock+A | Ctrl+A → cursor to start |
-| Kill line (zsh) | CapsLock+K | CapsLock+K | Ctrl+K → kill to EOL |
-| Switch workspace 1 | Ctrl+1 | Ctrl+1 | Hyper+1 → workspace 1 |
-| Move window to ws 2 | Ctrl+Shift+2 | Ctrl+Shift+2 | Hyper+Shift+2 → move |
-
-## Emacs Keybindings (unchanged)
-
-All emacs keybindings use Ctrl (via CapsLock). Same physical key on both platforms:
-- `CapsLock+A/E`: beginning/end of line
-- `CapsLock+K`: kill to end of line
-- `CapsLock+N/P`: next/previous line
-- `CapsLock+F/B`: forward/backward character
-- `CapsLock+W`: kill region (cut)
-- `CapsLock+Y`: yank (paste in emacs)
-
-## Tmux Keybindings
-
-- **Prefix**: `CapsLock+A` (sends Ctrl+A)
-- **Split panes**: `prefix + |` / `prefix + -`
-- **Pane navigation**: `Alt+arrows`
-- **Window navigation**: `Shift+arrows`
-- **Pane resize**: `CapsLock+Shift+arrows` (sends Ctrl+Shift+arrows)
-- **Copy mode**: vi keybindings (shell stays emacs via `bindkey -e`)
-
-Note: `Ctrl+A` in tmux conflicts with shell beginning-of-line. Use `CapsLock+A CapsLock+A` to send a literal Ctrl+A, or use `Home` key.
+| Shell beginning of line | `CapsLock+A` | `CapsLock+A` | logical `Ctrl+A` |
+| tmux prefix | `CapsLock+A` | `CapsLock+A` | logical `Ctrl+A` |
+| Ghostty copy | `CapsLock+Shift+C` | `CapsLock+Shift+C` | logical `Ctrl+Shift+C` |
+| GUI app copy | `Cmd+C` | `CapsLock+C` | native GUI copy |
+| VS Code command palette | `Cmd+Shift+P` | `CapsLock+Shift+P` | open command palette |
+| Launch terminal | `Ctrl+Return` | `Ctrl+Return` | logical `Hyper+Return` |
+| Switch to workspace 1 | `Ctrl+1` | `Ctrl+1` | logical `Hyper+1` |
+| Move window to workspace 2 | `Ctrl+Shift+2` | `Ctrl+Shift+2` | logical `Hyper+Shift+2` |
 
 ## Edge Cases
 
-### macOS Copy/Paste
-macOS GUI apps use Cmd+C/V/X (native). Linux GUI apps use CapsLock+C/V/X (sends Ctrl+C/V/X). This is the one intentional per-platform difference — each OS uses its native convention.
-
-### CapsLock
-CapsLock is remapped to Ctrl on both platforms. To type uppercase, use Shift.
-
-### Physical Ctrl Key
-The physical Ctrl key no longer sends Ctrl. It sends Hyper (Ctrl+Alt+Cmd on macOS, Mod3 on Linux). This is fully committed — there is no way to send "plain Ctrl" from the physical Ctrl key.
+- `CapsLock` no longer toggles caps. Use `Shift` for uppercase.
+- The physical `Ctrl` key no longer sends plain `Ctrl`. It is fully committed to `Hyper`.
+- macOS GUI shortcuts stay native: `Cmd+C/V/X`, `Cmd+Tab`, `Cmd+Q`, and similar shortcuts are not remapped.
+- Ghostty and tmux still use logical `Ctrl`, so their shortcuts are physically `CapsLock` combos in this setup.
+- `Hyper+\`` is only scratch-space access on macOS. It is not a true Hyprland-style dropdown terminal.
+- AeroSpace keeps `1..10` and `S` persistent so workspace cycling and assignments remain stable.
 
 ## Configuration Files
 
 | File | Purpose |
 |---|---|
 | `home/features/desktop/keybindings.nix` | Shared workspace layout and app assignments |
-| `home/features/desktop/karabiner.nix` | macOS: CapsLock→Ctrl + Ctrl→Hyper (Karabiner JSON) |
-| `home/features/desktop/aerospace.nix` | macOS: Aerospace tiling WM config |
-| `home/features/desktop/hyprland.nix` | Linux: Hyprland WM config (MOD3 bindings) |
-| `hosts/common/keyd.nix` | Linux: keyd daemon for CapsLock→Ctrl + Ctrl→Hyper |
+| `home/features/desktop/karabiner.nix` | macOS remapping rules: `CapsLock -> Ctrl`, physical `Ctrl -> Hyper` |
+| `darwin/common/karabiner.nix` | Starts Karabiner's non-privileged agents at login |
+| `home/features/desktop/aerospace.nix` | macOS Aerospace config and bindings |
+| `home/features/desktop/hyprland.nix` | Linux Hyprland bindings and window rules |
+| `hosts/common/keyd.nix` | Linux key remapping daemon |
 
 ## References
 

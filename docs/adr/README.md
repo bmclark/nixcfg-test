@@ -16,13 +16,15 @@ Every ADR follows a consistent structure:
 - [ADR-002: Shell and Terminal Choices](ADR-002-shell-and-terminal-choices.md)
   zsh + Starship (P10k-style) and Ghostty across platforms with CLI integrations.
 - [ADR-003: Keyboard Remapping Strategy](ADR-003-keyboard-remapping-strategy.md)
-  Ctrl for application shortcuts, Super for window management, Karabiner remapping on macOS.
+  CapsLock for logical Ctrl, Hyper for window management, native Cmd preserved on macOS.
 - [ADR-004: Theme Standardization (Dracula)](ADR-004-theme-standardization.md)
   Dracula palette applied to Hyprland, Ghostty, fzf, bat, Emacs, and Starship.
 - [ADR-005: Development Environment Approach](ADR-005-development-environment-approach.md)
   Per-project nix-shell environments with minimal system-wide tooling.
 - [ADR-006: Build Automation with Justfile](ADR-006-build-automation-with-justfile.md)
   Comprehensive justfile covering platform-specific commands, maintenance, and tooling.
+- [ADR-007: Hyprland Configuration Modernization](ADR-007-hyprland-configuration-modernization.md)
+  Modern Hyprland UX, theming, services, and desktop workflow choices.
 - [ADR-008: Tmux Integration and Session Logging](ADR-008-tmux-integration.md)
   Tmux with Dracula theme, Ctrl+A prefix, tmux-logging for session capture.
 - [ADR-009: Browser Strategy](ADR-009-browser-strategy.md)
@@ -33,6 +35,8 @@ Every ADR follows a consistent structure:
   Custom palette files with justfile rebuild command for theme switching.
 - [ADR-013: Documentation Maintenance for User Guides](ADR-013-documentation-maintenance-for-user-guides.md)
   Hybrid onboarding plus feature guides, with explicit maintenance rules for docs and shortcut conflicts.
+- [ADR-014: macOS Platform Parity Strategy](ADR-014-macos-platform-parity.md)
+  macOS parity decisions for package sources, platform guards, defaults, and Aerospace/Karabiner integration.
 
 ## Creating New ADRs
 When documenting new decisions:

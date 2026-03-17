@@ -18,8 +18,8 @@ Do not assume prior context beyond this file.
 
 This repository manages one NixOS host and one macOS host from a single flake:
 
-- `maverick`: NixOS laptop
-- `iceman`: macOS machine managed with `nix-darwin`
+- `maverick`: NixOS laptop running Hyprland with `keyd`
+- `iceman`: macOS machine managed with `nix-darwin`, Aerospace, and Karabiner
 
 Most user-facing configuration is implemented as modular home-manager features under `home/features/`, then enabled per host in `home/bclark/maverick.nix` or `home/bclark/iceman.nix`.
 
@@ -146,7 +146,7 @@ Practical examples:
 
 - A shell task usually flows through `home/bclark/<host>.nix` -> `home/features/cli/default.nix` -> `home/features/cli/zsh.nix`
 - A Hyprland task usually flows through `hosts/maverick/default.nix` and `home/bclark/maverick.nix` -> `home/features/desktop/default.nix` -> `home/features/desktop/hyprland.nix` and `home/features/desktop/wayland.nix`
-- A macOS keyboard task usually flows through `darwin/iceman/configuration.nix` and `home/bclark/iceman.nix` -> `home/features/desktop/karabiner.nix`
+- A macOS keyboard or window-management task usually flows through `darwin/iceman/configuration.nix` and `home/bclark/iceman.nix` -> `home/features/desktop/karabiner.nix` and `home/features/desktop/aerospace.nix` -> `home/features/desktop/keybindings.nix`, with login-agent wiring in `darwin/common/karabiner.nix`
 
 Do not load the whole repository by default. Load the minimum set that explains the path from flake -> host -> feature -> concrete implementation.
 
@@ -168,9 +168,10 @@ Use this as the first lookup table.
 | Emacs | `home/features/editors/emacs.nix`, `home/features/editors/default.nix` |
 | Firefox | `home/features/desktop/firefox.nix`, host file |
 | Chromium | `home/features/desktop/chromium.nix`, host file |
-| Hyprland | `home/features/desktop/hyprland.nix`, `home/features/desktop/wayland.nix`, `docs/hyprland-configuration.md`, `home/bclark/maverick.nix`, `hosts/maverick/configuration.nix` |
+| Hyprland | `home/features/desktop/hyprland.nix`, `home/features/desktop/wayland.nix`, `docs/hyprland-configuration.md`, `home/bclark/maverick.nix`, `hosts/maverick/configuration.nix`, `hosts/common/keyd.nix` |
+| Aerospace | `home/features/desktop/aerospace.nix`, `home/features/desktop/keybindings.nix`, `home/bclark/iceman.nix`, `darwin/iceman/configuration.nix` |
 | Fonts | `home/features/desktop/fonts.nix`, `home/themes/README.md` |
-| Karabiner | `home/features/desktop/karabiner.nix`, `darwin/iceman/configuration.nix`, `home/bclark/iceman.nix` |
+| Karabiner | `home/features/desktop/karabiner.nix`, `darwin/common/karabiner.nix`, `darwin/iceman/configuration.nix`, `home/bclark/iceman.nix` |
 | Themes | `home/themes/*.nix`, `flake.nix`, consuming modules |
 | NixOS host behavior | `hosts/maverick/configuration.nix`, `hosts/maverick/default.nix`, `hosts/common/default.nix` |
 | macOS host behavior | `darwin/iceman/configuration.nix`, `darwin/iceman/default.nix`, `darwin/common/default.nix` |

@@ -12,6 +12,8 @@ The iceman (macOS/nix-darwin) and maverick (NixOS) share extensive home-manager 
 - Chromium isn't packaged for aarch64-darwin
 - `homebrew.nix` declared almost nothing despite `onActivation.cleanup = "zap"` being set
 - gpg-agent used `pinentry-curses` on both platforms instead of the native macOS keychain UI
+- macOS window-management parity was incomplete until Aerospace and the revised Karabiner layout were wired in
+- Karabiner installed from Homebrew needed explicit login-agent startup so the remaps were actually available after login
 
 ## Decision
 
@@ -21,7 +23,7 @@ Prefer nix > Homebrew > Mac App Store > manual install:
 
 1. **Nix (home-manager):** All CLI tools, editors, dev tooling, fonts — shared config with Linux
 2. **Homebrew casks:** Apps that need macOS system integration or lack nixpkgs macOS builds (Ghostty, Karabiner, Raycast, etc.)
-3. **Homebrew formulae:** CLI tools not in nixpkgs (mas, gemini-cli, tdd-guard)
+3. **Homebrew formulae:** CLI tools not in nixpkgs (`mas`, `tdd-guard`)
 4. **Mac App Store (via mas):** Apps only available through MAS (Bitwarden, iWork suite, Xcode)
 5. **Manual install:** Only for apps that can't be managed by any of the above (driver utilities)
 
@@ -37,6 +39,13 @@ Prefer nix > Homebrew > Mac App Store > manual install:
 - **OCR functions:** `lib.optionalString pkgs.stdenv.isLinux` — Linux-only until macOS equivalents are implemented
 - **gpg-agent pinentry:** `pinentry_mac` on Darwin for native keychain UI, `pinentry-curses` on Linux
 - **Ghostty:** nixpkgs on Linux, Homebrew cask on macOS — shared config file via `home.file`
+- **Gemini CLI:** managed by Nix on both hosts now that nixpkgs carries `gemini-cli`
+
+### Window-management parity
+
+- **Aerospace:** enabled on macOS and fed by `home/features/desktop/keybindings.nix` so workspace layout stays aligned with Hyprland
+- **Karabiner:** `home/features/desktop/karabiner.nix` renders the remapping JSON, while `darwin/common/karabiner.nix` starts Karabiner's non-privileged agents at login
+- **Mission Control / Stage Manager:** disabled where needed so macOS workspace controls do not fight Aerospace
 
 ### macOS system defaults
 
@@ -45,6 +54,7 @@ Prefer nix > Homebrew > Mac App Store > manual install:
 ## Consequences
 
 - Both hosts now produce a consistent terminal + editor experience
+- Both hosts now share one Hyper-based window-management model and one workspace assignment map
 - All installed macOS software is captured declaratively
 - Platform-specific features degrade gracefully (disabled, not erroring)
 - Adding macOS software requires updating `homebrew.nix` — enforced by zap

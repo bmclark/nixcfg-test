@@ -53,6 +53,13 @@ in {
     {
       home.packages = with pkgs; [tree];
     }
+    (mkIf pkgs.stdenv.isLinux {
+      home.packages = with pkgs; [
+        audacity
+        bitwarden-desktop
+        spotify
+      ];
+    })
     (mkIf (cfg.enable && pkgs.stdenv.isLinux) {
       home.packages = [
         pkgs.remmina
