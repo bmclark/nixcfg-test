@@ -39,6 +39,13 @@ in {
       };
       historySubstringSearch.enable = true;
 
+      # --- Extra plugins (sourced automatically by home-manager) -------------
+      plugins = [
+        { name = "zsh-autopair";      src = pkgs.zsh-autopair;      file = "share/zsh/zsh-autopair/autopair.zsh"; }
+        { name = "zsh-you-should-use"; src = pkgs.zsh-you-should-use; file = "share/zsh/plugins/you-should-use/you-should-use.plugin.zsh"; }
+        { name = "zsh-nix-shell";     src = pkgs.zsh-nix-shell;     file = "share/zsh/zsh-nix-shell/nix-shell.plugin.zsh"; }
+      ];
+
       # --- History ----------------------------------------------------------
       history = {
         size = 100000;
@@ -75,6 +82,7 @@ in {
         dig = "doggo";
         watch = "viddy";
         http = "xh";
+        cpv = "rsync -pogbr -hhh --backup-dir=/tmp/rsync -e /dev/null --progress";
 
         # Git shortcuts
         g = "git";
@@ -164,6 +172,7 @@ in {
 
         # Tmux shortcuts (matches oh-my-zsh tmux plugin)
         ts = "tmux new-session -s";
+        tss = "tmux new-session -A -s"; # attach-or-create
         ta = "tmux attach -t";
         tad = "tmux attach -d -t";
         tkss = "tmux kill-session -t";

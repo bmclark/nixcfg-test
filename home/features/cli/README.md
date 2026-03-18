@@ -202,6 +202,7 @@ Use plain `just` when you want the current project's nearest `justfile`.
 | `watch` | `viddy` |
 | `dig` | `doggo` |
 | `diff` | `difftastic` |
+| `cp` (with progress) | `cpv` (rsync) |
 
 ### Tools worth learning on purpose
 
@@ -224,6 +225,7 @@ Quick tmux aliases matching the oh-my-zsh tmux plugin:
 | Alias | Command |
 |-------|---------|
 | `ts <name>` | Create a new named session |
+| `tss <name>` | Attach or create (idempotent) |
 | `ta <name>` | Attach to a session |
 | `tad <name>` | Detach other clients and attach |
 | `tkss <name>` | Kill a session |
@@ -257,5 +259,6 @@ Use these when you want a ready-made starting point instead of manually splittin
 - tmux mouse mode is on, and mouse drag selection copies to the system clipboard through `pbcopy` on macOS.
 - tmux logging auto-starts for new panes.
 - The shell is intentionally Emacs-first, matching the wider keyboard strategy across the repo.
+- Zsh plugins (`zsh-autopair`, `zsh-you-should-use`, `zsh-nix-shell`) are sourced via `programs.zsh.plugins` rather than bare `home.packages`, so they actually load at shell startup.
 
 See [ADR-002](../../../docs/adr/ADR-002-shell-and-terminal-choices.md), [ADR-008](../../../docs/adr/ADR-008-tmux-integration.md), [ADR-010](../../../docs/adr/ADR-010-shell-plugin-management.md), and [ADR-014](../../../docs/adr/ADR-014-macos-platform-parity.md).

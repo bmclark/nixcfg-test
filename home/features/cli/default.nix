@@ -367,10 +367,7 @@ in {
     ffmpegthumbnailer # Video thumbnails for yazi preview
     poppler-utils # PDF preview (pdftoppm) for yazi
 
-    # Zsh plugins (loaded via initExtra or as packages)
+    # Zsh plugins (nix-zsh-completions stays as a package; others sourced via programs.zsh.plugins in zsh.nix)
     nix-zsh-completions # Tab completion for nix commands
-    zsh-autopair # Auto-close brackets, quotes, etc.
-    zsh-you-should-use # Reminds you of existing aliases
-    zsh-nix-shell # Proper zsh in nix-shell environments
   ];
 }

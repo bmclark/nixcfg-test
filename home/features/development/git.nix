@@ -32,6 +32,7 @@ in {
         };
         commit.gpgsign = false;
         tag.gpgSign = true;
+        merge.ff = "only";
         merge.conflictstyle = "diff3";
         diff.colorMoved = "default";
         rerere.enabled = true;

@@ -20,10 +20,15 @@ The previous dotfiles setup used Antigen with 23+ zsh plugins, requiring a runti
 - `autosuggestion.enable`: fish-like autosuggestions from history + completion
 - `historySubstringSearch.enable`: arrow key history substring search
 
-### Package-based plugins (installed via `home.packages`)
-- `nix-zsh-completions`: tab completion for nix, nixos-rebuild, nix-env
+### Sourced plugins (`programs.zsh.plugins`)
+- `zsh-autopair`: auto-close brackets, quotes, etc.
 - `zsh-you-should-use`: reminds of existing aliases when typing full commands
 - `zsh-nix-shell`: proper zsh in nix-shell environments (instead of bash fallback)
+
+Note: these were previously in `home.packages` but that only puts them on `$PATH` — it does not source them. Moving them to `programs.zsh.plugins` ensures home-manager sources the plugin files at shell startup.
+
+### Package-based plugins (installed via `home.packages`)
+- `nix-zsh-completions`: tab completion for nix, nixos-rebuild, nix-env (works via `$fpath`, no sourcing needed)
 
 ### Supporting programs (home-manager `programs.*`)
 - `programs.direnv` + `nix-direnv`: automatic dev shell loading in project directories
