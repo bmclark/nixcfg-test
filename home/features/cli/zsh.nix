@@ -179,8 +179,8 @@ in {
         tl = "tmux list-sessions";
 
         # Emacs daemon workflow
-        emacs = "emacsclient -c -a ''";
-        ec = "emacsclient -c -a ''";
+        emacs = "emacsclient -c -n -a '' && emacsclient -e '(select-frame-set-input-focus (selected-frame))'";
+        ec = "emacsclient -c -n -a '' && emacsclient -e '(select-frame-set-input-focus (selected-frame))'";
         et = "emacsclient -t -a ''";
       } // lib.optionalAttrs pkgs.stdenv.isDarwin {
         # Darwin-specific nix shortcuts
