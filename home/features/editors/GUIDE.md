@@ -69,7 +69,7 @@ This is the primary use case. The config provides a full IDE experience with LSP
 
 ### Opening a Project
 
-Press `C-c p p` to switch projects. This:
+Press `C-c p p` (Projectile) to switch projects. **Do not use `C-x p p`** -- that's the built-in `project.el`, which doesn't trigger the IDE layout or workspace switching. This:
 1. Creates/switches to a dedicated workspace (perspective)
 2. Opens treemacs file tree on the left
 3. Opens a terminal at the bottom
@@ -155,7 +155,7 @@ Errors and warnings appear automatically in the left fringe and as sideline anno
 
 | Key | What it does |
 |-----|-------------|
-| `C-c v` | Toggle terminal panel (show/hide) |
+| `C-c v` or `C-\`` | Toggle terminal panel (show/hide) |
 | `C-c V` | Maximize terminal to full frame / restore |
 
 The terminal is a real shell (zsh via vterm). When maximized, pressing `C-c V` again restores your previous window layout exactly.
@@ -477,7 +477,7 @@ Press `C-c j` from anywhere for a quick journal entry. Entries are organized by 
 
 - **`C-c` then wait** -- which-key shows all available `C-c` bindings
 - **`C-c l` then wait** -- shows all LSP commands
-- **`C-c p` then wait** -- shows all project commands
+- **`C-c p` then wait** -- shows all Projectile project commands (use these, not `C-x p` which is built-in `project.el`)
 - **`C-h B`** -- searchable list of all keybindings
 - **`C-h k` then press a key** -- describes what that key does
 

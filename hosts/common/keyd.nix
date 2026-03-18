@@ -1,6 +1,6 @@
 # keyd: system-level key remapping daemon.
-# Remaps CapsLock→Ctrl (emacs), physical Ctrl→Hyper (WM),
-# and Super→Ctrl for common CUA shortcuts (copy/paste/undo).
+# Remaps CapsLock→Ctrl (emacs), physical Ctrl→Super (WM),
+# and physical Super→Ctrl for common CUA shortcuts (copy/paste/undo).
 # Runs at evdev level, transparent to Hyprland and all apps.
 #
 # Note: keyd cannot exclude per-app (it operates below the compositor).
@@ -14,8 +14,8 @@
       settings = {
         main = {
           capslock = "leftcontrol";
-          leftcontrol = "hyper";
-          rightcontrol = "hyper";
+          leftcontrol = "leftmeta";
+          rightcontrol = "rightmeta";
           leftmeta = "layer(super_cua)";
           rightmeta = "layer(super_cua)";
         };
@@ -26,7 +26,7 @@
           v = "C-v";       # paste
           x = "C-x";       # cut
           z = "C-z";       # undo
-          "shift+z" = "C-S-z"; # redo
+          # redo: shift+z not valid in keyd 2.6.0 layer syntax
           a = "C-a";       # select all
           s = "C-s";       # save
           f = "C-f";       # find

@@ -77,6 +77,7 @@
         "5, monitor:eDP-1"
         "6, monitor:eDP-1"
         "7, monitor:eDP-1"
+        "special:terminal, on-created-empty:ghostty, gapsout:0"
       ];
     };
   };

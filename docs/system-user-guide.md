@@ -53,7 +53,7 @@ If you only memorize a few things, start here:
 | `Ctrl+D` | Open the launcher | Start apps without hunting through menus |
 | `Ctrl+1` .. `Ctrl+0` | Go to workspace 1..10 | Main desktop navigation |
 | `Ctrl+Shift+1` .. `Ctrl+Shift+0` | Move a window to workspace 1..10 | Main desktop organization tool |
-| `Ctrl+\`` | Scratch terminal / scratch workspace | Quick temporary work area |
+| `CapsLock+\`` | Scratch terminal / scratch workspace | Quick temporary work area |
 | `CapsLock+]` | `Ctrl+]` | Primary tmux prefix |
 | `CapsLock+A` | `Ctrl+A` | Shell beginning-of-line, with tmux backup-prefix compatibility |
 
@@ -115,7 +115,7 @@ From a shell:
 emacsclient -c
 ```
 
-Then use `C-c p p` to switch into a project and let Emacs restore the IDE layout.
+Then use `C-c p p` (Projectile) to switch into a project and let Emacs restore the IDE layout. Do not use `C-x p p` -- that's the built-in `project.el` which skips the workspace and layout setup.
 
 ## Moving Around The System
 
@@ -162,7 +162,7 @@ Hyprland owns desktop-specific extras on `maverick`.
 
 | Physical key | Action |
 |--------------|--------|
-| `Ctrl+\`` | Toggle dropdown terminal |
+| `CapsLock+\`` | Toggle dropdown terminal |
 | `Ctrl+,` / `Ctrl+.` | Previous / next workspace |
 | `Ctrl+E` | Open Thunar |
 | `Ctrl+L` | Lock |
@@ -246,7 +246,7 @@ As elsewhere in this repo, `C-...` means the logical `Ctrl` key, which is the ph
 | `M-.` / `M-?` | Definition / references |
 | `C-c t` | Toggle file tree |
 | `C-c i` | Toggle symbol outline |
-| `C-c v` / `C-c V` | Toggle / maximize terminal panel |
+| `C-c v` or `C-\`` / `C-c V` | Toggle / maximize terminal panel |
 | `Ctrl+PageUp` / `Ctrl+PageDown` | Previous / next editor tab |
 | `C-c w s` | Switch Emacs workspace |
 
@@ -276,7 +276,7 @@ Use:
 
 ### Pattern: quick check without disturbing your main layout
 
-On `maverick`, use the Hyprland dropdown terminal with `Ctrl+\`` for:
+On `maverick`, use the Hyprland dropdown terminal with `CapsLock+\`` for:
 - one-off git status
 - package/version checks
 - a quick `journalctl`, `kubectl`, or `rg`

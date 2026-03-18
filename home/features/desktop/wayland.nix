@@ -172,6 +172,39 @@ in {
       '';
     };
 
+    home.file.".local/bin/dropdown-terminal" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # Guake-style dropdown terminal using Hyprland's special workspace.
+        # Sizes to top third of screen and slides down from top.
+
+        get_addr() {
+          hyprctl clients -j | ${pkgs.python3}/bin/python3 -c "
+        import json, sys
+        for c in json.load(sys.stdin):
+            if 'special:terminal' in str(c.get('workspace', {})):
+                print(c['address']); break
+        "
+        }
+
+        ADDR=$(get_addr)
+        if [[ -n "$ADDR" ]]; then
+          hyprctl dispatch togglespecialworkspace terminal
+        else
+          hyprctl dispatch togglespecialworkspace terminal
+          sleep 0.4
+          ADDR=$(get_addr)
+          if [[ -n "$ADDR" ]]; then
+            hyprctl --batch "\
+              dispatch floatwindow address:$ADDR;\
+              dispatch resizewindowpixel exact 1920 360,address:$ADDR;\
+              dispatch movewindowpixel exact 0 0,address:$ADDR"
+          fi
+        fi
+      '';
+    };
+
     home.file.".local/bin/cliphist-wofi" = {
       executable = true;
       text = ''

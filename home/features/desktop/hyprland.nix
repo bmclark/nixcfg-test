@@ -51,8 +51,7 @@ in {
           "swww-daemon && sleep 0.5 && $HOME/.local/bin/wallpaper-random"
           "waybar"
           "blueman-applet"
-          # Dropdown terminal: starts hidden in special workspace, toggled with Hyper+`
-          "[workspace special:terminal silent] $TERMINAL"
+          # Dropdown terminal: auto-spawns ghostty via workspace rule (on-created-empty)
         ];
 
         env = [
@@ -62,6 +61,7 @@ in {
           "XDG_SESSION_DESKTOP,Hyprland"
           "XDG_SESSION_TYPE,wayland"
           "GTK_THEME,${theme.gtkThemeName}"
+          "TERMINAL,ghostty"
         ];
 
         # --- Input -----------------------------------------------------------
@@ -91,8 +91,8 @@ in {
         # --- Decorations -----------------------------------------------------
         decoration = {
           rounding = 12;
-          active_opacity = 0.95; # 0.95 is more readable than 0.9
-          inactive_opacity = 0.5;
+          active_opacity = 0.65;
+          inactive_opacity = 0.35;
           blur = {
             enabled = true;
             size = 6;
@@ -134,6 +134,7 @@ in {
             "fadeOut, 1, 6, quick"
             "layers, 1, 6, easeOutQuint"
             "workspaces, 1, 7, easeOutQuint, slidefade 40%"
+            "specialWorkspace, 1, 5, easeOutQuint, slidevert"
           ];
         };
 
@@ -183,17 +184,16 @@ in {
           # Force full opacity on browsers (blur looks bad through text)
           "opacity 1.0 override 1.0, match:class ^(firefox|chromium-browser)$"
 
-          # Dropdown terminal: float and size for special workspace
-          "float on, size 100% 50%, move 0 0, animation slide, match:workspace name:special:terminal"
+          # Dropdown terminal sizing handled by ~/.local/bin/dropdown-terminal
         ];
 
         # --- Keybindings -----------------------------------------------------
-        "$mainMod" = "MOD3"; # Hyper key (physical Ctrl via keyd)
+        "$mainMod" = "SUPER"; # Physical Ctrl → Super via keyd (hyper removed in keyd 2.6.0)
         # Hyper (MOD3 via keyd) controls the WM. Arrow keys for directional focus.
         # CUA bindings (Ctrl via CapsLock) and Emacs navigation are unaffected.
         bind = [
           # Core launcher bindings
-          "$mainMod, Return, exec, $TERMINAL"
+          "$mainMod, Return, exec, ghostty"
           "$mainMod, D, exec, wofi --show drun"
           "$mainMod, Space, togglefloating"
           "$mainMod, F, fullscreen"
@@ -204,8 +204,8 @@ in {
           "$mainMod, comma, workspace, r-1"
           "$mainMod, period, workspace, r+1"
 
-          # Dropdown terminal (Hyper+` toggles special:terminal workspace)
-          "$mainMod, grave, togglespecialworkspace, terminal"
+          # Dropdown terminal (CapsLock+` = Ctrl+grave toggles special:terminal workspace)
+          "CTRL, grave, exec, $HOME/.local/bin/dropdown-terminal"
 
           # Wallpaper controls
           "$mainMod SHIFT, W, exec, $HOME/.local/bin/wallpaper-random"

@@ -47,7 +47,7 @@ Hyprland follows the shared keyboard strategy: logical `Ctrl` lives on `CapsLock
 | Ctrl+Shift+1..0 | Move window to workspace 1..10 |
 | Ctrl+Comma | Previous workspace |
 | Ctrl+Period | Next workspace |
-| Ctrl+Grave | Toggle the dropdown terminal workspace |
+| CapsLock+Grave | Toggle the guake-style dropdown terminal (top third) |
 | Ctrl+Mouse Wheel | Cycle workspaces |
 
 ### Screenshots

@@ -53,7 +53,8 @@
     keybind = ctrl+shift+t=new_tab
     keybind = ctrl+shift+w=close_surface
     keybind = ctrl+period=next_tab
-    keybind = ctrl+comma=previous_tab
+    keybind = ctrl+comma=unbind
+    keybind = ctrl+,=previous_tab
   '';
 in {
   options.features.cli.ghostty.enable =

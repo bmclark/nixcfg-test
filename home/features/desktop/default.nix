@@ -56,7 +56,10 @@ in {
     (mkIf pkgs.stdenv.isLinux {
       home.packages = with pkgs; [
         audacity
-        bitwarden-desktop
+        # FIXME: bitwarden-desktop disabled — electron-39 fails to build
+        # upstream (nixpkgs patch drift in chromium/angle). Re-enable after
+        # `nix flake update`.
+        # bitwarden-desktop
         spotify
       ];
     })

@@ -613,7 +613,9 @@ Uses `get-buffer' (C-level, immune to perspective.el filtering)."
                     (buffer-name (window-buffer win)))
     win))
 
-;; C-c v — toggle terminal panel at bottom (like VS Code Ctrl+`)
+;; C-` / C-c v — toggle terminal panel at bottom (like VS Code Ctrl+`)
+(global-set-key (kbd "C-`") #'bc/toggle-vterm)
+
 ;;   hidden  → show at bottom third
 ;;   visible → hide
 (defun bc/toggle-vterm ()

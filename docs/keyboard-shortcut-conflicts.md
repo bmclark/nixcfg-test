@@ -37,7 +37,7 @@ These are not bugs, but users can mistake them for bugs:
 | macOS app switching | AltTab now provides physical `Alt+Tab` app switching on macOS; native `Cmd+Tab` still exists alongside it |
 | Ghostty has no auto-logging | Users may expect terminal logs automatically; tmux logging is the intended solution |
 | tmux mouse copy | Mouse selection is enabled in tmux and copies through the clipboard integration rather than only selecting visually |
-| Linux dropdown terminal vs macOS scratch workspace | `Hyper+\`` toggles a dropdown terminal on Linux but toggles a Ghostty-backed scratch workspace `S` on macOS |
+| Linux dropdown terminal vs macOS scratch workspace | `CapsLock+\`` toggles a guake-style dropdown terminal on Linux but `Ctrl+\`` toggles a Ghostty-backed scratch workspace `S` on macOS |
 | Hyprland workspaces vs tmux windows vs Emacs workspaces | Each layer solves a different navigation problem; mixing them casually makes the setup feel harder than it is |
 
 ## Maintenance Rule
