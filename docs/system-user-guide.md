@@ -167,7 +167,7 @@ Hyprland owns desktop-specific extras on `maverick`.
 | `Ctrl+E` | Open Thunar |
 | `Ctrl+L` | Lock |
 | `Ctrl+Escape` | Logout / power menu |
-| `Alt+Tab` / `Alt+Shift+Tab` | Cycle windows |
+| `Alt+Tab` / `Alt+Shift+Tab` | Visual window switcher (hyprshell, like macOS AltTab) |
 | `Ctrl+Shift+S` | Area screenshot |
 | `Ctrl+Shift+Print` | Full screenshot |
 | `Ctrl+Alt+S` | Area screenshot and annotate in Swappy |
@@ -306,6 +306,9 @@ Examples:
 - `ujust ocr-shot`
 - `ujust doctor`
 - `ujust host-info`
+- `ujust gc` — delete old generations and garbage-collect the Nix store
+- `ujust wallpaper` — pick a random wallpaper now
+- `ujust wallpaper-mode sfw` / `ujust wallpaper-mode nsfw` — switch wallpaper directory
 
 For nixcfg specifically, the universal layer also exposes:
 - `ujust nixcfg-check`

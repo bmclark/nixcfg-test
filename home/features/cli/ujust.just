@@ -160,6 +160,35 @@ post-switch:
   @just --justfile "$HOME/.config/just/justfile" user-services || true
   @just --justfile "$HOME/.config/just/justfile" tailscale-status || true
 
+gc:
+  @bash -eu -c '\
+    echo "Deleting old system generations..."; \
+    sudo nix-collect-garbage -d; \
+    echo; echo "Deleting old home-manager generations..."; \
+    nix-collect-garbage -d; \
+    echo; echo "Updating boot entries..."; \
+    if [ -L /run/current-system ]; then \
+      sudo /run/current-system/bin/switch-to-configuration boot; \
+    fi; \
+    echo; echo "Done. Disk usage:"; \
+    df -h / \
+  '
+
+wallpaper-mode MODE="":
+  @bash -eu -c '\
+    if [ -z "{{MODE}}" ]; then \
+      current="sfw"; \
+      [ -f "$HOME/.local/state/wallpaper-mode" ] && current="$(cat "$HOME/.local/state/wallpaper-mode")"; \
+      echo "Current mode: $current"; \
+      echo "Usage: ujust wallpaper-mode [sfw|nsfw]"; \
+    else \
+      "$HOME/.local/bin/wallpaper-mode" "{{MODE}}"; \
+    fi \
+  '
+
+wallpaper:
+  @$HOME/.local/bin/wallpaper-random
+
 ocr-shot:
   @$HOME/.local/bin/ocr-screenshot
 

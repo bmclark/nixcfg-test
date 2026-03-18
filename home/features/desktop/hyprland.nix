@@ -52,6 +52,7 @@ in {
           "waybar"
           "blueman-applet"
           # Dropdown terminal: auto-spawns ghostty via workspace rule (on-created-empty)
+          # Alt+Tab: hyprshell daemon started via systemd (wayland.nix)
         ];
 
         env = [
@@ -212,8 +213,7 @@ in {
 
           # CUA / application bindings
           "ALT, F4, killactive"
-          "ALT, Tab, cyclenext"
-          "ALT SHIFT, Tab, cyclenext, prev"
+          # Alt+Tab handled by hyprshell daemon (see wayland.nix systemd service)
 
           # Window focus (arrow keys)
           "$mainMod, left, movefocus, l"

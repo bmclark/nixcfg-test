@@ -25,7 +25,7 @@ Hyprland follows the shared keyboard strategy: logical `Ctrl` lives on `CapsLock
 ### Window Navigation
 | Physical key | Action |
 |----------|--------|
-| Alt+Tab | Cycle windows forward |
+| Alt+Tab | Visual window switcher across all workspaces (hyprshell) |
 | Alt+Shift+Tab | Cycle windows backward |
 | Ctrl+Left | Focus window to the left |
 | Ctrl+Right | Focus window to the right |

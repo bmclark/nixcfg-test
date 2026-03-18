@@ -47,7 +47,7 @@ These bindings exist on both hosts:
 | Action | macOS physical key | Linux physical key |
 |---|---|---|
 | Scratch access | `Ctrl+\`` toggles workspace `S`, creating a Ghostty there on first use | `CapsLock+\`` toggles guake-style dropdown terminal (top third) |
-| App switcher | `Alt+Tab` (AltTab), `Cmd+Tab` still native | `Alt+Tab` / `Alt+Shift+Tab` |
+| App switcher | `Alt+Tab` (AltTab), `Cmd+Tab` still native | `Alt+Tab` (hyprshell visual switcher) |
 | Previous / next workspace | `Ctrl+,` / `Ctrl+.` | `Ctrl+,` / `Ctrl+.` |
 | File manager | `Ctrl+E` opens Finder | `Ctrl+E` opens Thunar |
 | Lock screen | `Ctrl+L` | `Ctrl+L` |

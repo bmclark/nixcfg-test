@@ -155,6 +155,23 @@ in {
       '';
     };
 
+    # Rotate wallpaper every 20 minutes
+    systemd.user.services.wallpaper-rotate = {
+      Unit.Description = "Rotate wallpaper";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "%h/.local/bin/wallpaper-random";
+      };
+    };
+    systemd.user.timers.wallpaper-rotate = {
+      Unit.Description = "Rotate wallpaper every 20 minutes";
+      Timer = {
+        OnUnitActiveSec = "20m";
+        OnStartupSec = "20m";
+      };
+      Install.WantedBy = ["timers.target"];
+    };
+
     home.file.".local/bin/wallpaper-set" = {
       executable = true;
       text = ''
@@ -448,6 +465,24 @@ in {
     }; # Dims after 5 min, locks after 15 min, blanks displays after 20 min.
 
     services.cliphist.enable = true;
+
+    # --- AltTab Window Switcher (hyprshell) -----------------------------------
+    services.hyprshell = {
+      enable = true;
+      systemd.enable = true;
+      settings = {
+        version = 3;
+        windows = {
+          scale = 0.3;
+          items_per_row = 3;
+          switch = {
+            modifier = "alt";
+            filter_by = [];
+            switch_workspaces = true;
+          };
+        };
+      };
+    };
 
     # --- Application Launcher -----------------------------------------------
     programs.wofi = {
