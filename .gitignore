@@ -6,6 +6,7 @@
 /.direnv/
 /.devenv/
 /.claude/settings.local.json
+/.claude/worktrees/
 
 # Local caches and ephemeral work dirs
 /.cache/
