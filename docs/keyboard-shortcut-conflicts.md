@@ -17,6 +17,16 @@ This file inventories current or likely user-facing shortcut conflicts based on 
 | `Shift+Down` | tmux, terminal selection behavior | tmux uses it for new-window | Users expecting selection-extension behavior may open a new tmux window instead | Accept for now because this preserves long-standing upstream muscle memory |
 | `Alt+Tab` | Hyprland, application-local switching expectations | Hyprland uses it for desktop window cycling | Some apps also treat Alt/Tab specially, but Hyprland wins at desktop scope | Probably acceptable; document as desktop-level behavior |
 
+## CUA Mode And keyd super_cua Interactions
+
+| Topic | Tools involved | Behavior | Impact | Notes |
+|-------|---------------|----------|--------|-------|
+| `Super+C` in Emacs | keyd, Emacs CUA mode | keyd sends `C-c`; CUA mode copies if region active, prefix otherwise | Works as expected for copy/paste. Prefix keys (`C-c C-c`, `C-c l`, etc.) are unaffected when no region is active | If CUA mode's context-switching causes confusion, consider a Hyprland IPC monitor to toggle keyd layers per-app |
+| `Super+X` in Emacs | keyd, Emacs CUA mode | keyd sends `C-x`; CUA mode cuts if region active, prefix otherwise | `C-x C-s` (save) works when no region is active. With region, first `C-x` cuts | Same as above — CUA mode handles context |
+| `Super+V` in Emacs | keyd, Emacs CUA mode | keyd sends `C-v`; CUA mode pastes (overrides scroll-up) | `C-v` no longer scrolls up — use `PgDn` or mouse wheel | Accepted trade-off for cross-platform paste consistency |
+| `Super+C/V/X` in VS Code | keyd, emacs-mcx | keyd sends `Ctrl+C/V/X`; emacs-mcx does NOT remap these | No conflict — native VS Code copy/paste | emacs-mcx only touches `C-a/e/k/n/p/f/b` |
+| `Super+C/V/X` in Ghostty | keyd, Ghostty | keyd sends `Ctrl+C/V/X`; Ghostty uses `Ctrl+Shift+C/V` for copy/paste | `Super+C` sends SIGINT in Ghostty (same as `Ctrl+C`); copy requires `Ctrl+Shift+C` (i.e., `CapsLock+Shift+C`) | Expected — terminal copy/paste uses Ctrl+Shift convention |
+
 ## Non-Conflicts Worth Keeping Explicit
 
 These are not bugs, but users can mistake them for bugs:

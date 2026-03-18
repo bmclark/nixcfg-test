@@ -39,6 +39,10 @@ Emacs runs as a background daemon:
 
 Closing a frame does not stop the daemon. Buffers, workspaces, and state remain available.
 
+## Cross-Platform Shortcuts
+
+`Cmd+C/V/X/Z/S/A/F` work on both macOS and Linux. On macOS, Emacs receives `Super` directly (`s-` bindings). On Linux, keyd translates `Super+key` → `Ctrl+key` and CUA mode handles the context (copy when region active, Emacs prefix otherwise). `Cmd+Shift+Z` is redo on both platforms.
+
 ## Movement And Navigation
 
 ### Buffers, windows, tabs, and workspaces
@@ -147,6 +151,8 @@ Practical rule:
 
 - **Emacs daemon:** runs via `systemd` on Linux (`services.emacs`) and via `launchd` on macOS (`launchd.agents.emacs`). Both use `--fg-daemon` and set `PKG_CONFIG_PATH` for jinx spell checking.
 - `emacsclient -c` and `emacsclient -t` work identically on both platforms.
+- **Copy/paste on Linux:** keyd's `super_cua` layer translates `Super+C/V/X/Z` → `Ctrl+C/V/X/Z`. CUA mode (init.el) makes `C-c`/`C-x` context-aware so Emacs prefix keys aren't broken. keyd-application-mapper doesn't support Hyprland, so per-app exclusion isn't possible yet.
+- **Copy/paste on macOS:** Emacs receives raw `s-c`/`s-v` etc. from Cmd and uses dedicated super bindings.
 
 ## Design Notes
 

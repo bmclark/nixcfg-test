@@ -39,7 +39,7 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 | Caps Lock | Ctrl | Emacs keybindings, app shortcuts |
 | Left Ctrl | Hyper (Mod3) | Window management |
 | Right Ctrl | Hyper (Mod3) | Window management |
-| Super | Super (unchanged) | Unused for WM; available for OS-level if needed |
+| Super | `layer(super_cua)` | Translates Super+key → Ctrl+key for CUA shortcuts (copy/paste/undo) |
 
 **Implementation:** Standard xkb has no option for Ctrl→Hyper. Use `keyd` (a Linux key remapping daemon available in nixpkgs) configured via NixOS module. keyd runs at the evdev level (before Hyprland), so the remap is transparent to all apps.
 
@@ -51,6 +51,25 @@ Declaratively managed via home-manager (`home.file.".config/karabiner/karabiner.
 capslock = leftcontrol
 leftcontrol = hyper
 rightcontrol = hyper
+leftmeta = layer(super_cua)
+rightmeta = layer(super_cua)
+
+[super_cua]
+c = C-c
+v = C-v
+x = C-x
+z = C-z
+shift+z = C-S-z
+a = C-a
+s = C-s
+f = C-f
+w = C-w
+t = C-t
+n = C-n
+q = C-q
+l = C-l
+r = C-r
+p = C-p
 ```
 
 Hyprland sees the remapped Hyper as `Mod3`. Bind syntax uses `MOD3` (not "Hyper"):
@@ -75,8 +94,10 @@ bind = $mainMod, 1, workspace, 1
 - **Ctrl+C interrupt** in macOS terminal: CapsLock+C sends Ctrl+C ✓
 - **Caps Lock for actual caps**: lost (use Shift; standard trade-off)
 - **Physical Ctrl no longer sends Ctrl**: fully committed to Hyper
-- **Linux GUI copy/paste**: CapsLock+C/V sends Ctrl+C/V ✓
-- **Linux terminal copy/paste**: CapsLock+Shift+C/V sends Ctrl+Shift+C/V ✓
+- **Linux GUI copy/paste**: Super+C/V sends Ctrl+C/V via super_cua ✓ (also CapsLock+C/V)
+- **Linux terminal copy/paste**: CapsLock+Shift+C/V sends Ctrl+Shift+C/V ✓ (Super+C sends SIGINT, not copy)
+- **Emacs on Linux**: Super+C → keyd → C-c. CUA mode makes this context-aware (copy with region, prefix without). keyd-application-mapper doesn't support Hyprland, so per-app exclusion isn't possible yet.
+- **VS Code + emacs-mcx**: No conflict — emacs-mcx only remaps C-a/e/k/n/p/f/b, not C-c/v/x/z
 
 ## Layer 2: Window Management
 
@@ -232,13 +253,18 @@ Both `aerospace.nix` and `hyprland.nix` import this module and generate their re
 
 ## Untouched
 
-- Ghostty keybindings (Ctrl+Shift+C/V etc.) — no conflict with Hyper
+- Ghostty keybindings (Ctrl+Shift+C/V etc.) — no conflict with Hyper or super_cua
 - Tmux keybindings (CapsLock+A prefix) — no conflict
 - Zsh emacs mode — no conflict
-- Emacs keybindings — no conflict
-- VS Code emacs-mcx — no conflict
+- VS Code emacs-mcx navigation keys (C-a/e/k/n/p/f/b) — no conflict with super_cua
 - Theme system — Aerospace is invisible (no bar/chrome to theme)
 - darwin system.defaults — unchanged
+
+## Changed (Emacs)
+
+- **CUA mode enabled** — makes `C-c`/`C-x`/`C-v` context-aware (copy/cut/paste with active region, normal prefix/scroll without). Required because keyd super_cua translates Super+C → C-c on Linux.
+- **`s-` bindings added** — `s-c`/`s-v`/`s-x`/`s-z`/`s-Z`/`s-a`/`s-s`/`s-f`/`s-w` for macOS where Emacs receives raw Super.
+- **`C-S-z` bound to undo-redo** — Linux redo via keyd (Super+Shift+Z → C-S-z).
 
 ## Out of Scope
 

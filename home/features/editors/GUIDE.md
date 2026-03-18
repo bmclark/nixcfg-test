@@ -43,6 +43,26 @@ After `just switch` (Nix rebuild), the first launch takes a minute:
 
 This layout opens automatically when you switch projects with `C-c p p`.
 
+## Cross-Platform Shortcuts (Cmd+C/V/X/Z)
+
+Standard Cmd shortcuts work identically on both macOS and Linux:
+
+| Shortcut | Action | How it works |
+|----------|--------|-------------|
+| `Cmd+C` | Copy | macOS: `s-c` binding. Linux: keyd translates to `C-c`, CUA mode copies when region active |
+| `Cmd+V` | Paste | macOS: `s-v` binding. Linux: keyd translates to `C-v`, CUA mode pastes |
+| `Cmd+X` | Cut | macOS: `s-x` binding. Linux: keyd translates to `C-x`, CUA mode cuts when region active |
+| `Cmd+Z` | Undo | macOS: `s-z` binding. Linux: keyd translates to `C-z` (native undo) |
+| `Cmd+Shift+Z` | Redo | macOS: `s-Z` binding. Linux: keyd translates to `C-S-z` |
+| `Cmd+A` | Select all | macOS: `s-a` binding. Linux: keyd translates to `C-a` |
+| `Cmd+S` | Save | macOS: `s-s` binding. Linux: keyd translates to `C-s` |
+| `Cmd+F` | Find | macOS: `s-f` binding. Linux: keyd translates to `C-f` |
+| `Cmd+W` | Close window | macOS: `s-w` binding. Linux: keyd translates to `C-w` |
+
+**How CUA mode works:** On Linux, keyd translates `Cmd+C` → `Ctrl+C`. Since `C-c` is an Emacs prefix key (used by `C-c C-c`, `C-c l`, etc.), CUA mode makes it context-aware: with an active region it copies, without a region it starts the `C-c` prefix. Same for `C-x` (cut/prefix). Standard Emacs keybindings (`M-w`, `C-y`, `C-w`) still work alongside CUA.
+
+**Note:** `C-v` (scroll up) is overridden by CUA paste. Use `PgDn` or mouse wheel to scroll down instead.
+
 ## IDE Mode (Coding)
 
 This is the primary use case. The config provides a full IDE experience with LSP, tree-sitter, autocomplete, diagnostics, and AI assistants.
@@ -119,7 +139,7 @@ Projects in `~/src/` are auto-discovered. Each project gets its own tab group, b
 4. Make your changes directly in the buffer
 5. `C-c C-c` -- save all modified files
 
-**Undo:** Press `C-x u` to open a visual undo tree. Navigate branches with arrow keys. Press `q` to close.
+**Undo/Redo:** `Cmd+Z` undoes, `Cmd+Shift+Z` redoes. For the full visual undo tree, press `C-x u` — navigate branches with arrow keys, press `q` to close.
 
 ### Diagnostics
 
@@ -476,6 +496,8 @@ When you open a file in a project with `flake.nix` + `.envrc`, Emacs automatical
 ### VS Code Compatibility
 
 This config is designed to work alongside VS Code with the [emacs-mcx](https://github.com/whitphx/vscode-emacs-mcx) extension. Standard Emacs navigation (C-f/b/n/p, C-a/e, C-k, C-w/M-w/C-y, C-x C-s) and code navigation (M-., M-?, C-M-n/p) work identically in both editors. All custom bindings use the `C-c` prefix, which emacs-mcx leaves free.
+
+`Cmd+C/V/X/Z` work in VS Code on both platforms: on macOS they're native, on Linux keyd translates `Super+key` → `Ctrl+key`. emacs-mcx only remaps navigation keys (`C-a/e/k/n/p/f/b`), not `C-c/v/x/z`, so there's no conflict.
 
 ### Getting Unstuck
 

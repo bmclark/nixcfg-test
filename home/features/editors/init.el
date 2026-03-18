@@ -37,6 +37,27 @@
 ;; Auto-revert files changed on disk
 (global-auto-revert-mode 1)
 
+;;; Cmd-key CUA shortcuts (cross-platform copy/paste/undo/redo)
+;; macOS: Cmd sends `s-' (super) directly to Emacs — bind s- keys.
+;; Linux: keyd translates Super→Ctrl — CUA mode makes C-c/C-v/C-x
+;;        context-aware (copy/paste/cut with active region, prefix otherwise).
+(cua-mode 1)
+(setq cua-keep-region-after-copy t)
+
+;; Super (Cmd) bindings — used on macOS where Emacs receives raw super.
+(global-set-key (kbd "s-c") #'kill-ring-save)       ; copy
+(global-set-key (kbd "s-v") #'yank)                  ; paste
+(global-set-key (kbd "s-x") #'kill-region)           ; cut
+(global-set-key (kbd "s-z") #'undo)                  ; undo
+(global-set-key (kbd "s-Z") #'undo-redo)             ; redo (Cmd+Shift+Z)
+(global-set-key (kbd "s-a") #'mark-whole-buffer)     ; select all
+(global-set-key (kbd "s-s") #'save-buffer)           ; save
+(global-set-key (kbd "s-f") #'isearch-forward)       ; find
+(global-set-key (kbd "s-w") #'delete-window)         ; close window
+
+;; Redo via Ctrl+Shift+Z (Linux: keyd translates Cmd+Shift+Z → C-S-z)
+(global-set-key (kbd "C-S-z") #'undo-redo)
+
 ;; Save backup/autosave files out of the way, mirroring the original directory structure.
 ;; e.g. ~/src/foo/bar.py~ → ~/.emacs.d/backups/~/src/foo/bar.py~
 (defun bc/backup-file-name (fpath)
