@@ -217,9 +217,21 @@ Use plain `just` when you want the current project's nearest `justfile`.
 | `nix-tree`, `nix-diff`, `nvd`, `nurl` | Nix debugging and inspection |
 | `sshs` | Browse SSH connections from config |
 
-## Tmux Session Helpers
+## Tmux Shortcuts
 
-The shell includes a few fast tmux layouts:
+Quick tmux aliases matching the oh-my-zsh tmux plugin:
+
+| Alias | Command |
+|-------|---------|
+| `ts <name>` | Create a new named session |
+| `ta <name>` | Attach to a session |
+| `tad <name>` | Detach other clients and attach |
+| `tkss <name>` | Kill a session |
+| `tl` | List sessions |
+
+### Session layout presets
+
+The shell also includes preset tmux layouts:
 
 | Function | Layout |
 |----------|--------|

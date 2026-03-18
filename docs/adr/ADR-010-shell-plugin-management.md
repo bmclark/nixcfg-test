@@ -55,3 +55,7 @@ The previous dotfiles setup used Antigen with 23+ zsh plugins, requiring a runti
 **Neutral**
 - Migration from Antigen requires mapping old plugin list to home-manager equivalents
 - Shell startup time should be measured after migration to ensure no regression
+
+### oh-my-zsh tmux plugin equivalents
+
+The upstream `.dotfiles` used the oh-my-zsh `tmux` plugin via Antigen, which provided shorthand aliases (`ts`, `ta`, `tad`, `tkss`, `tl`). Rather than pulling in the full OMZ plugin, these are declared as plain shell aliases in `zsh.nix`, keeping the no-plugin-manager approach intact.

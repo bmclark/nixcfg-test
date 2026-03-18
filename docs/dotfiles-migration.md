@@ -28,6 +28,10 @@ The declarative approach has been adopted. All major tools are now configured vi
 
 4. **Declarative over file imports**: All tools use `programs.*` modules rather than `home.file` imports of raw dotfiles. This provides compile-time validation and cross-platform abstractions.
 
+## Recently Ported
+
+- **oh-my-zsh tmux plugin aliases**: `ts`, `ta`, `tad`, `tkss`, `tl` added as shell aliases in `zsh.nix` (previously provided by the Antigen-loaded `tmux` OMZ plugin)
+
 ## Remaining from .dotfiles (Not Migrated)
 
 - **SSH config**: Manage manually or via `programs.ssh.matchBlocks` in a future session

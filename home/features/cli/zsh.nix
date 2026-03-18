@@ -162,6 +162,13 @@ in {
         gpgpub = "gpg --armor --export";
         rbwls = "rbw list";
 
+        # Tmux shortcuts (matches oh-my-zsh tmux plugin)
+        ts = "tmux new-session -s";
+        ta = "tmux attach -t";
+        tad = "tmux attach -d -t";
+        tkss = "tmux kill-session -t";
+        tl = "tmux list-sessions";
+
         # Emacs daemon workflow
         emacs = "emacsclient -c -a ''";
         ec = "emacsclient -c -a ''";

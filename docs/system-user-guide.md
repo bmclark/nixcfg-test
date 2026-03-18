@@ -89,10 +89,12 @@ On a fresh `iceman` setup:
 Inside Ghostty:
 
 ```bash
-tmux
+ts work        # create a named session
+ta work        # reattach later
+tl             # list existing sessions
 ```
 
-If you already use named sessions, attach to the right one instead.
+These aliases match the oh-my-zsh tmux plugin (`ts` = `tmux new-session -s`, `ta` = `tmux attach -t`, etc.).
 
 ### 3. Decide your workspace level
 
