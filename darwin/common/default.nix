@@ -19,6 +19,7 @@ in {
   imports = [
     ./users
     ./karabiner.nix
+    ./alttab.nix
   ];
 
   options.remoteAccess.screenSharing = {
