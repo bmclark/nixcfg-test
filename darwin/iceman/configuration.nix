@@ -40,16 +40,36 @@
       NSNavPanelExpandedStateForSaveMode2 = true;
       PMPrintingExpandedStateForPrint = true;
       PMPrintingExpandedStateForPrint2 = true;
+      AppleShowAllFiles = true;
+      "com.apple.swipescrolldirection" = false; # Disable "natural" scrolling
+      _HIHideMenuBar = true; # Auto-hide menu bar
+      AppleWindowTabbingMode = "always"; # Prefer tabs in all apps
     };
     dock = {
       autohide = true;
       show-recents = false;
-      persistent-apps = [];
+      persistent-apps = [
+        "/System/Library/CoreServices/Finder.app"
+        "/Applications/Ghostty.app"
+        "/Applications/Visual Studio Code.app"
+        "/Applications/Google Chrome.app"
+        "/Applications/Claude.app"
+        "/Applications/ChatGPT.app"
+        "/System/Applications/Messages.app"
+        "/System/Applications/Mail.app"
+        "/System/Applications/Calendar.app"
+        "/System/Applications/Notes.app"
+        "/Applications/Spotify.app"
+        "/Applications/Bitwarden.app"
+        "/System/Applications/System Settings.app"
+      ];
       mru-spaces = false;
       launchanim = false;
       tilesize = 48;
       mineffect = "scale";
       minimize-to-application = true;
+      show-process-indicators = true;
+      expose-animation-duration = 0.1; # Faster Mission Control animation
       # Hot corners (0=disabled, 4=desktop, 10=display sleep, 13=lock screen, 14=quick note)
       wvous-tl-corner = 13; # Lock Screen
       wvous-tr-corner = 14; # Quick Note
@@ -74,10 +94,14 @@
       Clicking = true;
       TrackpadRightClick = true;
       TrackpadThreeFingerVertSwipeGesture = 0;
+      TrackpadThreeFingerDrag = true;
     };
     screencapture = {
       location = "~/Pictures/Screenshots";
       type = "png";
+      target = "clipboard";
+      disable-shadow = true;
+      show-thumbnail = false;
     };
     # --- Menu Bar / Control Center ---
     menuExtraClock = {
@@ -95,6 +119,15 @@
     screensaver = {
       askForPassword = true;
       askForPasswordDelay = 60;
+    };
+    loginwindow = {
+      GuestEnabled = false;
+    };
+    SoftwareUpdate = {
+      AutomaticallyInstallMacOSUpdates = true;
+    };
+    spaces = {
+      spans-displays = false; # Independent spaces per display
     };
     LaunchServices = {
       LSQuarantine = false;
