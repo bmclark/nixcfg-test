@@ -1,5 +1,6 @@
 # Homebrew on macOS: declarative management of casks, formulae, and Mac App Store apps.
-# Aerospace and Karabiner-Elements are managed by nix-darwin services, not Homebrew.
+# Aerospace is managed by nix-darwin services, not Homebrew.
+# Karabiner-Elements via Homebrew until nix-darwin#1679 lands (key config still via home-manager).
 # Ghostty has no nixpkgs macOS build; config is shared via home/features/cli/ghostty.nix.
 # onActivation.cleanup = "zap" removes anything not declared here -- add before installing.
 {...}: {
@@ -20,7 +21,7 @@
       "codex" # OpenAI Codex desktop app
       "ghostty" # Terminal emulator (no nixpkgs macOS build)
       "google-chrome" # Chromium replacement on macOS (nixpkgs chromium unavailable on aarch64-darwin)
-      # karabiner-elements now managed by services.karabiner-elements in nix-darwin
+      "karabiner-elements" # Keyboard remapping (nix-darwin module broken with v15+, see nix-darwin#1679)
       "logitech-g-hub" # Logitech peripheral management
       "raycast" # Launcher / productivity tool
       "spotify" # Music streaming

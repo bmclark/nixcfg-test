@@ -62,8 +62,9 @@ in {
 
       programs.zsh.enable = true;
 
-      # Use nix-darwin built-in service modules instead of manual launchd agents
-      services.karabiner-elements.enable = true;
+      # Karabiner managed via Homebrew until nix-darwin#1679 lands
+      # (nix-darwin module broken with karabiner v15+ app-based architecture).
+      # Key mappings still managed declaratively by home-manager (karabiner.nix).
       services.aerospace.enable = true;
     }
     (mkIf screenSharingCfg.enable {

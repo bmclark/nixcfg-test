@@ -177,8 +177,9 @@
     restartAfterFreeze = true;
     sleep = {
       computer = "never";  # Always-on Mac Mini
-      display = 60;        # Display sleeps after 60 minutes
+      display = "never";   # Never sleep display — KVM built into monitor
       harddisk = "never";  # Never spin down
+      allowSleepByPowerButton = false;  # Prevent KVM from triggering sleep
     };
   };
 
@@ -186,6 +187,9 @@
     echo "--- FileVault status ---" >&2
     /usr/bin/fdesetup status >&2
     echo "------------------------" >&2
+
+    # Disable Power Nap — not needed on always-on Mac Mini
+    /usr/bin/pmset -a powernap 0
   '';
 
   networking.applicationFirewall = {
