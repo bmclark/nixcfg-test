@@ -42,15 +42,15 @@
       PMPrintingExpandedStateForPrint2 = true;
       AppleShowAllFiles = true;
       "com.apple.swipescrolldirection" = false; # Disable "natural" scrolling
-      _HIHideMenuBar = true; # Auto-hide menu bar
-      AppleWindowTabbingMode = "always"; # Prefer tabs in all apps
+      _HIHideMenuBar = false;
+
     };
     dock = {
       autohide = true;
       show-recents = false;
       persistent-apps = [
         "/System/Library/CoreServices/Finder.app"
-        "/Applications/Ghostty.app"
+        "/Applications/cmux.app"
         "/Applications/Visual Studio Code.app"
         "/Applications/Google Chrome.app"
         "/Applications/Claude.app"
@@ -165,6 +165,11 @@
           "121" = { enabled = false; };
           "122" = { enabled = false; };
           "123" = { enabled = false; };
+          # Accessibility shortcuts that collide with Hyper+key
+          "12" = { enabled = false; };  # Invert Colors (Ctrl+Opt+Cmd+8)
+          "15" = { enabled = false; };  # Zoom In
+          "17" = { enabled = false; };  # Zoom Out
+          "19" = { enabled = false; };  # Zoom Toggle
         };
       };
     };
@@ -190,6 +195,19 @@
 
     # Disable Power Nap — not needed on always-on Mac Mini
     /usr/bin/pmset -a powernap 0
+
+    # Enable Night Shift (sunset to sunrise)
+    # Use PlistBuddy because `defaults` cannot nest dicts.
+    /usr/libexec/PlistBuddy \
+      -c "Delete :CBBlueReductionStatus" \
+      -c "Add :CBBlueReductionStatus dict" \
+      -c "Add :CBBlueReductionStatus:AutoBlueReductionEnabled bool true" \
+      -c "Add :CBBlueReductionStatus:BlueLightReductionSchedule dict" \
+      -c "Add :CBBlueReductionStatus:BlueLightReductionSchedule:DayStartHour integer 7" \
+      -c "Add :CBBlueReductionStatus:BlueLightReductionSchedule:DayStartMinute integer 0" \
+      -c "Add :CBBlueReductionStatus:BlueLightReductionSchedule:NightStartHour integer 22" \
+      -c "Add :CBBlueReductionStatus:BlueLightReductionSchedule:NightStartMinute integer 0" \
+      /var/root/Library/Preferences/com.apple.CoreBrightness.plist 2>/dev/null || true
   '';
 
   networking.applicationFirewall = {

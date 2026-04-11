@@ -202,8 +202,15 @@ in {
           "$mainMod, E, exec, thunar"
           "$mainMod, L, exec, hyprlock"
           "$mainMod, Escape, exec, wlogout -p layer-shell"
-          "$mainMod, comma, workspace, r-1"
-          "$mainMod, period, workspace, r+1"
+          # Workspace cycling (arrows — matches macOS Ctrl+arrows convention)
+          "$mainMod, left, workspace, r-1"
+          "$mainMod, right, workspace, r+1"
+
+          # Window focus (comma/period for horizontal, arrows for vertical)
+          "$mainMod, comma, movefocus, l"
+          "$mainMod, period, movefocus, r"
+          "$mainMod, up, movefocus, u"
+          "$mainMod, down, movefocus, d"
 
           # Dropdown terminal (CapsLock+` = Ctrl+grave toggles special:terminal workspace)
           "CTRL, grave, exec, $HOME/.local/bin/dropdown-terminal"
@@ -215,17 +222,15 @@ in {
           "ALT, F4, killactive"
           # Alt+Tab handled by hyprshell daemon (see wayland.nix systemd service)
 
-          # Window focus (arrow keys)
-          "$mainMod, left, movefocus, l"
-          "$mainMod, right, movefocus, r"
-          "$mainMod, up, movefocus, u"
-          "$mainMod, down, movefocus, d"
-
-          # Window movement (arrow keys + shift)
-          "$mainMod SHIFT, left, movewindow, l"
-          "$mainMod SHIFT, right, movewindow, r"
+          # Move window to adjacent workspace (shift+arrows)
+          "$mainMod SHIFT, left, movetoworkspace, r-1"
+          "$mainMod SHIFT, right, movetoworkspace, r+1"
           "$mainMod SHIFT, up, movewindow, u"
           "$mainMod SHIFT, down, movewindow, d"
+
+          # Move window within workspace (shift+comma/period)
+          "$mainMod SHIFT, comma, movewindow, l"
+          "$mainMod SHIFT, period, movewindow, r"
 
           # Workspace management
           "$mainMod, 1, workspace, 1"

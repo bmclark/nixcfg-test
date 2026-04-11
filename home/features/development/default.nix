@@ -77,7 +77,7 @@
     nodejs
     pnpm # Fast package manager: pnpm install, pnpm dev
     typescript # TypeScript compiler: tsc
-    nodePackages.prettier # Code formatter: prettier --write .
+    prettier # Code formatter: prettier --write .
 
     # --- Container tools -----------------------------------------------------
     docker-compose # Docker Compose v1

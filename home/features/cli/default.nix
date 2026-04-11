@@ -28,6 +28,7 @@ in {
     ./fzf.nix
     ./zsh.nix
     ./ghostty.nix
+    ./cmux.nix
     ./tmux.nix
     ./atuin.nix
   ];

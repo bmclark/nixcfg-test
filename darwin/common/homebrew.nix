@@ -2,6 +2,7 @@
 # Aerospace is managed by nix-darwin services, not Homebrew.
 # Karabiner-Elements via Homebrew until nix-darwin#1679 lands (key config still via home-manager).
 # Ghostty has no nixpkgs macOS build; config is shared via home/features/cli/ghostty.nix.
+# cmux wraps Ghostty's renderer; reads ~/.config/ghostty/config + its own ~/.config/cmux/settings.json.
 # onActivation.cleanup = "zap" removes anything not declared here -- add before installing.
 {...}: {
   homebrew = {
@@ -19,6 +20,7 @@
       "chatgpt" # OpenAI ChatGPT desktop app
       "claude" # Anthropic Claude desktop app
       "codex" # OpenAI Codex desktop app
+      "cmux" # Terminal workspace manager (wraps Ghostty renderer)
       "ghostty" # Terminal emulator (no nixpkgs macOS build)
       "google-chrome" # Chromium replacement on macOS (nixpkgs chromium unavailable on aarch64-darwin)
       "karabiner-elements" # Keyboard remapping (nix-darwin module broken with v15+, see nix-darwin#1679)

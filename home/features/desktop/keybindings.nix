@@ -6,7 +6,7 @@
     "2" = { name = "browser";  darwin = ["Safari" "Google Chrome"];                                 linux = ["firefox" "chromium"]; };
     "3" = { name = "ai";       darwin = ["Claude" "ChatGPT" "Codex"];                               linux = ["Claude" "ChatGPT"]; };
     "4" = { name = "editor";   darwin = ["Emacs" "Code" "Xcode"];                                   linux = ["Emacs" "Code"]; };
-    "5" = { name = "terminal"; darwin = ["Ghostty"];                                                 linux = ["com.mitchellh.ghostty"]; };
+    "5" = { name = "terminal"; darwin = ["cmux" "Ghostty"];                                           linux = ["com.mitchellh.ghostty"]; };
     "6" = { name = "media";    darwin = ["Spotify" "Audacity" "GarageBand" "iMovie"];               linux = ["Spotify" "Audacity"]; };
   };
   # Workspaces 7-10: no app assignments (flexible use)

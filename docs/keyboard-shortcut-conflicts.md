@@ -27,6 +27,30 @@ This file inventories current or likely user-facing shortcut conflicts based on 
 | `Super+C/V/X` in VS Code | keyd, emacs-mcx | keyd sends `Ctrl+C/V/X`; emacs-mcx does NOT remap these | No conflict — native VS Code copy/paste | emacs-mcx only touches `C-a/e/k/n/p/f/b` |
 | `Super+C/V/X` in Ghostty | keyd, Ghostty | keyd sends `Ctrl+C/V/X`; Ghostty uses `Ctrl+Shift+C/V` for copy/paste | `Super+C` sends SIGINT in Ghostty (same as `Ctrl+C`); copy requires `Ctrl+Shift+C` (i.e., `CapsLock+Shift+C`) | Expected — terminal copy/paste uses Ctrl+Shift convention |
 
+## Disabled macOS Accessibility Shortcuts
+
+The following macOS accessibility shortcuts are disabled via `AppleSymbolicHotKeys` because physical Ctrl maps to Hyper (Ctrl+Alt+Cmd) via Karabiner, causing collisions:
+
+| HotKey ID | macOS shortcut | Conflict | Resolution |
+|-----------|---------------|----------|------------|
+| 12 | Ctrl+Opt+Cmd+8 | Invert Colors triggered by physical Ctrl+8 (workspace 8) | Disabled |
+| 15 | Ctrl+Opt+Cmd+= | Zoom In triggered by Hyper+= | Disabled |
+| 17 | Ctrl+Opt+Cmd+- | Zoom Out triggered by Hyper+- | Disabled |
+| 19 | Ctrl+Opt+Cmd+0 | Zoom Toggle triggered by physical Ctrl+0 (workspace 10) | Disabled |
+
+## Workspace Cycling vs Window Focus (Cross-Platform)
+
+Arrows cycle workspaces, comma/period focus windows — consistent across macOS and Hyprland:
+
+| Physical key | macOS (Aerospace) | Linux (Hyprland) | Purpose |
+|-------------|-------------------|-------------------|---------|
+| Ctrl+Left/Right | Workspace cycle prev/next | Workspace r-1/r+1 | Desktop switching |
+| Ctrl+,/. | Focus left/right | movefocus l/r | Window focus within workspace |
+| Ctrl+Shift+Left/Right | Move window to prev/next workspace | movetoworkspace r-1/r+1 | Send window to adjacent workspace |
+| Ctrl+Shift+,/. | Move window left/right (spatial) | movewindow l/r | Rearrange window within workspace |
+| Ctrl+Up/Down | Focus up/down | movefocus u/d | Vertical window focus |
+| Ctrl+Shift+Up/Down | Move window up/down | movewindow u/d | Vertical window rearrangement |
+
 ## Non-Conflicts Worth Keeping Explicit
 
 These are not bugs, but users can mistake them for bugs:

@@ -19,6 +19,7 @@
       zsh.enable = true;
       fzf.enable = true;
       ghostty.enable = true;
+      cmux.enable = true;
       tmux.enable = true;
       atuin.enable = true;
     };
@@ -31,7 +32,7 @@
       firefox.enable = true;
       chromium.enable = true;
       karabiner.enable = true;
-      aerospace.enable = true;
+      # aerospace config moved to nix-darwin (darwin/common/aerospace.nix)
     };
     editors = {
       emacs.enable = true;

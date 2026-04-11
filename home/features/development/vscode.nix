@@ -55,7 +55,7 @@ in {
 
           # AI assistants
           github.copilot
-          anthropic.claude-code
+          # anthropic.claude-code — installed via CLI package; nixpkgs hash is stale
 
           # Nix: language support + formatting
           jnoortheen.nix-ide

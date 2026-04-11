@@ -18,6 +18,7 @@ with lib; let
 in {
   imports = [
     ./users
+    ./aerospace.nix
     ./alttab.nix
   ];
 
@@ -65,7 +66,7 @@ in {
       # Karabiner managed via Homebrew until nix-darwin#1679 lands
       # (nix-darwin module broken with karabiner v15+ app-based architecture).
       # Key mappings still managed declaratively by home-manager (karabiner.nix).
-      services.aerospace.enable = true;
+      # Aerospace config in ./aerospace.nix
     }
     (mkIf screenSharingCfg.enable {
       assertions = [
