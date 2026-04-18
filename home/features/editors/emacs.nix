@@ -46,7 +46,7 @@ in {
 
       # Formatters used by LSP
       shfmt # Shell formatter
-      gotools # goimports etc.
+      (lib.lowPrio gotools) # goimports etc. (lowPrio to avoid bin/modernize clash with gopls)
 
       # Writing / export
       pandoc # Universal document converter (org → EPUB, DOCX, PDF, Hugo)

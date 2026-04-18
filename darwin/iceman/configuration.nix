@@ -70,11 +70,11 @@
       minimize-to-application = true;
       show-process-indicators = true;
       expose-animation-duration = 0.1; # Faster Mission Control animation
-      # Hot corners (0=disabled, 4=desktop, 10=display sleep, 13=lock screen, 14=quick note)
-      wvous-tl-corner = 13; # Lock Screen
-      wvous-tr-corner = 14; # Quick Note
-      wvous-bl-corner = 4;  # Desktop
-      wvous-br-corner = 10; # Display Sleep
+      # Hot corners disabled (1=disabled)
+      wvous-tl-corner = 1;
+      wvous-tr-corner = 1;
+      wvous-bl-corner = 1;
+      wvous-br-corner = 1;
     };
     finder = {
       FXPreferredViewStyle = "Nlsv";
@@ -147,29 +147,33 @@
       "com.apple.symbolichotkeys" = {
         AppleSymbolicHotKeys = {
           # Mission Control (Ctrl+Up / F3)
-          "32" = { enabled = false; };
-          "34" = { enabled = false; };
+          "32" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "34" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
           # Application Windows (Ctrl+Down)
-          "33" = { enabled = false; };
-          "35" = { enabled = false; };
+          "33" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "35" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
           # Move left a space (Ctrl+Left / fn variant)
-          "79" = { enabled = false; };
-          "80" = { enabled = false; };
+          "79" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "80" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
           # Move right a space (Ctrl+Right / fn variant)
-          "81" = { enabled = false; };
-          "82" = { enabled = false; };
+          "81" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "82" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
           # Switch to Desktop 1-6 (Ctrl+1 through Ctrl+6)
-          "118" = { enabled = false; };
-          "119" = { enabled = false; };
-          "120" = { enabled = false; };
-          "121" = { enabled = false; };
-          "122" = { enabled = false; };
-          "123" = { enabled = false; };
+          "118" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "119" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "120" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "121" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "122" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
+          "123" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };
           # Accessibility shortcuts that collide with Hyper+key
-          "12" = { enabled = false; };  # Invert Colors (Ctrl+Opt+Cmd+8)
-          "15" = { enabled = false; };  # Zoom In
-          "17" = { enabled = false; };  # Zoom Out
-          "19" = { enabled = false; };  # Zoom Toggle
+          # Full parameter structure required — bare `enabled = false` is ignored by macOS
+          "12" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Invert Colors (Cmd+Ctrl+Opt+8)
+          "21" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Reverse Black and White (Cmd+Ctrl+Opt+8)
+          "25" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Increase Contrast (Cmd+Ctrl+Opt+.)
+          "26" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Decrease Contrast (Cmd+Ctrl+Opt+,)
+          "15" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Zoom Toggle (Cmd+Opt+8)
+          "17" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Zoom In (Cmd+Opt+=)
+          "19" = { enabled = false; value = { parameters = [65535 65535 0]; type = "standard"; }; };  # Zoom Out (Cmd+Opt+-)
         };
       };
     };
